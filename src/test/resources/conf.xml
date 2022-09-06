@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package name="conf">
+    <bean name="Item">
+        <var name="id" type="int" from="ID"/>
+        <var name="name" type="string" from="道具名称"/>
+    </bean>
+    <bean name="Properties">
+        <var name="atk" type="float" from="攻击"/>
+        <var name="def" type="float" from="防御"/>
+    </bean>
+    <bean name="Equip" parent="Item">
+        <var name="properties" type="Properties"/>
+    </bean>
+    <bean name="Material" parent="Item">
+        <var name="awards" type="list" value="int" from="拆解物品"/>
+    </bean>
+    <enum name="ItemID">
+
+    </enum>
+</package>
