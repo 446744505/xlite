@@ -2,6 +2,7 @@ package xlite.gen;
 
 import xlite.coder.GenCoder;
 import xlite.language.XLanguage;
+import xlite.util.Util;
 
 import java.io.File;
 
@@ -18,6 +19,7 @@ public class XGenerator {
 
     public void gen(GenCoder code) {
         outDir.mkdirs();
+        Util.cleanDir(outDir);
         GenContext context = new GenContext(outDir, language, conf);
         code.before(context);
         code.gen(context);

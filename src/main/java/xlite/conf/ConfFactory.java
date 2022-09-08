@@ -40,6 +40,6 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
 
     @Override
     public GenConf createConf() {
-        return new ConfConf();
+        return new ConfGenConf();
     }
 }
