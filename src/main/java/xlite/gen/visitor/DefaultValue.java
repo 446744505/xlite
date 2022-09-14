@@ -12,6 +12,6 @@ public class DefaultValue implements LanguageVisitor<String> {
 
     @Override
     public String visit(Java java) {
-        return type.accept(new xlite.type.visitor.DefaultValue(), java);
+        return type.accept(xlite.type.visitor.DefaultValue.INSTANCE, java);
     }
 }

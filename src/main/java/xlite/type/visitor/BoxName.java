@@ -4,6 +4,10 @@ import xlite.language.XLanguage;
 import xlite.type.*;
 
 public class BoxName implements TypeVisitor<String> {
+    public static final BoxName INSTANCE = new BoxName();
+
+    private BoxName() {}
+
     @Override
     public String visit(XLanguage language, XInt t) {
         return language.boxName(t);

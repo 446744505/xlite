@@ -20,11 +20,11 @@ public class XSheet {
         if (Objects.isNull(row)) {
             return;
         }
-        if (def == null || def.isEmpty()) {
+        if (Objects.isNull(def) || def.isEmpty()) {
             def = XReader.DEF_DEFAULT;
         }
         Map<Object, XRow> rs = rows.get(def);
-        if (rs == null) {
+        if (Objects.isNull(rs)) {
             rs = new LinkedHashMap<>();
             rows.put(def, rs);
         }

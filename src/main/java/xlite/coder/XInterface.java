@@ -2,7 +2,7 @@ package xlite.coder;
 
 import lombok.Getter;
 import xlite.gen.GenContext;
-import xlite.gen.visitor.Define;
+import xlite.gen.visitor.PrintDefine;
 import xlite.gen.visitor.Import;
 import xlite.language.XLanguage;
 
@@ -40,6 +40,10 @@ public class XInterface extends AbsCoder {
         return pak.fullPack(language) + "." + name;
     }
 
+    public boolean hasExtend() {
+        return !extendes.isEmpty();
+    }
+
     public void print(GenContext context) {
         printPackage(context);
         context.println();
@@ -60,7 +64,7 @@ public class XInterface extends AbsCoder {
     }
 
     protected void printDefine(GenContext context) {
-        context.vprintln(new Define(this));
+        context.vprintln(new PrintDefine(this));
     }
 
     protected void printMethod(GenContext context) {

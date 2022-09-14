@@ -9,10 +9,7 @@ import xlite.language.XLanguage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class XPackage extends AbsCoder implements GenCoder {
     @Getter private final String name;
@@ -32,6 +29,15 @@ public class XPackage extends AbsCoder implements GenCoder {
     public XPackage addClass(XClass clazz) {
         classes.add(clazz);
         return this;
+    }
+
+    public static XPackage wrap(String path) {
+        String[] names = path.split("\\.");
+        XPackage pak = null;
+        for (String name : names) {
+            pak = new XPackage(name, pak);
+        }
+        return pak;
     }
 
     @Override

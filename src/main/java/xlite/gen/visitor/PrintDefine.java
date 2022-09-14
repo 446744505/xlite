@@ -8,10 +8,10 @@ import xlite.language.XLanguage;
 
 import java.util.List;
 
-public class Define implements LanguageVisitor<String> {
+public class PrintDefine implements LanguageVisitor<String> {
     private final XInterface iface;
 
-    public Define(XInterface iface) {
+    public PrintDefine(XInterface iface) {
         this.iface = iface;
     }
 

@@ -11,7 +11,7 @@ public abstract class AbsElement implements XElement {
     protected final Element src;
     protected final XElement parent;
     protected final List<XElement> elements = new ArrayList<>();
-    protected final Map<String, XAttr> attrs = new LinkedHashMap<>();
+    private final Map<String, XAttr> attrs = new LinkedHashMap<>();
 
     public AbsElement(Element src, XElement parent) {
         this.src = src;
@@ -42,5 +42,9 @@ public abstract class AbsElement implements XElement {
             throw new UnsupportedOperationException(String.format("element [%s] unsupported attribute [%s]", this.src.getName(), attrName));
         }
         return factory.createAttr(src, this);
+    }
+
+    protected <T> T getAttr(String name) {
+        return (T) attrs.get(name);
     }
 }

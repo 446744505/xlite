@@ -2,6 +2,7 @@ package xlite.xml.element;
 
 import org.dom4j.Element;
 import xlite.coder.XField;
+import xlite.xml.BuildContext;
 import xlite.xml.attr.KeyAttr;
 import xlite.xml.attr.TypeAttr;
 import xlite.xml.attr.ValueAttr;
@@ -23,16 +24,16 @@ public class VarElement extends AbsElement {
     }
 
     @Override
-    public XField build() {
+    public XField build(BuildContext context) {
         if (!Objects.isNull(buildField)) {
             return buildField;
         }
 
-        XAttr nameAttr = attrs.get(XAttr.ATTR_NAME);
-        TypeAttr typeAttr = (TypeAttr) attrs.get(XAttr.ATTR_TYPE);
-        KeyAttr keyAttr = (KeyAttr) attrs.get(XAttr.ATTR_KEY);
-        ValueAttr valueAttr = (ValueAttr) attrs.get(XAttr.ATTR_VALUE);
-        buildField = new XField(nameAttr.getValue(), typeAttr.build(keyAttr, valueAttr, t -> buildField.setType(t)), parent.build());
+        XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
+        TypeAttr typeAttr = getAttr(XAttr.ATTR_TYPE);
+        KeyAttr keyAttr = getAttr(XAttr.ATTR_KEY);
+        ValueAttr valueAttr = getAttr(XAttr.ATTR_VALUE);
+        buildField = new XField(nameAttr.getValue(), typeAttr.build(keyAttr, valueAttr, t -> buildField.setType(t)), parent.build(context));
         return buildField;
     }
 }

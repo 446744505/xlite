@@ -2,6 +2,7 @@ package xlite.xml.element;
 
 import org.dom4j.Element;
 import xlite.coder.XCoder;
+import xlite.xml.BuildContext;
 import xlite.xml.attr.XAttr;
 
 public class EnumElement extends AbsElement {
@@ -15,7 +16,7 @@ public class EnumElement extends AbsElement {
     }
 
     @Override
-    public XCoder build() {
+    public XCoder build(BuildContext context) {
         return null;
     }
 }

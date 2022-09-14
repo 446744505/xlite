@@ -67,11 +67,8 @@ public class NumberCell extends AbsCell {
     @Override
     public float asFloat() {
         double v = asDouble();
-        if (v < Float.MIN_VALUE || v > Float.MAX_VALUE) {
-            throw new IllegalArgumentException("overflow float value " + v);
-        }
         float r = (float) v;
-        if (r != v) {
+        if (Math.abs(r - v) > 0.001) {
             throw new IllegalArgumentException("illegal float value " + v);
         }
         return r;

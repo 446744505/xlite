@@ -50,9 +50,9 @@ public class XClass extends XInterface {
 
     private void addSetter(GenContext context) {
         GenConf conf = context.getConf();
-        if (conf.genSetter(this)) {
+        if (conf.genSetter(this, context.getLanguage())) {
             fields.forEach(f -> {
-                if (conf.genSetter(f)) {
+                if (conf.genSetter(this, f, context.getLanguage())) {
                     context.getLanguage().accept(new AddSetter(this, f));
                 }
             });
@@ -78,6 +78,12 @@ public class XClass extends XInterface {
             wait.add(cb);
         }
         return clazz;
+    }
+
+    @Override
+    public XClass addImport(String importt) {
+        super.addImport(importt);
+        return this;
     }
 
     public XClass implement(XInterface iface) {
@@ -136,7 +142,7 @@ public class XClass extends XInterface {
     }
 
     private void printConstructor(GenContext context) {
-        context.getLanguage().accept(new Constructor(this, context));
+        context.getLanguage().accept(new PrintConstructor(this, context));
     }
 
     protected void printField(GenContext context) {
@@ -148,8 +154,10 @@ public class XClass extends XInterface {
         addGetter(context);
         addSetter(context);
         methods.forEach(m -> {
-            context.getLanguage().accept(new Method(m, context));
-            context.println();
+            if (context.getConf().genMethod(this, m, context.getLanguage())) {
+                context.getLanguage().accept(new PrintMethod(m, context));
+                context.println();
+            }
         });
     }
 }

@@ -7,7 +7,7 @@ public class SimpleGenFactory implements XGenFactory {
     @Override
     public XLanguage createLanguage(String l) {
         if ("java".equals(l)) {
-            return new Java();
+            return Java.INSTANCE;
         }
         throw new UnsupportedOperationException(String.format("unsupported language %s", l));
     }

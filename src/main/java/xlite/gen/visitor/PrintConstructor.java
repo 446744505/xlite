@@ -4,11 +4,11 @@ import xlite.coder.XClass;
 import xlite.gen.GenContext;
 import xlite.language.Java;
 
-public class Constructor implements LanguageVisitor<Void> {
+public class PrintConstructor implements LanguageVisitor<Void> {
     private final XClass clazz;
     private final GenContext context;
 
-    public Constructor(XClass clazz, GenContext context) {
+    public PrintConstructor(XClass clazz, GenContext context) {
         this.clazz = clazz;
         this.context = context;
     }

@@ -103,7 +103,7 @@ public class XReader {
     }
 
     private Header parseHeader(XSheet sheet, Row row) {
-        Header header = new Header();
+        Header header = new Header(sheet);
         row.cellIterator().forEachRemaining(cell -> {
             CellType cellType = cell.getCellType();
             if (cellType != CellType.STRING) {

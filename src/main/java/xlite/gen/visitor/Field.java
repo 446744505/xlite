@@ -13,6 +13,6 @@ public class Field implements LanguageVisitor<String> {
 
     @Override
     public String visit(Java java) {
-        return String.format("private %s %s;", field.getType().accept(new SimpleName(), java), field.getName());
+        return String.format("private %s %s;", field.getType().accept(SimpleName.INSTANCE, java), field.getName());
     }
 }

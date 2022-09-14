@@ -5,7 +5,13 @@ import xlite.gen.visitor.LanguageVisitor;
 import xlite.type.*;
 import xlite.type.visitor.BoxName;
 
+import java.util.Objects;
+
 public class Java implements XLanguage {
+    public static final Java INSTANCE = new Java();
+
+    private Java() {}
+
     @Override
     public <T> T accept(LanguageVisitor<T> visitor) {
         return visitor.visit(this);
@@ -23,7 +29,7 @@ public class Java implements XLanguage {
 
     @Override
     public String simpleName(XList t) {
-        String boxName = t.getValue().accept(new BoxName(), this);
+        String boxName = t.getValue().accept(BoxName.INSTANCE, this);
         return String.format("java.util.List<%s>", boxName);
     }
 
@@ -74,8 +80,8 @@ public class Java implements XLanguage {
 
     @Override
     public String simpleName(XMap t) {
-        String keyBoxName = t.getKey().accept(new BoxName(), this);
-        String valueBoxName = t.getValue().accept(new BoxName(), this);
+        String keyBoxName = t.getKey().accept(BoxName.INSTANCE, this);
+        String valueBoxName = t.getValue().accept(BoxName.INSTANCE, this);
         return String.format("java.util.Map<%s, %s>", keyBoxName, valueBoxName);
     }
 
@@ -91,11 +97,19 @@ public class Java implements XLanguage {
 
     @Override
     public String simpleName(XBean t) {
+        Class clazz = t.getClazz();
+        if (!Objects.isNull(clazz)) {
+            return clazz.getSimpleName();
+        }
         return XClass.getFullName(t.getName(), this);
     }
 
     @Override
     public String boxName(XBean t) {
+        Class clazz = t.getClazz();
+        if (!Objects.isNull(clazz)) {
+            return clazz.getName();
+        }
         return XClass.getFullName(t.getName(), this);
     }
 

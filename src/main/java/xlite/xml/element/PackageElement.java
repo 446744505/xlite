@@ -2,8 +2,10 @@ package xlite.xml.element;
 
 import org.dom4j.Element;
 import xlite.coder.XPackage;
+import xlite.xml.BuildContext;
 import xlite.xml.XXmlFactory;
 import xlite.xml.attr.XAttr;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,22 +39,22 @@ public class PackageElement extends AbsElement {
     }
 
     @Override
-    public XPackage build() {
+    public XPackage build(BuildContext context) {
         if (!Objects.isNull(buildPak)) {
             return buildPak;
         }
 
         XPackage parentPak = null;
         if (!Objects.isNull(parent)) {
-            parentPak = parent.build();
+            parentPak = parent.build(context);
         }
-        XAttr nameAttr = attrs.get(XAttr.ATTR_NAME);
+        XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
         buildPak = new XPackage(nameAttr.getValue(), parentPak);
         elements.stream()
                 .filter(ele -> ele instanceof BeanElement)
                 .map(ele -> (BeanElement) ele)
-                .forEach(ele -> buildPak.addClass(ele.build()));
-        children.forEach(pak -> buildPak.addChild(pak.build()));
+                .forEach(ele -> buildPak.addClass(ele.build(context)));
+        children.forEach(pak -> buildPak.addChild(pak.build(context)));
         return buildPak;
     }
 }

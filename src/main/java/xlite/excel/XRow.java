@@ -23,9 +23,16 @@ public class XRow {
     }
 
     public XCell getCell(String title) {
+        return getCell(title, 0);
+    }
+
+    public XCell getCell(String title, int count) {
+        if (count != 0) {
+            title += count;
+        }
         Integer colIndex = sheet.getHeader().getColIndex(title);
         if (Objects.isNull(colIndex)) {
-            throw new NullPointerException(String.format("there is no title %s @ %s", title, sheet));
+            throw new NullPointerException(String.format("there is no column %s @ %s", title, sheet));
         }
         return cells.get(colIndex);
     }

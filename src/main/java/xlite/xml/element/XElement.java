@@ -2,6 +2,7 @@ package xlite.xml.element;
 
 import org.dom4j.Attribute;
 import xlite.coder.XCoder;
+import xlite.xml.BuildContext;
 import xlite.xml.XXmlFactory;
 import xlite.xml.attr.XAttr;
 
@@ -13,5 +14,5 @@ public interface XElement {
 
     XElement parse(XXmlFactory factory);
     XAttr parseAttr(Attribute src, XXmlFactory factory);
-    XCoder build();
+    XCoder build(BuildContext context);
 }

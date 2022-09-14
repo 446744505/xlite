@@ -3,6 +3,7 @@ package xlite.conf;
 import org.dom4j.DocumentException;
 import xlite.coder.XPackage;
 import xlite.gen.XGenerator;
+import xlite.xml.BuildContext;
 import xlite.xml.XParser;
 import xlite.xml.element.PackageElement;
 import xlite.xml.element.XElement;
@@ -19,13 +20,15 @@ public class ConfGenerator {
         generator = new XGenerator(out, language, factory);
     }
 
-    public void gen() {
+    public void gen(boolean isLoadCode) {
         XElement root = parser.parse();
         if (!(root instanceof PackageElement)) {
             throw new RuntimeException("conf xml root must be package");
         }
+        BuildContext context = new BuildContext();
+        context.setConfLoadCode(isLoadCode);
         PackageElement packageElement = (PackageElement) root;
-        XPackage xPackage = packageElement.build();
+        XPackage xPackage = packageElement.build(context);
         generator.gen(xPackage);
     }
 }

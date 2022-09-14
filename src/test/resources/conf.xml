@@ -13,6 +13,7 @@
     </bean>
     <bean name="Material" parent="Item">
         <var name="awards" type="list" value="int" from="拆解物品"/>
+        <var name="properties" type="list" value="Properties"/>
     </bean>
     <enum name="ItemID">
 

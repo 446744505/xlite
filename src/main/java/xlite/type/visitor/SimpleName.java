@@ -4,6 +4,10 @@ import xlite.language.XLanguage;
 import xlite.type.*;
 
 public class SimpleName implements TypeVisitor<String> {
+    public static final SimpleName INSTANCE = new SimpleName();
+
+    private SimpleName() {}
+
     @Override
     public String visit(XLanguage language, XInt t) {
         return language.simpleName(t);

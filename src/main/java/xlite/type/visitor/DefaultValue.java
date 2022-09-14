@@ -4,6 +4,9 @@ import xlite.language.XLanguage;
 import xlite.type.*;
 
 public class DefaultValue implements TypeVisitor<String> {
+    public static final DefaultValue INSTANCE = new DefaultValue();
+
+    private DefaultValue() {}
 
     @Override
     public String visit(XLanguage language, XInt t) {

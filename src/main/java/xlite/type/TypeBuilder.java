@@ -15,10 +15,14 @@ public class TypeBuilder {
     private static final Map<String, XType> defineTypes = new HashMap<>();
     private static final Map<String, List<Consumer<XType>>> waitBuildType = new HashMap<>();
 
+    public static final XInt INT = new XInt();
+    public static final XFloat FLOAT = new XFloat();
+    public static final XString STRING = new XString();
+
     static {
-        baseTypes.put(TYPE_INT, new XInt());
-        baseTypes.put(TYPE_STRING, new XString());
-        baseTypes.put(TYPE_FLOAT, new XFloat());
+        baseTypes.put(TYPE_INT, INT);
+        baseTypes.put(TYPE_STRING, STRING);
+        baseTypes.put(TYPE_FLOAT, FLOAT);
     }
 
     public static XType build(String type, String key, String value, Consumer<XType> cb) {
