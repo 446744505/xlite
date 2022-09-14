@@ -6,7 +6,8 @@ import xlite.type.XType;
 public class XMethod extends XConstructor {
     @Getter private final String name;
     @Getter private XType returned;
-    private boolean isStatic;
+    @Getter private boolean isStatic;
+    @Getter private boolean isOverride;
     private final StringBuilder body = new StringBuilder();
 
     public XMethod(String name, XCoder parent) {
@@ -21,6 +22,11 @@ public class XMethod extends XConstructor {
 
     public XMethod staticed() {
         isStatic = true;
+        return this;
+    }
+
+    public XMethod overrided() {
+        isOverride = true;
         return this;
     }
 

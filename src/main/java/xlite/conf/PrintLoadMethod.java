@@ -48,9 +48,10 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
         }
         body.delete(body.length() - 1, body.length());//去掉最后一个换行
         XMethod loader = new XMethod(methodName, clazz);
-        loader.addParam(new XField(rowName, new XBean(XRow.class), loader))
+        loader.overrided()
+                .addParam(new XField(rowName, new XBean(XRow.class), loader))
                 .addParam(new XField(countName, TypeBuilder.INT, loader))
-                .returned(XVoid.INSTANCE)
+                .returned(TypeBuilder.VOID)
                 .addBody(body.toString());
         clazz.addMethod(loader);
         return loader;

@@ -59,6 +59,10 @@ public class XClass extends XInterface {
         }
     }
 
+    private void addToString(GenContext context) {
+        fields.forEach(f -> context.getLanguage().accept(new AddToString(this, f)));
+    }
+
     public static String getFullName(String name, XLanguage language) {
         return getClass(name).getFullName(language);
     }
@@ -153,7 +157,8 @@ public class XClass extends XInterface {
     protected void printMethod(GenContext context) {
         addGetter(context);
         addSetter(context);
-        methods.forEach(m -> {
+        addToString(context);
+        methods.values().forEach(m -> {
             if (context.getConf().genMethod(this, m, context.getLanguage())) {
                 context.getLanguage().accept(new PrintMethod(m, context));
                 context.println();

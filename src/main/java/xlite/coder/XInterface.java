@@ -2,18 +2,20 @@ package xlite.coder;
 
 import lombok.Getter;
 import xlite.gen.GenContext;
-import xlite.gen.visitor.PrintDefine;
 import xlite.gen.visitor.Import;
+import xlite.gen.visitor.PrintDefine;
 import xlite.language.XLanguage;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class XInterface extends AbsCoder {
     @Getter protected final String name;
     @Getter protected List<XInterface> extendes = new ArrayList<>();
     protected final List<String> imports = new ArrayList<>();
-    protected final List<XMethod> methods = new ArrayList<>();
+    protected final Map<String, XMethod> methods = new LinkedHashMap<>();
 
     public XInterface(String name, XCoder parent) {
         super(parent);
@@ -31,7 +33,7 @@ public class XInterface extends AbsCoder {
     }
 
     public XInterface addMethod(XMethod method) {
-        methods.add(method);
+        methods.put(method.getName(), method);
         return this;
     }
 

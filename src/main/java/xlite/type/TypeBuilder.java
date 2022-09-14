@@ -15,6 +15,7 @@ public class TypeBuilder {
     private static final Map<String, XType> defineTypes = new HashMap<>();
     private static final Map<String, List<Consumer<XType>>> waitBuildType = new HashMap<>();
 
+    public static final XVoid VOID = new XVoid();
     public static final XInt INT = new XInt();
     public static final XFloat FLOAT = new XFloat();
     public static final XString STRING = new XString();
