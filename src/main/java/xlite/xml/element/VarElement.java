@@ -28,8 +28,15 @@ public class VarElement extends AbsElement {
             return buildField;
         }
 
+        BeanElement p = (BeanElement) parent;
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
+        if (Objects.isNull(nameAttr)) {
+            throw new NullPointerException("var must have a name attr at bean " + p.getName());
+        }
         TypeAttr typeAttr = getAttr(XAttr.ATTR_TYPE);
+        if (Objects.isNull(typeAttr)) {
+            throw new NullPointerException("var must have a type attr at bean " + p.getName());
+        }
         SimpleAttr keyAttr = getAttr(XAttr.ATTR_KEY);
         SimpleAttr valueAttr = getAttr(XAttr.ATTR_VALUE);
         buildField = context.getFactory().createField(nameAttr.getValue(), typeAttr.build(keyAttr, valueAttr, t -> buildField.setType(t)), parent.build(context));

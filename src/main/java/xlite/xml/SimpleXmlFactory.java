@@ -6,8 +6,13 @@ import xlite.coder.XClass;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.type.XType;
-import xlite.xml.attr.*;
-import xlite.xml.element.*;
+import xlite.xml.attr.SimpleAttr;
+import xlite.xml.attr.TypeAttr;
+import xlite.xml.attr.XAttr;
+import xlite.xml.element.BeanElement;
+import xlite.xml.element.PackageElement;
+import xlite.xml.element.VarElement;
+import xlite.xml.element.XElement;
 
 public class SimpleXmlFactory implements XXmlFactory {
 
@@ -18,8 +23,6 @@ public class SimpleXmlFactory implements XXmlFactory {
             return new PackageElement(src, parent);
         } else if (XElement.ELEMENT_BEAN.equals(name)) {
             return new BeanElement(src, parent);
-        } else if (XElement.ELEMENT_ENUM.equals(name)) {
-            return new EnumElement(src, parent);
         } else if (XElement.ELEMENT_VAR.equals(name)) {
             return new VarElement(src, parent);
         }

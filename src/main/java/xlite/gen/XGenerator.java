@@ -21,7 +21,6 @@ public class XGenerator {
         outDir.mkdirs();
         Util.cleanDir(outDir);
         GenContext context = new GenContext(outDir, language, conf);
-        code.before(context);
         code.gen(context);
     }
 }

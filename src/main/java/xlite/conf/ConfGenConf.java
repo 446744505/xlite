@@ -22,8 +22,4 @@ public class ConfGenConf implements GenConf {
         return true;
     }
 
-    @Override
-    public boolean checkLoopDepend() {
-        return true;
-    }
 }

@@ -62,14 +62,7 @@ public class XPackage extends AbsCoder implements GenCoder {
         }
     }
 
-    @Override
-    public void before(GenContext context) {
-        if (context.getConf().checkLoopDepend()) {
-            checkLoopDepend();
-        }
-    }
-
-    private void checkLoopDepend() {
+    public void check() {
         List<XClass> allClass = new ArrayList<>();
         getAllClass(allClass);
         allClass.forEach(clazz -> {

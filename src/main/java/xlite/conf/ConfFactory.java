@@ -6,6 +6,7 @@ import xlite.coder.XClass;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.conf.elem.ConfBeanElement;
+import xlite.conf.elem.ConfEnumElement;
 import xlite.conf.elem.ConfVarElement;
 import xlite.gen.GenConf;
 import xlite.gen.SimpleGenFactory;
@@ -14,6 +15,7 @@ import xlite.language.XLanguage;
 import xlite.type.XType;
 import xlite.xml.SimpleXmlFactory;
 import xlite.xml.XXmlFactory;
+import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.XAttr;
 import xlite.xml.element.XElement;
 
@@ -28,12 +30,18 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
             return new ConfBeanElement(src, parent);
         } else if (XElement.ELEMENT_VAR.equals(name)) {
             return new ConfVarElement(src, parent);
+        } else if (XElement.ELEMENT_ENUM.equals(name)) {
+            return new ConfEnumElement(src, parent);
         }
         return xmlFactory.createElement(src, parent);
     }
 
     @Override
     public XAttr createAttr(Attribute src, XElement parent) {
+        String name = src.getName();
+        if (XAttr.ATTR_COMMENT.equals(name)) {
+            return new SimpleAttr(src, parent);
+        }
         return xmlFactory.createAttr(src, parent);
     }
 

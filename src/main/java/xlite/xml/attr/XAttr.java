@@ -11,6 +11,7 @@ public interface XAttr {
     String ATTR_EXCEL = "excel";
     String ATTR_COLFROM = "from";
     String ATTR_ENDPOINT = "to";
+    String ATTR_COMMENT = "comment";
 
     String getName();
     String getValue();

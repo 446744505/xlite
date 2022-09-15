@@ -3,7 +3,6 @@ package xlite.conf.elem;
 import org.dom4j.Element;
 import xlite.coder.XClass;
 import xlite.conf.ConfClass;
-import xlite.conf.PrintLoadMethod;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.XAttr;
@@ -33,12 +32,5 @@ public class ConfBeanElement extends BeanElement {
             confClass.setFromExcel(excelAttr.getValue());
         }
         return confClass;
-    }
-
-    @Override
-    public void afterBuild(XmlContext context) {
-        if (context.isConfLoadCode()) {
-            new PrintLoadMethod(buildClass, null).make();
-        }
     }
 }

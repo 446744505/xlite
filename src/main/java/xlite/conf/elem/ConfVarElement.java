@@ -24,7 +24,8 @@ public class ConfVarElement extends VarElement {
                 XAttr.ATTR_KEY.equals(name) ||
                 XAttr.ATTR_VALUE.equals(name) ||
                 XAttr.ATTR_COLFROM.equals(name) ||
-                XAttr.ATTR_ENDPOINT.equals(name);
+                XAttr.ATTR_ENDPOINT.equals(name) ||
+                XAttr.ATTR_COMMENT.equals(name);
     }
 
     @Override

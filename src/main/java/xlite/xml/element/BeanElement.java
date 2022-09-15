@@ -29,6 +29,9 @@ public class BeanElement extends AbsElement {
         }
 
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
+        if (Objects.isNull(nameAttr)) {
+            throw new NullPointerException("bean must have a name attr");
+        }
         XAttr parentAttr = getAttr(XAttr.ATTR_PARENT);
         buildClass = context.getFactory().createClass(nameAttr.getValue(), parent.build(context));
         buildClass.setComment(getComment());
@@ -41,11 +44,11 @@ public class BeanElement extends AbsElement {
                 .map(ele -> (VarElement) ele)
                 .forEach(ele -> buildClass.addField(ele.build(context)));
         TypeBuilder.registerBean(new XBean(buildClass.getName()));
-        afterBuild(context);
         return buildClass;
     }
 
-    protected void afterBuild(XmlContext context) {
-
+    public String getName() {
+        XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
+        return nameAttr.getValue();
     }
 }

@@ -47,13 +47,23 @@ public class ConfGenerator {
         context.setEndPoint(endPoint);
         PackageElement packageElement = (PackageElement) root;
         XPackage xPackage = packageElement.build(context);
+        xPackage.check();
         if (isLoadCode) {
-            genInit(xPackage);
+            addLoadMethod(xPackage);
+            addInitClass(xPackage);
         }
         generator.gen(xPackage);
     }
 
-    private void genInit(XPackage root) {
+    private void addLoadMethod(XPackage root) {
+        List<XClass> allClass = new ArrayList<>();
+        root.getAllClass(allClass);
+        allClass.stream()
+                .map(c -> (ConfClass)c)
+                .forEach(c -> new PrintLoadMethod(c, null).make());
+    }
+
+    private void addInitClass(XPackage root) {
         Writer body = new Writer();
         body.println( "Map<String, XExcel> excels = new XReader(excelDir, new ConfExcelHook()).read();");
         List<XClass> allClass = new ArrayList<>();
