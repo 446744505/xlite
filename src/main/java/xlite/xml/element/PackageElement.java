@@ -2,8 +2,7 @@ package xlite.xml.element;
 
 import org.dom4j.Element;
 import xlite.coder.XPackage;
-import xlite.xml.BuildContext;
-import xlite.xml.XXmlFactory;
+import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
 import java.util.ArrayList;
@@ -21,8 +20,8 @@ public class PackageElement extends AbsElement {
     }
 
     @Override
-    public XElement parse(XXmlFactory factory) {
-        super.parse(factory);
+    public XElement parse(XElement preEle, XmlContext context) {
+        super.parse(preEle, context);
         elements.stream()
                 .filter(ele -> ele instanceof PackageElement)
                 .map(ele -> (PackageElement) ele)
@@ -39,7 +38,7 @@ public class PackageElement extends AbsElement {
     }
 
     @Override
-    public XPackage build(BuildContext context) {
+    public XPackage build(XmlContext context) {
         if (!Objects.isNull(buildPak)) {
             return buildPak;
         }

@@ -4,7 +4,7 @@ import org.dom4j.Element;
 import xlite.coder.XClass;
 import xlite.type.TypeBuilder;
 import xlite.type.XBean;
-import xlite.xml.BuildContext;
+import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
 import java.util.Objects;
@@ -23,7 +23,7 @@ public class BeanElement extends AbsElement {
     }
 
     @Override
-    public XClass build(BuildContext context) {
+    public XClass build(XmlContext context) {
         if (!Objects.isNull(buildClass)) {
             return buildClass;
         }
@@ -31,6 +31,7 @@ public class BeanElement extends AbsElement {
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
         XAttr parentAttr = getAttr(XAttr.ATTR_PARENT);
         buildClass = new XClass(nameAttr.getValue(), parent.build(context));
+        buildClass.setComment(getComment());
         if (!Objects.isNull(parentAttr)) {
             String parentName = parentAttr.getValue();
             buildClass.addExtend(XClass.getClass(parentName, parent -> buildClass.addExtend(parent)));
@@ -44,7 +45,7 @@ public class BeanElement extends AbsElement {
         return buildClass;
     }
 
-    protected void afterBuild(BuildContext context) {
+    protected void afterBuild(XmlContext context) {
 
     }
 }

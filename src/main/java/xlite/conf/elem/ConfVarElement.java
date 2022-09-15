@@ -3,7 +3,7 @@ package xlite.conf.elem;
 import org.dom4j.Element;
 import xlite.coder.XField;
 import xlite.conf.ConfField;
-import xlite.xml.BuildContext;
+import xlite.xml.XmlContext;
 import xlite.xml.attr.ColFromAttr;
 import xlite.xml.attr.XAttr;
 import xlite.xml.element.VarElement;
@@ -26,9 +26,11 @@ public class ConfVarElement extends VarElement {
     }
 
     @Override
-    public XField build(BuildContext context) {
+    public XField build(XmlContext context) {
         XField field = super.build(context);
+        ConfField confField = (ConfField) field;
         ColFromAttr colFrom = getAttr(XAttr.ATTR_COLFROM);
-        return new ConfField(field, Objects.isNull(colFrom) ? "" : colFrom.getValue());
+        confField.setFromCol(Objects.isNull(colFrom) ? "" : colFrom.getValue());
+        return confField;
     }
 }

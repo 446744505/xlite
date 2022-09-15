@@ -1,6 +1,7 @@
 package xlite.coder;
 
 import lombok.Getter;
+import lombok.Setter;
 import xlite.gen.GenConf;
 import xlite.gen.GenContext;
 import xlite.gen.visitor.*;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class XClass extends XInterface {
+    @Getter @Setter private String comment;
     @Getter private final List<XField> fields = new ArrayList<>();
     @Getter private final List<XInterface> interfaces = new ArrayList<>();
 

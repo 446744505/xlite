@@ -2,7 +2,7 @@ package xlite.conf.elem;
 
 import org.dom4j.Element;
 import xlite.conf.PrintLoadMethod;
-import xlite.xml.BuildContext;
+import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 import xlite.xml.element.BeanElement;
 import xlite.xml.element.XElement;
@@ -19,7 +19,7 @@ public class ConfBeanElement extends BeanElement {
     }
 
     @Override
-    public void afterBuild(BuildContext context) {
+    public void afterBuild(XmlContext context) {
         if (context.isConfLoadCode()) {
             new PrintLoadMethod(buildClass, null).make();
         }

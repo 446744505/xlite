@@ -7,6 +7,7 @@ import xlite.language.Java;
 import xlite.language.XLanguage;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PrintDefine implements LanguageVisitor<String> {
     private final XInterface iface;
@@ -26,6 +27,12 @@ public class PrintDefine implements LanguageVisitor<String> {
     private String jdefineClass(XLanguage language) {
         XClass clazz = (XClass) iface;
         Writer writer = new Writer();
+        String comment = clazz.getComment();
+        if (!Objects.isNull(comment) && !comment.isEmpty()) {
+            writer.println("/**");
+            writer.println(comment);
+            writer.println("*/");
+        }
         writer.print("public class ", clazz.getName());
         if (!clazz.getExtendes().isEmpty()) {
             XInterface parent = clazz.getExtendes().get(0);

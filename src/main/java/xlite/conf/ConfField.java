@@ -1,15 +1,15 @@
 package xlite.conf;
 
 import lombok.Getter;
+import lombok.Setter;
+import xlite.coder.XCoder;
 import xlite.coder.XField;
+import xlite.type.XType;
 
 public class ConfField extends XField {
-    private final XField field;
-    @Getter private final String fromCol;
+    @Getter @Setter private String fromCol;
 
-    public ConfField(XField field, String fromCol) {
-        super(field.getName(), field.getType(), field.getParent());
-        this.field = field;
-        this.fromCol = fromCol;
+    public ConfField(String name, XType type, XCoder parent) {
+        super(name, type, parent);
     }
 }

@@ -12,42 +12,42 @@ import java.io.Reader;
 import java.net.URL;
 
 public class XParser {
-    private final XXmlFactory factory;
+    private final XmlContext context;
     private final Document document;
 
-    public XParser(URL url, XXmlFactory factory) throws DocumentException {
+    public XParser(URL url, XmlContext context) throws DocumentException {
         SAXReader reader = new SAXReader();
         document = reader.read(url);
-        this.factory = factory;
+        this.context = context;
     }
 
-    public XParser(File file, XXmlFactory factory) throws DocumentException {
+    public XParser(File file, XmlContext context) throws DocumentException {
         SAXReader reader = new SAXReader();
         document = reader.read(file);
-        this.factory = factory;
+        this.context = context;
     }
 
-    public XParser(InputStream input, XXmlFactory factory) throws DocumentException {
+    public XParser(InputStream input, XmlContext context) throws DocumentException {
         SAXReader reader = new SAXReader();
         document = reader.read(input);
-        this.factory = factory;
+        this.context = context;
     }
 
-    public XParser(String systemId, XXmlFactory factory) throws DocumentException {
+    public XParser(String systemId, XmlContext context) throws DocumentException {
         SAXReader reader = new SAXReader();
         document = reader.read(systemId);
-        this.factory = factory;
+        this.context = context;
     }
 
-    public XParser(Reader r, XXmlFactory factory) throws DocumentException {
+    public XParser(Reader r, XmlContext context) throws DocumentException {
         SAXReader reader = new SAXReader();
         document = reader.read(r);
-        this.factory = factory;
+        this.context = context;
     }
 
     public XElement parse() {
         Element root = document.getRootElement();
-        XElement xroot = factory.createElement(root, null);
-        return xroot.parse(factory);
+        XElement xroot = context.getFactory().createElement(root, null);
+        return xroot.parse(xroot, context);
     }
 }

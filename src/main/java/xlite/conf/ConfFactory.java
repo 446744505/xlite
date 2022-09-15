@@ -2,12 +2,15 @@ package xlite.conf;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import xlite.coder.XCoder;
+import xlite.coder.XField;
 import xlite.conf.elem.ConfBeanElement;
 import xlite.conf.elem.ConfVarElement;
 import xlite.gen.GenConf;
 import xlite.gen.SimpleGenFactory;
 import xlite.gen.XGenFactory;
 import xlite.language.XLanguage;
+import xlite.type.XType;
 import xlite.xml.SimpleXmlFactory;
 import xlite.xml.XXmlFactory;
 import xlite.xml.attr.XAttr;
@@ -31,6 +34,11 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
     @Override
     public XAttr createAttr(Attribute src, XElement parent) {
         return xmlFactory.createAttr(src, parent);
+    }
+
+    @Override
+    public XField createField(String name, XType type, XCoder parent) {
+        return new ConfField(name, type, parent);
     }
 
     @Override

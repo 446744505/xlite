@@ -2,8 +2,7 @@ package xlite.xml.element;
 
 import org.dom4j.Attribute;
 import xlite.coder.XCoder;
-import xlite.xml.BuildContext;
-import xlite.xml.XXmlFactory;
+import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
 public interface XElement {
@@ -12,7 +11,9 @@ public interface XElement {
     String ELEMENT_ENUM = "enum";
     String ELEMENT_VAR = "var";
 
-    XElement parse(XXmlFactory factory);
-    XAttr parseAttr(Attribute src, XXmlFactory factory);
-    XCoder build(BuildContext context);
+    XElement parse(XElement preEle, XmlContext context);
+    XAttr parseAttr(Attribute src, XmlContext context);
+    XCoder build(XmlContext context);
+    String getComment();
+    void setComment(String comment);
 }

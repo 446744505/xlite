@@ -2,6 +2,9 @@ package xlite.xml;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import xlite.coder.XCoder;
+import xlite.coder.XField;
+import xlite.type.XType;
 import xlite.xml.attr.*;
 import xlite.xml.element.*;
 
@@ -39,5 +42,10 @@ public class SimpleXmlFactory implements XXmlFactory {
             return new ParentAttr(src, parent);
         }
         throw new UnsupportedOperationException(String.format("unsupported attribute %s", name));
+    }
+
+    @Override
+    public XField createField(String name, XType type, XCoder parent) {
+        return new XField(name, type, parent);
     }
 }

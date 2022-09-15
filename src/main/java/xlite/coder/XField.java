@@ -7,6 +7,7 @@ import xlite.type.XType;
 public class XField extends AbsCoder {
     @Getter private final String name;
     @Getter @Setter private XType type;
+    @Getter @Setter private String comment;
 
     public XField(String name, XType type, XCoder parent) {
         super(parent);
