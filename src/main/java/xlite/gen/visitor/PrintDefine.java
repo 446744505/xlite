@@ -42,10 +42,8 @@ public class PrintDefine implements LanguageVisitor<String> {
         List<XInterface> interfaces = clazz.getInterfaces();
         if (!interfaces.isEmpty()) {
             writer.print(" implements");
-            StringBuilder sb = new StringBuilder();
-            interfaces.forEach(iface -> sb.append(" ").append(iface.getFullName(language)).append(","));
-            sb.delete(sb.length() - 1, sb.length());
-            writer.print(sb.toString());
+            interfaces.forEach(iface -> writer.print(" ", iface.getFullName(language), ","));
+            writer.deleteEnd(1);
         }
         writer.print(" {");
         return writer.getString();
@@ -57,10 +55,8 @@ public class PrintDefine implements LanguageVisitor<String> {
         List<XInterface> extendes = iface.getExtendes();
         if (!extendes.isEmpty()) {
             writer.print(" extends");
-            StringBuilder sb = new StringBuilder();
-            extendes.forEach(iface -> sb.append(" ").append(iface.getFullName(language)).append(","));
-            sb.delete(sb.length() - 1, sb.length());
-            writer.print(sb.toString());
+            extendes.forEach(iface -> writer.print(" ", iface.getFullName(language), ","));
+            writer.deleteEnd(1);
         }
         writer.print(" {");
         return writer.getString();

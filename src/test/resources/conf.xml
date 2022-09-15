@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package name="conf">
-    <bean name="Item"> 道具
+    <bean name="Item" excel="道具.xlsx"> 道具
         <var name="id" type="int" from="ID"/> ID
         <var name="name" type="string" from="道具名称"/> 道具名称
     </bean>
@@ -8,10 +8,10 @@
         <var name="atk" type="float" from="攻击"/> 攻击
         <var name="def" type="float" from="防御"/> 防御
     </bean>
-    <bean name="Equip" parent="Item"> 装备
+    <bean name="Equip" parent="Item" excel="装备.xlsx"> 装备
         <var name="properties" type="Properties"/> 属性
     </bean>
-    <bean name="Material" parent="Item"> 材料
+    <bean name="Material" parent="Item" excel="材料.xlsx"> 材料
         <var name="awards" type="list" value="int" from="拆解物品"/> 拆解物品
         <var name="properties" type="list" value="Properties"/> 属性
     </bean>

@@ -2,6 +2,7 @@ package xlite.conf;
 
 import xlite.coder.*;
 import xlite.excel.XRow;
+import xlite.gen.Writer;
 import xlite.gen.visitor.LanguageVisitor;
 import xlite.language.Java;
 import xlite.language.XLanguage;
@@ -31,28 +32,28 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     public XMethod visit(Java java) {
         clazz.addImport("xlite.excel.XRow")
                 .implement(new XInterface("Loader", XPackage.wrap("xlite.excel")));
-        StringBuilder body = new StringBuilder(50);
+        Writer body = new Writer();
         boolean isFirstLine = true;
         if (clazz.hasExtend()) {
             isFirstLine = false;
-            body.append("super.").append(methodName).append("(").append(rowName).append(", ").append(countName).append(");\n");
+            body.println("super.", methodName, "(", rowName, ", ", countName, ");");
         }
         for (XField field : clazz.getFields()) {
             ConfField confField = (ConfField) field;
-            body.append(isFirstLine ? "" : "        ");
+            body.print(isFirstLine ? 0 : 2, "");
             if (isFirstLine) {
                 isFirstLine = false;
             }
             String line = confField.getType().accept(new PrintLoadMethod(clazz, confField), java);
-            body.append(line).append("\n");
+            body.println(line);
         }
-        body.delete(body.length() - 1, body.length());//去掉最后一个换行
+        body.deleteEnd(1);//去掉最后一个换行
         XMethod loader = new XMethod(methodName, clazz);
         loader.overrided()
                 .addParam(new XField(rowName, new XBean(XRow.class), loader))
                 .addParam(new XField(countName, TypeBuilder.INT, loader))
                 .returned(TypeBuilder.VOID)
-                .addBody(body.toString());
+                .addBody(body.getString());
         clazz.addMethod(loader);
         return loader;
     }

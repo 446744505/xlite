@@ -96,10 +96,17 @@ public class Writer implements Closeable, Printer {
         }
     }
 
+    public void deleteEnd(int num) {
+        if (!Objects.isNull(sb) && sb.length() >= num) {
+            sb.delete(sb.length() - num, sb.length());
+        }
+    }
+
     public String getString() {
         if (Objects.isNull(sb)) {
             throw new UnsupportedOperationException();
         }
         return sb.toString();
     }
+
 }

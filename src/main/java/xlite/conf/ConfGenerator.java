@@ -1,14 +1,26 @@
 package xlite.conf;
 
 import org.dom4j.DocumentException;
+import xlite.coder.XClass;
+import xlite.coder.XField;
+import xlite.coder.XMethod;
 import xlite.coder.XPackage;
+import xlite.gen.Writer;
 import xlite.gen.XGenerator;
-import xlite.xml.XmlContext;
+import xlite.language.Java;
+import xlite.type.TypeBuilder;
+import xlite.type.XBean;
+import xlite.type.visitor.BoxName;
 import xlite.xml.XParser;
+import xlite.xml.XmlContext;
 import xlite.xml.element.PackageElement;
 import xlite.xml.element.XElement;
 
+import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ConfGenerator {
     private final XParser parser;
@@ -30,6 +42,52 @@ public class ConfGenerator {
         context.setConfLoadCode(isLoadCode);
         PackageElement packageElement = (PackageElement) root;
         XPackage xPackage = packageElement.build(context);
+        if (isLoadCode) {
+            genInit(xPackage);
+        }
         generator.gen(xPackage);
+    }
+
+    private void genInit(XPackage root) {
+        Writer body = new Writer();
+        body.println( "Map<String, XExcel> excels = new XReader(excelDir, new ConfExcelHook()).read();");
+        List<XClass> allClass = new ArrayList<>();
+        root.getAllClass(allClass);
+        allClass.stream()
+            .map(c -> (ConfClass)c)
+            .forEach(c -> {
+                String fromExcel = c.getFromExcel();
+                if (!Objects.isNull(fromExcel) && !fromExcel.isEmpty()) {
+                    for (String excel : fromExcel.split(",")) {
+                        String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, Java.INSTANCE);
+                        int tab = 2;
+                        body.println(tab, "{");
+                        body.println(tab + 1, String.format("XExcel excel = excels.get(\"%s\");", excel));
+                        body.println(tab + 1, "excel.iterator().forEachRemaining(sheet -> sheet.rows().forEach(row -> {");
+                        body.println(tab + 2, String.format("%s obj = new %s();", boxName, boxName));
+                        body.println(tab + 2, "obj.load(row, 0);");
+                        body.println(tab + 2, "System.out.println(obj);");
+                        body.println(tab + 1, "}));");
+                        body.println(tab, "}");
+                    }
+                }
+            });
+
+        XClass clazz = new XClass("Init", root);
+        clazz.addImport("java.io.File");
+        clazz.addImport("java.util.Map");
+        clazz.addImport("xlite.conf.ConfExcelHook");
+        clazz.addImport("xlite.excel.XExcel");
+        clazz.addImport("xlite.conf.ConfGenerator");
+        clazz.addImport("xlite.excel.XReader");
+        XMethod load = new XMethod("loadAll", clazz);
+        XField file = new XField("excelDir", new XBean(File.class), load);
+        load.staticed()
+                .returned(TypeBuilder.VOID)
+                .addParam(file)
+                .throwed("Exception")
+                .addBody(body.getString());
+        clazz.addMethod(load);
+        root.addClass(clazz);
     }
 }

@@ -14,7 +14,7 @@ public class TypeAttr extends AbsAttr {
         super(src, parent);
     }
 
-    public XType build(KeyAttr keyAttr, ValueAttr valueAttr, Consumer<XType> cb) {
+    public XType build(SimpleAttr keyAttr, SimpleAttr valueAttr, Consumer<XType> cb) {
         String key = "", value = "";
         if (!Objects.isNull(keyAttr)) {
             key = keyAttr.getValue();

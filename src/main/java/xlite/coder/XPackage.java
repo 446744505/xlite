@@ -78,7 +78,7 @@ public class XPackage extends AbsCoder implements GenCoder {
         });
     }
 
-    private void getAllClass(List<XClass> allClass) {
+    public void getAllClass(List<XClass> allClass) {
         allClass.addAll(classes);
         children.forEach(pak -> pak.getAllClass(allClass));
     }

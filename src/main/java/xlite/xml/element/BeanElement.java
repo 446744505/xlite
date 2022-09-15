@@ -30,7 +30,7 @@ public class BeanElement extends AbsElement {
 
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
         XAttr parentAttr = getAttr(XAttr.ATTR_PARENT);
-        buildClass = new XClass(nameAttr.getValue(), parent.build(context));
+        buildClass = context.getFactory().createClass(nameAttr.getValue(), parent.build(context));
         buildClass.setComment(getComment());
         if (!Objects.isNull(parentAttr)) {
             String parentName = parentAttr.getValue();

@@ -2,6 +2,7 @@ package xlite.xml;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import xlite.coder.XClass;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.type.XType;
@@ -29,17 +30,19 @@ public class SimpleXmlFactory implements XXmlFactory {
     public XAttr createAttr(Attribute src, XElement parent) {
         String name = src.getName();
         if (XAttr.ATTR_NAME.equals(name)) {
-            return new NameAttr(src, parent);
+            return new SimpleAttr(src, parent);
         } else if (XAttr.ATTR_TYPE.equals(name)) {
             return new TypeAttr(src, parent);
         } else if (XAttr.ATTR_KEY.equals(name)) {
-            return new KeyAttr(src, parent);
+            return new SimpleAttr(src, parent);
         } else if (XAttr.ATTR_VALUE.equals(name)) {
-            return new ValueAttr(src, parent);
+            return new SimpleAttr(src, parent);
         } else if (XAttr.ATTR_COLFROM.equals(name)) {
-            return new ColFromAttr(src, parent);
+            return new SimpleAttr(src, parent);
         } else if (XAttr.ATTR_PARENT.equals(name)) {
-            return new ParentAttr(src, parent);
+            return new SimpleAttr(src, parent);
+        } else if (XAttr.ATTR_EXCEL.equals(name)) {
+            return new SimpleAttr(src, parent);
         }
         throw new UnsupportedOperationException(String.format("unsupported attribute %s", name));
     }
@@ -47,5 +50,10 @@ public class SimpleXmlFactory implements XXmlFactory {
     @Override
     public XField createField(String name, XType type, XCoder parent) {
         return new XField(name, type, parent);
+    }
+
+    @Override
+    public XClass createClass(String name, XCoder parent) {
+        return new XClass(name, parent);
     }
 }

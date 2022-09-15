@@ -2,6 +2,7 @@ package xlite.conf;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import xlite.coder.XClass;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.conf.elem.ConfBeanElement;
@@ -39,6 +40,11 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
     @Override
     public XField createField(String name, XType type, XCoder parent) {
         return new ConfField(name, type, parent);
+    }
+
+    @Override
+    public XClass createClass(String name, XCoder parent) {
+        return new ConfClass(name, parent);
     }
 
     @Override

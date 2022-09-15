@@ -2,6 +2,7 @@ package xlite.gen.visitor;
 
 import xlite.coder.XMethod;
 import xlite.gen.GenContext;
+import xlite.gen.Writer;
 import xlite.language.Java;
 import xlite.type.visitor.SimpleName;
 
@@ -29,10 +30,18 @@ public class PrintMethod implements LanguageVisitor<Void> {
         if (method.isOverride()) {
             context.println(tab, "@Override");
         }
+        Writer exWriter = new Writer();
+        if (!method.getExceptions().isEmpty()) {
+            exWriter.print(" throws ");
+            method.getExceptions().forEach(ex -> {
+                exWriter.print(ex, ",");
+            });
+            exWriter.deleteEnd(1);
+        }
         if (method.isStatic()) {
-            context.println(tab, String.format("public static %s %s(%s) {", returned, method.getName(), param.toString()));
+            context.println(tab, String.format("public static %s %s(%s)%s {", returned, method.getName(), param.toString(), exWriter.getString()));
         } else {
-            context.println(tab, String.format("public %s %s(%s) {", returned, method.getName(), param.toString()));
+            context.println(tab, String.format("public %s %s(%s)%s {", returned, method.getName(), param.toString(), exWriter.getString()));
         }
         context.println(tab + 1, method.getBody());
         context.println(tab, "}");
