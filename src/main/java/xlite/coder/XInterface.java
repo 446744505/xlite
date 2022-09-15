@@ -58,15 +58,15 @@ public class XInterface extends AbsCoder {
 
     protected void printPackage(GenContext context) {
         XPackage pak = (XPackage) parent;
-        context.vprintln(new xlite.gen.visitor.Package(pak));
+        context.println(new xlite.gen.visitor.Package(pak));
     }
 
     protected void printImport(GenContext context) {
-        imports.forEach(imp -> context.vprintln(new Import(imp)));
+        imports.forEach(imp -> context.println(new Import(imp)));
     }
 
     protected void printDefine(GenContext context) {
-        context.vprintln(new PrintDefine(this));
+        context.println(new PrintDefine(this));
     }
 
     protected void printMethod(GenContext context) {

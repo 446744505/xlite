@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class ConfGenerator {
+    public static final String ENDPOINT_ALL = "a";
+    public static final String ENDPOINT_SERVER = "s";
+    public static final String ENDPOINT_CLIENT = "c";
+
     private final XParser parser;
     private final XGenerator generator;
     private final XmlContext context;
@@ -34,12 +38,13 @@ public class ConfGenerator {
         generator = new XGenerator(out, language, factory);
     }
 
-    public void gen(boolean isLoadCode) {
+    public void gen(boolean isLoadCode, String endPoint) {
         XElement root = parser.parse();
         if (!(root instanceof PackageElement)) {
             throw new RuntimeException("conf xml root must be package");
         }
         context.setConfLoadCode(isLoadCode);
+        context.setEndPoint(endPoint);
         PackageElement packageElement = (PackageElement) root;
         XPackage xPackage = packageElement.build(context);
         if (isLoadCode) {
@@ -59,6 +64,9 @@ public class ConfGenerator {
                 String fromExcel = c.getFromExcel();
                 if (!Objects.isNull(fromExcel) && !fromExcel.isEmpty()) {
                     for (String excel : fromExcel.split(",")) {
+                        if (Objects.isNull(excel) || excel.trim().isEmpty()) {
+                            continue;
+                        }
                         String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, Java.INSTANCE);
                         int tab = 2;
                         body.println(tab, "{");
@@ -72,7 +80,7 @@ public class ConfGenerator {
                     }
                 }
             });
-
+        body.deleteEnd(1);//去掉最后一个换行
         XClass clazz = new XClass("Init", root);
         clazz.addImport("java.io.File");
         clazz.addImport("java.util.Map");
@@ -83,10 +91,10 @@ public class ConfGenerator {
         XMethod load = new XMethod("loadAll", clazz);
         XField file = new XField("excelDir", new XBean(File.class), load);
         load.staticed()
-                .returned(TypeBuilder.VOID)
-                .addParam(file)
-                .throwed("Exception")
-                .addBody(body.getString());
+            .returned(TypeBuilder.VOID)
+            .addParam(file)
+            .throwed("Exception")
+            .addBody(body.getString());
         clazz.addMethod(load);
         root.addClass(clazz);
     }

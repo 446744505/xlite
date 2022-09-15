@@ -10,6 +10,7 @@ public interface XAttr {
     //conf
     String ATTR_EXCEL = "excel";
     String ATTR_COLFROM = "from";
+    String ATTR_ENDPOINT = "to";
 
     String getName();
     String getValue();

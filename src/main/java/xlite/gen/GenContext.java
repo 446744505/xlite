@@ -19,15 +19,15 @@ public class GenContext implements Printer {
         this.conf = conf;
     }
 
-    public void vprintln(LanguageVisitor<String> visitor) {
+    public void println(LanguageVisitor<String> visitor) {
         println(language.accept(visitor));
     }
 
-    public void vprintln(int tab, LanguageVisitor<String> visitor) {
+    public void println(int tab, LanguageVisitor<String> visitor) {
         println(tab, language.accept(visitor));
     }
 
-    public void vprint(LanguageVisitor<String> visitor) {
+    public void print(LanguageVisitor<String> visitor) {
         print(language.accept(visitor));
     }
 

@@ -88,17 +88,23 @@ public class XClass extends XInterface {
 
     @Override
     public XClass addImport(String importt) {
-        super.addImport(importt);
+        if (!Objects.isNull(importt)) {
+            super.addImport(importt);
+        }
         return this;
     }
 
     public XClass implement(XInterface iface) {
-        interfaces.add(iface);
+        if (!Objects.isNull(iface)) {
+            interfaces.add(iface);
+        }
         return this;
     }
 
     public XClass addField(XField field) {
-        fields.add(field);
+        if (!Objects.isNull(field)) {
+            fields.add(field);
+        }
         return this;
     }
 
@@ -152,7 +158,7 @@ public class XClass extends XInterface {
     }
 
     protected void printField(GenContext context) {
-        fields.forEach(f -> context.vprintln(1, new Field(f)));
+        fields.forEach(f -> context.println(1, new Field(f)));
     }
 
     @Override

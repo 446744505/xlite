@@ -43,6 +43,8 @@ public class SimpleXmlFactory implements XXmlFactory {
             return new SimpleAttr(src, parent);
         } else if (XAttr.ATTR_EXCEL.equals(name)) {
             return new SimpleAttr(src, parent);
+        } else if (XAttr.ATTR_ENDPOINT.equals(name)) {
+            return new SimpleAttr(src, parent);
         }
         throw new UnsupportedOperationException(String.format("unsupported attribute %s", name));
     }
