@@ -28,11 +28,7 @@ public class ConfBeanVarElement extends BeanVarElement {
     }
 
     @Override
-    public ConfBeanField build(XmlContext context) {
-        if (!Objects.isNull(buildField)) {
-            return (ConfBeanField) buildField;
-        }
-
+    public ConfBeanField build0(XmlContext context) {
         SimpleAttr endPointAttr = getAttr(XAttr.ATTR_ENDPOINT);
         String endPoint = Objects.isNull(endPointAttr) ? ConfGenerator.ENDPOINT_ALL : endPointAttr.getValue();
         if (!ConfGenerator.ENDPOINT_ALL.equals(endPoint) &&
@@ -41,7 +37,7 @@ public class ConfBeanVarElement extends BeanVarElement {
             return null;
         }
 
-        XField field = super.build(context);
+        XField field = super.build0(context);
         ConfBeanField confField = (ConfBeanField) field;
         SimpleAttr colFrom = getAttr(XAttr.ATTR_COLFROM);
         confField.setFromCol(Objects.isNull(colFrom) ? "" : colFrom.getValue());

@@ -10,8 +10,6 @@ import xlite.xml.attr.XAttr;
 import java.util.Objects;
 
 public class BeanElement extends AbsElement {
-    protected XClass buildClass;
-
     public BeanElement(Element element, XElement parent) {
         super(element, parent);
     }
@@ -23,28 +21,24 @@ public class BeanElement extends AbsElement {
     }
 
     @Override
-    public XClass build(XmlContext context) {
-        if (!Objects.isNull(buildClass)) {
-            return buildClass;
-        }
-
+    public XClass build0(XmlContext context) {
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
         if (Objects.isNull(nameAttr)) {
             throw new NullPointerException("bean must have a name attr");
         }
         XAttr parentAttr = getAttr(XAttr.ATTR_PARENT);
-        buildClass = context.getFactory().createClass(nameAttr.getValue(), parent.build(context));
-        buildClass.setComment(getComment());
+        XClass clazz = setCache(context.getFactory().createClass(nameAttr.getValue(), parent.build(context)));
+        clazz.setComment(getComment());
         if (!Objects.isNull(parentAttr)) {
             String parentName = parentAttr.getValue();
-            buildClass.addExtend(XClass.getClass(parentName, parent -> buildClass.addExtend(parent)));
+            clazz.addExtend(XClass.getClass(parentName, parent -> clazz.addExtend(parent)));
         }
         elements.stream()
                 .filter(ele -> ele instanceof VarElement)
                 .map(ele -> (VarElement) ele)
-                .forEach(ele -> buildClass.addField(ele.build(context)));
-        TypeBuilder.registerBean(new XBean(buildClass.getName()));
-        return buildClass;
+                .forEach(ele -> clazz.addField(ele.build(context)));
+        TypeBuilder.registerBean(new XBean(clazz.getName()));
+        return clazz;
     }
 
     public String getName() {

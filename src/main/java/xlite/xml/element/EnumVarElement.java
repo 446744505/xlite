@@ -29,6 +29,4 @@ public class EnumVarElement extends VarElement {
                 XAttr.ATTR_TYPE.equals(name) ||
                 XAttr.ATTR_VALUE.equals(name);
     }
-
-
 }

@@ -24,11 +24,8 @@ public class ConfEnumElement extends EnumElement {
     }
 
     @Override
-    public ConfEnum build(XmlContext context) {
-        if (!Objects.isNull(buildEnum)) {
-            return (ConfEnum) buildEnum;
-        }
-        XEnum e = super.build(context);
+    public ConfEnum build0(XmlContext context) {
+        XEnum e = super.build0(context);
         ConfEnum confEnum = (ConfEnum) e;
         XAttr fromAttr = getAttr(XAttr.ATTR_EXCEL);
         if (Objects.isNull(fromAttr)) {

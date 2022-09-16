@@ -5,10 +5,6 @@
         <var name="id" type="int" from="ID"/> ID
         <var name="name" type="string" from="道具名称"/> 道具名称
     </bean>
-    <bean name="Properties"> 属性
-        <var name="atk" type="float" from="攻击"/> 攻击
-        <var name="def" type="float" from="防御"/> 防御
-    </bean>
     <bean name="Equip" parent="Item" excel="装备.xlsx"> 装备
         <var name="properties" type="Properties"/> 属性
     </bean>
@@ -16,12 +12,16 @@
         <var name="awards" type="list" value="int" from="拆解物品"/> 拆解物品
         <var name="properties" type="list" value="Properties"/> 属性
     </bean>
+    <bean name="Properties"> 属性
+        <var name="atk" type="float" from="攻击"/> 攻击
+        <var name="def" type="float" from="防御"/> 防御
+    </bean>
     -->
-    <enum name="ItemID" excel="道具ID.xlsx,装备ID.xlsx">
-        <var name="name" type="int" from="value" comment="备注"/>
-    </enum>
     <enum name="Const" excel="常量表.xlsx">
         <var name="Const_1" type="int" value="10011"/> xml常量
         <var name="name" type="only" from="value" comment="备注"/>
+    </enum>
+    <enum name="ItemID" excel="道具ID.xlsx,装备ID.xlsx">
+        <var name="name" type="int" from="value" comment="备注"/>
     </enum>
 </package>

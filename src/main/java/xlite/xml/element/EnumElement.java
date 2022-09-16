@@ -8,8 +8,6 @@ import xlite.xml.attr.XAttr;
 import java.util.Objects;
 
 public class EnumElement extends AbsElement {
-    protected XEnum buildEnum;
-
     public EnumElement(Element src, XElement parent) {
         super(src, parent);
     }
@@ -20,21 +18,18 @@ public class EnumElement extends AbsElement {
     }
 
     @Override
-    public XEnum build(XmlContext context) {
-        if (!Objects.isNull(buildEnum)) {
-            return buildEnum;
-        }
+    public XEnum build0(XmlContext context) {
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
         if (Objects.isNull(nameAttr)) {
             throw new NullPointerException("enum must have a name attr");
         }
         String name = nameAttr.getValue();
-        buildEnum = context.getFactory().createEnum(name, parent.build(context));
+        XEnum e = setCache(context.getFactory().createEnum(name, parent.build(context)));
         elements.stream()
                 .filter(ele -> ele instanceof VarElement)
                 .map(ele -> (VarElement) ele)
-                .forEach(ele -> buildEnum.addField(ele.build(context)));
-        return buildEnum;
+                .forEach(ele -> e.addField(ele.build(context)));
+        return e;
     }
 
     public String getName() {

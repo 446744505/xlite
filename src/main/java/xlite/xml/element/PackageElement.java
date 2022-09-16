@@ -13,8 +13,6 @@ public class PackageElement extends AbsElement {
     private PackageElement parent;
     private List<PackageElement> children = new ArrayList<>();
 
-    protected XPackage buildPak;
-
     public PackageElement(Element element, XElement parent) {
         super(element, parent);
     }
@@ -38,22 +36,22 @@ public class PackageElement extends AbsElement {
     }
 
     @Override
-    public XPackage build(XmlContext context) {
-        if (!Objects.isNull(buildPak)) {
-            return buildPak;
-        }
-
+    public XPackage build0(XmlContext context) {
         XPackage parentPak = null;
         if (!Objects.isNull(parent)) {
             parentPak = parent.build(context);
         }
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
-        buildPak = new XPackage(nameAttr.getValue(), parentPak);
+        XPackage pak = setCache(new XPackage(nameAttr.getValue(), parentPak));
         elements.stream()
                 .filter(ele -> ele instanceof BeanElement)
                 .map(ele -> (BeanElement) ele)
-                .forEach(ele -> buildPak.addClass(ele.build(context)));
-        children.forEach(pak -> buildPak.addChild(pak.build(context)));
-        return buildPak;
+                .forEach(ele -> pak.addClass(ele.build(context)));
+        elements.stream()
+                .filter(ele -> ele instanceof EnumElement)
+                .map(ele -> (EnumElement) ele)
+                .forEach(ele -> pak.addEnum(ele.build(context)));
+        children.forEach(child -> pak.addChild(child.build(context)));
+        return pak;
     }
 }

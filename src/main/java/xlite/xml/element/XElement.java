@@ -13,7 +13,7 @@ public interface XElement {
 
     XElement parse(XElement preEle, XmlContext context);
     XAttr parseAttr(Attribute src, XmlContext context);
-    XCoder build(XmlContext context);
+    <T extends XCoder> T build(XmlContext context);
     String getComment();
     void setComment(String comment);
 }

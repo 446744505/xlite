@@ -12,8 +12,6 @@ import xlite.xml.attr.XAttr;
 import java.util.Objects;
 
 public abstract class VarElement extends AbsElement {
-    protected XField buildField;
-
     public VarElement(Element element, XElement parent) {
         super(element, parent);
     }
@@ -30,11 +28,7 @@ public abstract class VarElement extends AbsElement {
     }
 
     @Override
-    public XField build(XmlContext context) {
-        if (!Objects.isNull(buildField)) {
-            return buildField;
-        }
-
+    public XField build0(XmlContext context) {
         String name = getParentName();
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
         if (Objects.isNull(nameAttr)) {
@@ -46,8 +40,9 @@ public abstract class VarElement extends AbsElement {
         }
         SimpleAttr keyAttr = getAttr(XAttr.ATTR_KEY);
         SimpleAttr valueAttr = getAttr(XAttr.ATTR_VALUE);
-        buildField = createField(context, nameAttr.getValue(), typeAttr.build(keyAttr, valueAttr, t -> buildField.setType(t)), parent.build(context));
-        buildField.setComment(getComment());
-        return buildField;
+        XField field = setCache(createField(context, nameAttr.getValue(),
+                typeAttr.build(keyAttr, valueAttr, t -> ((XField)buildCache).setType(t)), parent.build(context)));
+        field.setComment(getComment());
+        return field;
     }
 }

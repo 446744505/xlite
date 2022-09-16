@@ -31,8 +31,6 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
             return new ConfBeanVarElement(src, parent);
         } else if (XElement.ELEMENT_ENUM.equals(name)) {
             return new ConfEnumElement(src, parent);
-        } else if (XElement.ELEMENT_PACKAGE.equals(name)) {
-            return new ConfPackageElement(src, parent);
         }
         return xmlFactory.createElement(src, parent);
     }

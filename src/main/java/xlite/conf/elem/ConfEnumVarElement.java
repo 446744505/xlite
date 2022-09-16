@@ -26,11 +26,8 @@ public class ConfEnumVarElement extends EnumVarElement {
     }
 
     @Override
-    public ConfEnumField build(XmlContext context) {
-        if (!Objects.isNull(buildField)) {
-            return (ConfEnumField) buildField;
-        }
-        XField field = super.build(context);
+    public ConfEnumField build0(XmlContext context) {
+        XField field = super.build0(context);
         ConfEnumField confEnumField = (ConfEnumField) field;
         SimpleAttr commentAttr = getAttr(XAttr.ATTR_COMMENT);
         if (!Objects.isNull(commentAttr)) {
