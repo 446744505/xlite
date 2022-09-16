@@ -2,10 +2,7 @@ package xlite.conf;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
-import xlite.coder.XClass;
-import xlite.coder.XCoder;
-import xlite.coder.XEnum;
-import xlite.coder.XField;
+import xlite.coder.*;
 import xlite.conf.elem.*;
 import xlite.gen.GenConf;
 import xlite.gen.SimpleGenFactory;
@@ -51,10 +48,12 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
 
     @Override
     public XField createField(String name, XType type, XCoder parent) {
-        if (parent instanceof ConfEnum) {
-            return new ConfEnumField(name, type, parent);
-        }
         return new ConfBeanField(name, type, parent);
+    }
+
+    @Override
+    public XEnumField createEnumField(String name, XType type, XCoder parent) {
+        return new ConfEnumField(name, type, parent);
     }
 
     @Override

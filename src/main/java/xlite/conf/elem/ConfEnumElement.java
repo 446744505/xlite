@@ -25,14 +25,16 @@ public class ConfEnumElement extends EnumElement {
 
     @Override
     public ConfEnum build(XmlContext context) {
+        if (!Objects.isNull(buildEnum)) {
+            return (ConfEnum) buildEnum;
+        }
         XEnum e = super.build(context);
         ConfEnum confEnum = (ConfEnum) e;
         XAttr fromAttr = getAttr(XAttr.ATTR_EXCEL);
         if (Objects.isNull(fromAttr)) {
             throw new NullPointerException("enum must have a excel attr at enum " + e.getName());
         }
-        XAttr commentAttr = getAttr(XAttr.ATTR_COMMENT);
-        String comment = Objects.isNull(commentAttr) ? "" : commentAttr.getValue();
+        confEnum.setFromExcel(fromAttr.getValue());
         return confEnum;
     }
 }

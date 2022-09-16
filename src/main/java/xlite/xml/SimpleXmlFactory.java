@@ -52,10 +52,12 @@ public class SimpleXmlFactory implements XXmlFactory {
 
     @Override
     public XField createField(String name, XType type, XCoder parent) {
-        if (parent instanceof XEnum) {
-            return new XEnumField(name, type, parent);
-        }
         return new XField(name, type, parent);
+    }
+
+    @Override
+    public XEnumField createEnumField(String name, XType type, XCoder parent) {
+        return new XEnumField(name, type, parent);
     }
 
     @Override

@@ -8,7 +8,7 @@ import xlite.xml.attr.XAttr;
 import java.util.Objects;
 
 public class EnumElement extends AbsElement {
-    private XEnum buildEnum;
+    protected XEnum buildEnum;
 
     public EnumElement(Element src, XElement parent) {
         super(src, parent);

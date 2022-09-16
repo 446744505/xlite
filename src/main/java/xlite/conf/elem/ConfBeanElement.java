@@ -25,7 +25,7 @@ public class ConfBeanElement extends BeanElement {
     }
 
     @Override
-    public XClass build(XmlContext context) {
+    public ConfClass build(XmlContext context) {
         XClass clazz = super.build(context);
         ConfClass confClass = (ConfClass) clazz;
         SimpleAttr excelAttr = getAttr(XAttr.ATTR_EXCEL);
