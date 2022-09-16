@@ -2,28 +2,27 @@ package xlite.conf.elem;
 
 import org.dom4j.Element;
 import xlite.coder.XField;
-import xlite.conf.ConfField;
+import xlite.conf.ConfBeanField;
 import xlite.conf.ConfGenerator;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.XAttr;
-import xlite.xml.element.VarElement;
+import xlite.xml.element.BeanVarElement;
 import xlite.xml.element.XElement;
 
 import java.util.Objects;
 
-public class ConfVarElement extends VarElement {
-    public ConfVarElement(Element element, XElement parent) {
+public class ConfBeanVarElement extends BeanVarElement {
+    public ConfBeanVarElement(Element element, XElement parent) {
         super(element, parent);
     }
 
     @Override
     protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name) ||
-                XAttr.ATTR_TYPE.equals(name) ||
-                XAttr.ATTR_KEY.equals(name) ||
-                XAttr.ATTR_VALUE.equals(name) ||
-                XAttr.ATTR_COLFROM.equals(name) ||
+        if (super.checkAttr(name)) {
+            return true;
+        }
+        return XAttr.ATTR_COLFROM.equals(name) ||
                 XAttr.ATTR_ENDPOINT.equals(name) ||
                 XAttr.ATTR_COMMENT.equals(name);
     }
@@ -39,9 +38,8 @@ public class ConfVarElement extends VarElement {
         }
 
         XField field = super.build(context);
-        ConfField confField = (ConfField) field;
+        ConfBeanField confField = (ConfBeanField) field;
         SimpleAttr colFrom = getAttr(XAttr.ATTR_COLFROM);
-
         confField.setFromCol(Objects.isNull(colFrom) ? "" : colFrom.getValue());
         confField.setEndPoint(endPoint);
         return confField;

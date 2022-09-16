@@ -9,17 +9,21 @@ import xlite.xml.attr.XAttr;
 
 import java.util.Objects;
 
-public class VarElement extends AbsElement {
+public abstract class VarElement extends AbsElement {
     protected XField buildField;
 
     public VarElement(Element element, XElement parent) {
         super(element, parent);
     }
 
+    public abstract String getParentName();
+
     @Override
     protected boolean checkAttr(String name) {
         return XAttr.ATTR_NAME.equals(name) ||
-                XAttr.ATTR_TYPE.equals(name);
+                XAttr.ATTR_TYPE.equals(name) ||
+                XAttr.ATTR_KEY.equals(name) ||
+                XAttr.ATTR_VALUE.equals(name);
     }
 
     @Override
@@ -28,14 +32,14 @@ public class VarElement extends AbsElement {
             return buildField;
         }
 
-        BeanElement p = (BeanElement) parent;
+        String name = getParentName();
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
         if (Objects.isNull(nameAttr)) {
-            throw new NullPointerException("var must have a name attr at bean " + p.getName());
+            throw new NullPointerException("var must have a name attr at bean " + name);
         }
         TypeAttr typeAttr = getAttr(XAttr.ATTR_TYPE);
         if (Objects.isNull(typeAttr)) {
-            throw new NullPointerException("var must have a type attr at bean " + p.getName());
+            throw new NullPointerException("var must have a type attr at bean " + name);
         }
         SimpleAttr keyAttr = getAttr(XAttr.ATTR_KEY);
         SimpleAttr valueAttr = getAttr(XAttr.ATTR_VALUE);

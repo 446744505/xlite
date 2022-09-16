@@ -17,9 +17,9 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     private static final String methodName = "load";
 
     private final XClass clazz;
-    private final ConfField field;
+    private final ConfBeanField field;
 
-    public PrintLoadMethod(XClass clazz, ConfField field) {
+    public PrintLoadMethod(XClass clazz, ConfBeanField field) {
         this.clazz = clazz;
         this.field = field;
     }
@@ -39,7 +39,7 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
             body.println("super.", methodName, "(", rowName, ", ", countName, ");");
         }
         for (XField field : clazz.getFields()) {
-            ConfField confField = (ConfField) field;
+            ConfBeanField confField = (ConfBeanField) field;
             body.print(isFirstLine ? 0 : 2, "");
             if (isFirstLine) {
                 isFirstLine = false;

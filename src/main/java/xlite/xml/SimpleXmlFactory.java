@@ -2,17 +2,12 @@ package xlite.xml;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
-import xlite.coder.XClass;
-import xlite.coder.XCoder;
-import xlite.coder.XField;
+import xlite.coder.*;
 import xlite.type.XType;
 import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.TypeAttr;
 import xlite.xml.attr.XAttr;
-import xlite.xml.element.BeanElement;
-import xlite.xml.element.PackageElement;
-import xlite.xml.element.VarElement;
-import xlite.xml.element.XElement;
+import xlite.xml.element.*;
 
 public class SimpleXmlFactory implements XXmlFactory {
 
@@ -24,7 +19,10 @@ public class SimpleXmlFactory implements XXmlFactory {
         } else if (XElement.ELEMENT_BEAN.equals(name)) {
             return new BeanElement(src, parent);
         } else if (XElement.ELEMENT_VAR.equals(name)) {
-            return new VarElement(src, parent);
+            if (parent instanceof EnumElement) {
+                return new EnumVarElement(src, parent);
+            }
+            return new BeanVarElement(src, parent);
         }
         throw new UnsupportedOperationException(String.format("unsupported element %s", name));
     }
@@ -54,11 +52,19 @@ public class SimpleXmlFactory implements XXmlFactory {
 
     @Override
     public XField createField(String name, XType type, XCoder parent) {
+        if (parent instanceof XEnum) {
+            return new XEnumField(name, type, parent);
+        }
         return new XField(name, type, parent);
     }
 
     @Override
     public XClass createClass(String name, XCoder parent) {
         return new XClass(name, parent);
+    }
+
+    @Override
+    public XEnum createEnum(String name, XCoder parent) {
+        return new XEnum(name, parent);
     }
 }

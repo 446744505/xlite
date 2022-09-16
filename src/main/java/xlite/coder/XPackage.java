@@ -15,6 +15,7 @@ public class XPackage extends AbsCoder implements GenCoder {
     @Getter private final String name;
     private final List<XPackage> children = new ArrayList<>();
     private final List<XClass> classes = new ArrayList<>();
+    private final List<XEnum> enums = new ArrayList<>();
 
     public XPackage(String name, XCoder parent) {
         super(parent);
@@ -28,6 +29,11 @@ public class XPackage extends AbsCoder implements GenCoder {
 
     public XPackage addClass(XClass clazz) {
         classes.add(clazz);
+        return this;
+    }
+
+    public XPackage addEnum(XEnum e) {
+        enums.add(e);
         return this;
     }
 

@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 public class Test {
     public static void main(String[] args) throws Exception {
         URL url = Test.class.getResource("conf.xml");
-        new ConfGenerator(url, "gen", "java").gen(true, "a");
+        new ConfGenerator(url, "gen", "java").gen(true, ConfGenerator.ENDPOINT_ALL);
 
         URL excelURL = Test.class.getResource("excel");
         File excelDir = Paths.get(excelURL.toURI()).toFile();

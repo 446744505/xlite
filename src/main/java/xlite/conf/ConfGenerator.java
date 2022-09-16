@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class ConfGenerator {
-    public static final String ENDPOINT_ALL = "a";
-    public static final String ENDPOINT_SERVER = "s";
-    public static final String ENDPOINT_CLIENT = "c";
+    public static final String ENDPOINT_ALL = "all";
+    public static final String ENDPOINT_SERVER = "server";
+    public static final String ENDPOINT_CLIENT = "client";
 
     private final XParser parser;
     private final XGenerator generator;

@@ -18,9 +18,10 @@ public class ConfBeanElement extends BeanElement {
 
     @Override
     protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name)
-                || XAttr.ATTR_PARENT.equals(name)
-                || XAttr.ATTR_EXCEL.equals(name);
+        if (super.checkAttr(name)) {
+            return true;
+        }
+        return XAttr.ATTR_EXCEL.equals(name);
     }
 
     @Override

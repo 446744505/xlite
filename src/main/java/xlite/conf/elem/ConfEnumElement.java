@@ -1,29 +1,38 @@
 package xlite.conf.elem;
 
 import org.dom4j.Element;
-import xlite.coder.XCoder;
+import xlite.coder.XEnum;
+import xlite.conf.ConfEnum;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
-import xlite.xml.element.AbsElement;
+import xlite.xml.element.EnumElement;
 import xlite.xml.element.XElement;
 
-public class ConfEnumElement extends AbsElement {
+import java.util.Objects;
+
+public class ConfEnumElement extends EnumElement {
     public ConfEnumElement(Element src, XElement parent) {
         super(src, parent);
     }
 
     @Override
     protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name) ||
-                XAttr.ATTR_EXCEL.equals(name);
+        if (super.checkAttr(name)) {
+            return true;
+        }
+        return XAttr.ATTR_EXCEL.equals(name);
     }
 
     @Override
-    public XCoder build(XmlContext context) {
-        XAttr nameAttr = getAttr(XAttr.ATTR_NAME);
-        XAttr typeAttr = getAttr(XAttr.ATTR_TYPE);
-        XAttr fromAttr = getAttr(XAttr.ATTR_COLFROM);
+    public ConfEnum build(XmlContext context) {
+        XEnum e = super.build(context);
+        ConfEnum confEnum = (ConfEnum) e;
+        XAttr fromAttr = getAttr(XAttr.ATTR_EXCEL);
+        if (Objects.isNull(fromAttr)) {
+            throw new NullPointerException("enum must have a excel attr at enum " + e.getName());
+        }
         XAttr commentAttr = getAttr(XAttr.ATTR_COMMENT);
-        return null;
+        String comment = Objects.isNull(commentAttr) ? "" : commentAttr.getValue();
+        return confEnum;
     }
 }

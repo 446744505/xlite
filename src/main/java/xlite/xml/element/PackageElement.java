@@ -13,7 +13,7 @@ public class PackageElement extends AbsElement {
     private PackageElement parent;
     private List<PackageElement> children = new ArrayList<>();
 
-    private XPackage buildPak;
+    protected XPackage buildPak;
 
     public PackageElement(Element element, XElement parent) {
         super(element, parent);
