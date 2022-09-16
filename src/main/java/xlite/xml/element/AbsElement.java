@@ -2,6 +2,7 @@ package xlite.xml.element;
 
 import org.dom4j.*;
 import xlite.coder.XCoder;
+import xlite.util.Util;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
@@ -30,7 +31,7 @@ public abstract class AbsElement implements XElement {
 
     @Override
     public final <T extends XCoder> T build(XmlContext context) {
-        if (!Objects.isNull(buildCache)) {
+        if (Objects.nonNull(buildCache)) {
             return (T) buildCache;
         }
         build0(context);//这里不赋值，必须在build0里设置cache值
@@ -47,13 +48,13 @@ public abstract class AbsElement implements XElement {
                 elements.add(preEle.parse(preEle, context));
             } else if (node instanceof Comment) {
                 Comment comment = (Comment) node;
-                if (!Objects.isNull(preEle)) {
+                if (Objects.nonNull(preEle)) {
                     preEle.setComment(comment.getText());
                 }
             } else if (node instanceof Text) {
                 Text txt = (Text) node;
                 String line = txt.getText();
-                if (!Objects.isNull(preEle) && !line.isEmpty()) {
+                if (Util.notEmpty(line)) {
                     preEle.setComment(line.trim());
                 }
             }
@@ -82,7 +83,7 @@ public abstract class AbsElement implements XElement {
 
     @Override
     public void setComment(String comment) {
-        if (!Objects.isNull(this.comment)) {
+        if (Objects.nonNull(this.comment)) {
             this.comment += comment;
         } else {
             this.comment = comment;

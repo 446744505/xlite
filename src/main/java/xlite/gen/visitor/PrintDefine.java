@@ -5,9 +5,9 @@ import xlite.coder.XInterface;
 import xlite.gen.Writer;
 import xlite.language.Java;
 import xlite.language.XLanguage;
+import xlite.util.Util;
 
 import java.util.List;
-import java.util.Objects;
 
 public class PrintDefine implements LanguageVisitor<String> {
     private final XInterface iface;
@@ -28,7 +28,7 @@ public class PrintDefine implements LanguageVisitor<String> {
         XClass clazz = (XClass) iface;
         Writer writer = new Writer();
         String comment = clazz.getComment();
-        if (!Objects.isNull(comment) && !comment.isEmpty()) {
+        if (Util.notEmpty(comment)) {
             writer.println("/**");
             writer.println(comment);
             writer.println("*/");

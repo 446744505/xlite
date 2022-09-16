@@ -5,7 +5,6 @@ import xlite.coder.XField;
 import xlite.conf.ConfBeanField;
 import xlite.conf.ConfGenerator;
 import xlite.xml.XmlContext;
-import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.XAttr;
 import xlite.xml.element.BeanVarElement;
 import xlite.xml.element.XElement;
@@ -29,7 +28,7 @@ public class ConfBeanVarElement extends BeanVarElement {
 
     @Override
     public ConfBeanField build0(XmlContext context) {
-        SimpleAttr endPointAttr = getAttr(XAttr.ATTR_ENDPOINT);
+        XAttr endPointAttr = getAttr(XAttr.ATTR_ENDPOINT);
         String endPoint = Objects.isNull(endPointAttr) ? ConfGenerator.ENDPOINT_ALL : endPointAttr.getValue();
         if (!ConfGenerator.ENDPOINT_ALL.equals(endPoint) &&
                 !ConfGenerator.ENDPOINT_ALL.equals(context.getEndPoint()) &&
@@ -39,7 +38,7 @@ public class ConfBeanVarElement extends BeanVarElement {
 
         XField field = super.build0(context);
         ConfBeanField confField = (ConfBeanField) field;
-        SimpleAttr colFrom = getAttr(XAttr.ATTR_COLFROM);
+        XAttr colFrom = getAttr(XAttr.ATTR_COLFROM);
         confField.setFromCol(Objects.isNull(colFrom) ? "" : colFrom.getValue());
         confField.setEndPoint(endPoint);
         return confField;

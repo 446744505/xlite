@@ -29,7 +29,7 @@ public class BeanElement extends AbsElement {
         XAttr parentAttr = getAttr(XAttr.ATTR_PARENT);
         XClass clazz = setCache(context.getFactory().createClass(nameAttr.getValue(), parent.build(context)));
         clazz.setComment(getComment());
-        if (!Objects.isNull(parentAttr)) {
+        if (Objects.nonNull(parentAttr)) {
             String parentName = parentAttr.getValue();
             clazz.addExtend(XClass.getClass(parentName, parent -> clazz.addExtend(parent)));
         }

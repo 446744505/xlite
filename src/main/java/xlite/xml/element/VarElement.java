@@ -5,7 +5,6 @@ import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.type.XType;
 import xlite.xml.XmlContext;
-import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.TypeAttr;
 import xlite.xml.attr.XAttr;
 
@@ -38,8 +37,8 @@ public abstract class VarElement extends AbsElement {
         if (Objects.isNull(typeAttr)) {
             throw new NullPointerException("var must have a type attr at bean " + name);
         }
-        SimpleAttr keyAttr = getAttr(XAttr.ATTR_KEY);
-        SimpleAttr valueAttr = getAttr(XAttr.ATTR_VALUE);
+        XAttr keyAttr = getAttr(XAttr.ATTR_KEY);
+        XAttr valueAttr = getAttr(XAttr.ATTR_VALUE);
         XField field = setCache(createField(context, nameAttr.getValue(),
                 typeAttr.build(keyAttr, valueAttr, t -> ((XField)buildCache).setType(t)), parent.build(context)));
         field.setComment(getComment());

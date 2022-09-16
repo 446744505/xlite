@@ -13,7 +13,7 @@ public class VList {
         for (int i = 1; i <= MAX_SAME_NAME_COLUMN; i++) {
             try {
                 XCell cell = row.getCell(title, i);
-                if (!Objects.isNull(cell)) {
+                if (Objects.nonNull(cell)) {
                     cb.accept(cell);
                 }
             } catch (NullPointerException e) {

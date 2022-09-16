@@ -30,7 +30,7 @@ public class XSheet {
         }
 
         Object key = hook.key(row);
-        if (!Objects.isNull(rs.put(key, row))) {
+        if (Objects.nonNull(rs.put(key, row))) {
             throw new IllegalStateException(String.format("multi row key = %s @ %s", key, this));
         }
     }
@@ -44,9 +44,9 @@ public class XSheet {
         if (Objects.isNull(defaults)) {
             defaults = new HashMap<>();
         }
-        if (!Objects.isNull(def) && !def.equals(XReader.DEF_DEFAULT)) {
+        if (Objects.nonNull(def) && !def.equals(XReader.DEF_DEFAULT)) {
             Map<Object, XRow> defs = rows.get(def);
-            if (!Objects.isNull(defs)) {
+            if (Objects.nonNull(defs)) {
                 defaults.putAll(defs);
             }
         }

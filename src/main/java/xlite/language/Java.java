@@ -98,7 +98,7 @@ public class Java implements XLanguage {
     @Override
     public String simpleName(XBean t) {
         Class clazz = t.getClazz();
-        if (!Objects.isNull(clazz)) {
+        if (Objects.nonNull(clazz)) {
             return clazz.getSimpleName();
         }
         return XClass.getFullName(t.getName(), this);
@@ -107,7 +107,7 @@ public class Java implements XLanguage {
     @Override
     public String boxName(XBean t) {
         Class clazz = t.getClazz();
-        if (!Objects.isNull(clazz)) {
+        if (Objects.nonNull(clazz)) {
             return clazz.getName();
         }
         return XClass.getFullName(t.getName(), this);

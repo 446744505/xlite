@@ -16,7 +16,7 @@ public class FullPack implements LanguageVisitor<String> {
     public String visit(Java java) {
         String path = pak.getName();
         XPackage p = (XPackage) pak.getParent();
-        while (!Objects.isNull(p)) {
+        while (Objects.nonNull(p)) {
             path = p.getName() + "." + path;
             p = (XPackage) p.getParent();
         }

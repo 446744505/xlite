@@ -38,7 +38,7 @@ public class PackageElement extends AbsElement {
     @Override
     public XPackage build0(XmlContext context) {
         XPackage parentPak = null;
-        if (!Objects.isNull(parent)) {
+        if (Objects.nonNull(parent)) {
             parentPak = parent.build(context);
         }
         XAttr nameAttr = getAttr(XAttr.ATTR_NAME);

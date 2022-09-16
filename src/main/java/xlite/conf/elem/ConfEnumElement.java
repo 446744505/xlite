@@ -28,10 +28,9 @@ public class ConfEnumElement extends EnumElement {
         XEnum e = super.build0(context);
         ConfEnum confEnum = (ConfEnum) e;
         XAttr fromAttr = getAttr(XAttr.ATTR_EXCEL);
-        if (Objects.isNull(fromAttr)) {
-            throw new NullPointerException("enum must have a excel attr at enum " + e.getName());
+        if (Objects.nonNull(fromAttr)) {//excel attr可以放在var上
+            confEnum.setFromExcel(fromAttr.getValue());
         }
-        confEnum.setFromExcel(fromAttr.getValue());
         return confEnum;
     }
 }

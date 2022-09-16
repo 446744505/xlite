@@ -7,11 +7,11 @@ import java.nio.file.Paths;
 
 public class Test {
     public static void main(String[] args) throws Exception {
-        URL url = Test.class.getResource("conf.xml");
-        new ConfGenerator(url, "gen", "java").gen(true, ConfGenerator.ENDPOINT_ALL);
-
+        URL xmlUrl = Test.class.getResource("conf.xml");
         URL excelURL = Test.class.getResource("excel");
         File excelDir = Paths.get(excelURL.toURI()).toFile();
+        new ConfGenerator(xmlUrl, excelDir,"gen", "java").gen(true, ConfGenerator.ENDPOINT_ALL);
+
         Init.loadAll(excelDir);
     }
 }

@@ -15,7 +15,7 @@ public class Header {
 
     public void setTitle(int colIndex, String title) {
         col2Title.put(colIndex, title);
-        if (!Objects.isNull(title2Col.put(title, colIndex))) {
+        if (Objects.nonNull(title2Col.put(title, colIndex))) {
             throw new IllegalStateException(String.format("multi column %s @ %s", title, sheet));
         }
     }

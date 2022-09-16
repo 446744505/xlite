@@ -65,7 +65,7 @@ public class Writer implements Closeable, Printer {
     }
 
     private void print0(String txt) {
-        if (!Objects.isNull(writer)) {
+        if (Objects.nonNull(writer)) {
             writer.print(txt);
         } else {
             sb.append(txt);
@@ -73,7 +73,7 @@ public class Writer implements Closeable, Printer {
     }
 
     private void println0(String txt) {
-        if (!Objects.isNull(writer)) {
+        if (Objects.nonNull(writer)) {
             writer.println(txt);
         } else {
             sb.append(txt).append("\n");
@@ -81,7 +81,7 @@ public class Writer implements Closeable, Printer {
     }
 
     private void println0() {
-        if (!Objects.isNull(writer)) {
+        if (Objects.nonNull(writer)) {
             writer.println();
         } else {
             sb.append("\n");
@@ -90,14 +90,14 @@ public class Writer implements Closeable, Printer {
 
     @Override
     public void close() {
-        if (!Objects.isNull(writer)) {
+        if (Objects.nonNull(writer)) {
             writer.flush();
             writer.close();
         }
     }
 
     public void deleteEnd(int num) {
-        if (!Objects.isNull(sb) && sb.length() >= num) {
+        if (Objects.nonNull(sb) && sb.length() >= num) {
             sb.delete(sb.length() - num, sb.length());
         }
     }

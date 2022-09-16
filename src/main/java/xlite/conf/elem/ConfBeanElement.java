@@ -4,7 +4,6 @@ import org.dom4j.Element;
 import xlite.coder.XClass;
 import xlite.conf.ConfClass;
 import xlite.xml.XmlContext;
-import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.XAttr;
 import xlite.xml.element.BeanElement;
 import xlite.xml.element.XElement;
@@ -28,8 +27,8 @@ public class ConfBeanElement extends BeanElement {
     public ConfClass build0(XmlContext context) {
         XClass clazz = super.build0(context);
         ConfClass confClass = (ConfClass) clazz;
-        SimpleAttr excelAttr = getAttr(XAttr.ATTR_EXCEL);
-        if (!Objects.isNull(excelAttr)) {
+        XAttr excelAttr = getAttr(XAttr.ATTR_EXCEL);
+        if (Objects.nonNull(excelAttr)) {
             confClass.setFromExcel(excelAttr.getValue());
         }
         return confClass;

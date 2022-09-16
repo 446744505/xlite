@@ -52,8 +52,8 @@ public class XReader {
         } else if (fileName.endsWith("xls")) {
             workbook = new HSSFWorkbook(new FileInputStream(file));
         }
-        if (!Objects.isNull(workbook)) {
-            if (!Objects.isNull(books.put(fileName, workbook))) {//不允许重名
+        if (Objects.nonNull(workbook)) {
+            if (Objects.nonNull(books.put(fileName, workbook))) {//不允许重名
                 throw new UnsupportedOperationException(String.format("excel file name %s is exist", fileName));
             }
         }
@@ -62,8 +62,10 @@ public class XReader {
     private Map<String, XExcel> readExcels() {
         Map<String, XExcel> excels = new HashMap<>(books.size());
         books.forEach((fileName, book) -> {
-            XExcel excel = parseBook(fileName, book);
-            excels.put(excel.getFileName(), excel);
+            if (hook.isLoadExcel(fileName)) {
+                XExcel excel = parseBook(fileName, book);
+                excels.put(excel.getFileName(), excel);
+            }
         });
         return excels;
     }
@@ -130,7 +132,7 @@ public class XReader {
                 continue;
             }
             Cell cell = row.getCell(colIndex);
-            if (colIndex == 0 && !Objects.isNull(cell) && cell.getCellType() == CellType.STRING) {
+            if (colIndex == 0 && Objects.nonNull(cell) && cell.getCellType() == CellType.STRING) {
                 String val = cell.getStringCellValue();
                 if (val.startsWith(XReader.DEF_START)) {
                     String name = val.substring(XReader.DEF_START.length() + 1);

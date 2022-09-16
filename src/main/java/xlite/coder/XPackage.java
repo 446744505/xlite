@@ -63,6 +63,21 @@ public class XPackage extends AbsCoder implements GenCoder {
                 throw new RuntimeException(e);
             }
         }
+
+        for (XEnum e : enums) {
+            try {
+                String fileName = context.getLanguage().accept(new FileName(e.name));
+                File file = new File(dir, fileName);
+                file.delete();
+                file.createNewFile();
+                Writer writer = new Writer(file);
+                context.setClassWriter(writer);
+                e.print(context);
+                writer.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
         for (XPackage pak : children) {
             pak.gen(context);
         }
@@ -80,6 +95,11 @@ public class XPackage extends AbsCoder implements GenCoder {
     public void getAllClass(List<XClass> allClass) {
         allClass.addAll(classes);
         children.forEach(pak -> pak.getAllClass(allClass));
+    }
+
+    public void getAllEnum(List<XEnum> allEnums) {
+        allEnums.addAll(enums);
+        children.forEach(pak -> pak.getAllEnum(allEnums));
     }
 
     public File mkdir(GenContext context) {

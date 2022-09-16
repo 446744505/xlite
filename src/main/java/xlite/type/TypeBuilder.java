@@ -28,11 +28,11 @@ public class TypeBuilder {
 
     public static XType build(String type, String key, String value, Consumer<XType> cb) {
         XType typ = baseTypes.get(type);
-        if (!Objects.isNull(typ)) {
+        if (Objects.nonNull(typ)) {
             return typ;
         }
         typ = defineTypes.get(type);
-        if (!Objects.isNull(typ)) {
+        if (Objects.nonNull(typ)) {
             return typ;
         }
         if (TYPE_LIST.equals(type)) {
@@ -65,7 +65,7 @@ public class TypeBuilder {
             throw new IllegalStateException(String.format("type of repetition:", name));
         }
         List<Consumer<XType>> waits = waitBuildType.get(name);
-        if (!Objects.isNull(waits)) {
+        if (Objects.nonNull(waits)) {
             waits.forEach(cb -> cb.accept(bean));
         }
     }

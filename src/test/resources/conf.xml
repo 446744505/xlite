@@ -16,12 +16,14 @@
         <var name="atk" type="float" from="攻击"/> 攻击
         <var name="def" type="float" from="防御"/> 防御
     </bean>
-    -->
+
     <enum name="Const" excel="常量表.xlsx">
-        <var name="Const_1" type="int" value="10011"/> xml常量
-        <var name="name" type="only" from="value" comment="备注"/>
+        <var name="name" type="any" from="value" comment="备注"/>
     </enum>
-    <enum name="ItemID" excel="道具ID.xlsx,装备ID.xlsx">
-        <var name="name" type="int" from="value" comment="备注"/>
+    -->
+    <enum name="ItemID">
+        <var name="Const_1" type="int" value="10011"/> xml常量
+        <var name="道具" type="int" from="道具ID" excel="道具ID.xlsx,材料ID.xlsx" comment="备注"/>
+        <var name="装备" type="int" from="装备ID" excel="装备ID.xlsx" comment="备注"/>
     </enum>
 </package>

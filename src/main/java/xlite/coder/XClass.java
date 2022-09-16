@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 public class XClass extends XInterface {
     @Getter @Setter private String comment;
-    @Getter private final List<XField> fields = new ArrayList<>();
+    @Getter protected final List<XField> fields = new ArrayList<>();
     @Getter private final List<XInterface> interfaces = new ArrayList<>();
 
     private static final Map<String, XClass> clazzCache = new HashMap<>();
@@ -26,7 +26,7 @@ public class XClass extends XInterface {
         super(name, parent);
         clazzCache.put(name, this);
         List<Consumer<XClass>> wait = waitBuildClass.get(name);
-        if (!Objects.isNull(wait)) {
+        if (Objects.nonNull(wait)) {
             wait.forEach(cb -> cb.accept(this));
         }
     }
@@ -75,7 +75,7 @@ public class XClass extends XInterface {
 
     public static XClass getClass(String name, Consumer<XClass> cb) {
         XClass clazz =  clazzCache.get(name);
-        if (Objects.isNull(clazz) && !Objects.isNull(cb)) {
+        if (Objects.isNull(clazz) && Objects.nonNull(cb)) {
             List<Consumer<XClass>> wait = waitBuildClass.get(name);
             if (Objects.isNull(wait)) {
                 wait = new ArrayList<>();
@@ -88,21 +88,21 @@ public class XClass extends XInterface {
 
     @Override
     public XClass addImport(String importt) {
-        if (!Objects.isNull(importt)) {
+        if (Objects.nonNull(importt)) {
             super.addImport(importt);
         }
         return this;
     }
 
     public XClass implement(XInterface iface) {
-        if (!Objects.isNull(iface)) {
+        if (Objects.nonNull(iface)) {
             interfaces.add(iface);
         }
         return this;
     }
 
     public XClass addField(XField field) {
-        if (!Objects.isNull(field)) {
+        if (Objects.nonNull(field)) {
             fields.add(field);
         }
         return this;

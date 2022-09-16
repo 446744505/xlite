@@ -14,12 +14,12 @@ public class TypeAttr extends AbsAttr {
         super(src, parent);
     }
 
-    public XType build(SimpleAttr keyAttr, SimpleAttr valueAttr, Consumer<XType> cb) {
+    public XType build(XAttr keyAttr, XAttr valueAttr, Consumer<XType> cb) {
         String key = "", value = "";
-        if (!Objects.isNull(keyAttr)) {
+        if (Objects.nonNull(keyAttr)) {
             key = keyAttr.getValue();
         }
-        if (!Objects.isNull(valueAttr)) {
+        if (Objects.nonNull(valueAttr)) {
             value = valueAttr.getValue();
         }
         return TypeBuilder.build(getValue(), key, value, cb);
