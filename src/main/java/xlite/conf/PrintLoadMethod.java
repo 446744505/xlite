@@ -65,12 +65,32 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     }
 
     @Override
+    public String visit(XLanguage language, XBool t) {
+        return visitBase(language, t);
+    }
+
+    @Override
     public String visit(XLanguage language, XInt t) {
         return visitBase(language, t);
     }
 
     @Override
+    public String visit(XLanguage language, XShort t) {
+        return visitBase(language, t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XLong t) {
+        return visitBase(language, t);
+    }
+
+    @Override
     public String visit(XLanguage language, XFloat t) {
+        return visitBase(language, t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XDouble t) {
         return visitBase(language, t);
     }
 
@@ -111,5 +131,10 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     @Override
     public String visit(XLanguage language, XVoid t) {
         throw new UnsupportedOperationException("PrintLoadMethod unsupported type void");
+    }
+
+    @Override
+    public String visit(XLanguage language, XAny t) {
+        throw new UnsupportedOperationException();
     }
 }

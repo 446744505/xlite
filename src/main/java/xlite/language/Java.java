@@ -18,6 +18,36 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String simpleName(XBool t) {
+        return "boolean";
+    }
+
+    @Override
+    public String boxName(XBool t) {
+        return "Boolean";
+    }
+
+    @Override
+    public String defaultValue(XBool t) {
+        return "false";
+    }
+
+    @Override
+    public String simpleName(XShort t) {
+        return "short";
+    }
+
+    @Override
+    public String boxName(XShort t) {
+        return "Short";
+    }
+
+    @Override
+    public String defaultValue(XShort t) {
+        return "0";
+    }
+
+    @Override
     public String simpleName(XInt t) {
         return "int";
     }
@@ -54,6 +84,21 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String simpleName(XLong t) {
+        return "long";
+    }
+
+    @Override
+    public String boxName(XLong t) {
+        return "Long";
+    }
+
+    @Override
+    public String defaultValue(XLong t) {
+        return "0l";
+    }
+
+    @Override
     public String simpleName(XFloat t) {
         return "float";
     }
@@ -66,6 +111,21 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XFloat t) {
         return "0f";
+    }
+
+    @Override
+    public String simpleName(XDouble t) {
+        return "double";
+    }
+
+    @Override
+    public String boxName(XDouble t) {
+        return "Double";
+    }
+
+    @Override
+    public String defaultValue(XDouble t) {
+        return "0";
     }
 
     @Override
@@ -131,5 +191,50 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XVoid t) {
         throw new UnsupportedOperationException("void cannot be a value");
+    }
+
+    @Override
+    public String simpleName(XAny t) {
+        XType inner = t.getInner();
+        if (inner instanceof XBool) {
+            return simpleName((XBool) inner);
+        } else if (inner instanceof XInt) {
+            return simpleName((XInt) inner);
+        } else if (inner instanceof XDouble) {
+            return simpleName((XDouble) inner);
+        } else if (inner instanceof XString) {
+            return simpleName((XString) inner);
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String boxName(XAny t) {
+        XType inner = t.getInner();
+        if (inner instanceof XBool) {
+            return boxName((XBool) inner);
+        } else if (inner instanceof XInt) {
+            return boxName((XInt) inner);
+        } else if (inner instanceof XDouble) {
+            return boxName((XDouble) inner);
+        } else if (inner instanceof XString) {
+            return boxName((XString) inner);
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String defaultValue(XAny t) {
+        XType inner = t.getInner();
+        if (inner instanceof XBool) {
+            return defaultValue((XBool) inner);
+        } else if (inner instanceof XInt) {
+            return defaultValue((XInt) inner);
+        } else if (inner instanceof XDouble) {
+            return defaultValue((XDouble) inner);
+        } else if (inner instanceof XString) {
+            return defaultValue((XString) inner);
+        }
+        throw new UnsupportedOperationException();
     }
 }

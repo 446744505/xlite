@@ -9,7 +9,22 @@ public class BoxName implements TypeVisitor<String> {
     private BoxName() {}
 
     @Override
+    public String visit(XLanguage language, XBool t) {
+        return language.boxName(t);
+    }
+
+    @Override
     public String visit(XLanguage language, XInt t) {
+        return language.boxName(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XShort t) {
+        return language.boxName(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XLong t) {
         return language.boxName(t);
     }
 
@@ -34,12 +49,22 @@ public class BoxName implements TypeVisitor<String> {
     }
 
     @Override
+    public String visit(XLanguage language, XDouble t) {
+        return language.boxName(t);
+    }
+
+    @Override
     public String visit(XLanguage language, XBean t) {
         return language.boxName(t);
     }
 
     @Override
     public String visit(XLanguage language, XVoid t) {
+        return language.boxName(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XAny t) {
         return language.boxName(t);
     }
 }

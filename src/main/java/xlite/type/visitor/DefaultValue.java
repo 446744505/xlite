@@ -9,7 +9,22 @@ public class DefaultValue implements TypeVisitor<String> {
     private DefaultValue() {}
 
     @Override
+    public String visit(XLanguage language, XBool t) {
+        return language.defaultValue(t);
+    }
+
+    @Override
     public String visit(XLanguage language, XInt t) {
+        return language.defaultValue(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XShort t) {
+        return language.defaultValue(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XLong t) {
         return language.defaultValue(t);
     }
 
@@ -34,12 +49,22 @@ public class DefaultValue implements TypeVisitor<String> {
     }
 
     @Override
+    public String visit(XLanguage language, XDouble t) {
+        return language.defaultValue(t);
+    }
+
+    @Override
     public String visit(XLanguage language, XBean t) {
         return language.defaultValue(t);
     }
 
     @Override
     public String visit(XLanguage language, XVoid t) {
+        return language.defaultValue(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XAny t) {
         return language.defaultValue(t);
     }
 }

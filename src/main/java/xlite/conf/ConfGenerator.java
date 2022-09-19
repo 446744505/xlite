@@ -49,11 +49,11 @@ public class ConfGenerator {
         PackageElement packageElement = (PackageElement) root;
         XPackage xPackage = packageElement.build(context);
         xPackage.check();
-        loadEnumField(xPackage);
         if (isLoadCode) {
             addLoadMethod(xPackage);
             addInitClass(xPackage);
         }
+        loadEnumField(xPackage);
         generator.gen(xPackage);
     }
 
