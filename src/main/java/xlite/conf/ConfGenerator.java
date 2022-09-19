@@ -48,12 +48,12 @@ public class ConfGenerator {
         context.setEndPoint(endPoint);
         PackageElement packageElement = (PackageElement) root;
         XPackage xPackage = packageElement.build(context);
+        loadEnumField(xPackage);
         xPackage.check();
         if (isLoadCode) {
             addLoadMethod(xPackage);
             addInitClass(xPackage);
         }
-        loadEnumField(xPackage);
         generator.gen(xPackage);
     }
 
@@ -110,7 +110,7 @@ public class ConfGenerator {
         Map<String, String> allEnumExcels = new HashMap<>();
         allEnums.stream().map(e -> (ConfEnum)e).forEach(e -> {
             List<String> enumExcels = Util.getExcels(e.getFromExcel());
-            e.getFields().stream().map(f -> (ConfEnumField)f).forEach(f -> {
+            e.getFields().stream().map(f -> (ConfEnumField)f).filter(f -> Objects.isNull(f.getValue())).forEach(f -> {
                 List<String> fieldExcels = Util.getExcels(f.getExcel());
                 fieldExcels.addAll(enumExcels);
                 fieldExcels.forEach(excel -> allEnumExcels.put(excel, f.getName()));

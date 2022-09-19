@@ -90,6 +90,17 @@ public class XPackage extends AbsCoder implements GenCoder {
             Set<String> depends = new HashSet<>();
             clazz.checkLoopDepend(depends);
         });
+
+        List<XEnum> allEnum = new ArrayList<>();
+        getAllEnum(allEnum);
+        allEnum.forEach(e -> {
+            Set<String> consts = new HashSet<>();
+            e.getFields().forEach(f -> {
+                if (!consts.add(f.getName())) {
+                    throw new IllegalStateException(String.format("multi const field %s at enum %s", f.getName(), e.getName()));
+                }
+            });
+        });
     }
 
     public void getAllClass(List<XClass> allClass) {

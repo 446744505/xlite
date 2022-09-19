@@ -18,7 +18,6 @@
     <enum name="Const" excel="常量表.xlsx">
         <var name="name" type="any" from="value" comment="备注"/>
     </enum>
-
     <enum name="ItemID">
         <var name="Const_1" type="int" value="10011"/> xml常量
         <var name="道具" type="int" from="道具ID" excel="道具ID.xlsx,材料ID.xlsx" comment="备注"/>
