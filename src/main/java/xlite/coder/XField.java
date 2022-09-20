@@ -6,6 +6,7 @@ import xlite.type.XType;
 
 public class XField extends AbsCoder {
     @Getter private final String name;
+    @Getter private boolean staticed;
     @Getter @Setter private XType type;
     @Getter @Setter private String comment;
 
@@ -13,5 +14,10 @@ public class XField extends AbsCoder {
         super(parent);
         this.name = name;
         this.type = type;
+    }
+
+    public XField staticed() {
+        staticed = true;
+        return this;
     }
 }

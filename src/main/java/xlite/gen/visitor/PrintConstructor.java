@@ -17,7 +17,7 @@ public class PrintConstructor implements LanguageVisitor<Void> {
     public Void visit(Java java) {
         int tab = 1;
         context.println(tab, String.format("public %s() {", clazz.getName()));
-        clazz.getFields().forEach(f -> {
+        clazz.getFields().stream().filter(f -> !f.isStaticed()).forEach(f -> {
             context.println(tab + 1, String.format("this.%s = %s;", f.getName(), java.accept(new DefaultValue(f.getType()))));
         });
         context.println(tab, "}");

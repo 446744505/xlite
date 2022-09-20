@@ -47,7 +47,14 @@ public class XClass extends XInterface {
     }
 
     private void addGetter(GenContext context) {
-        fields.forEach(f -> context.getLanguage().accept(new AddGetter(this, f)));
+        GenConf conf = context.getConf();
+        if (conf.genGetter(this, context.getLanguage())) {
+            fields.forEach(f -> {
+                if (conf.genGetter(this, f, context.getLanguage())) {
+                    context.getLanguage().accept(new AddGetter(this, f));
+                }
+            });
+        }
     }
 
     private void addSetter(GenContext context) {

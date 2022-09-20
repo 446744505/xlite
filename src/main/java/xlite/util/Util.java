@@ -8,9 +8,11 @@ import java.util.Objects;
 
 public class Util {
     public static String firstToUpper(String s) {
-        char[] cs = s.toCharArray();
-        cs[0] -= 32;
-        return String.valueOf(cs);
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+
+    public static String firstToLower(String s) {
+        return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
     public static void cleanDir(File dir) {

@@ -17,6 +17,16 @@ public class SimpleConf implements GenConf {
     }
 
     @Override
+    public boolean genGetter(XClass clazz, XLanguage language) {
+        return true;
+    }
+
+    @Override
+    public boolean genGetter(XClass clazz, XField field, XLanguage language) {
+        return !field.isStaticed();
+    }
+
+    @Override
     public boolean genMethod(XClass clazz, XMethod method, XLanguage language) {
         return true;
     }

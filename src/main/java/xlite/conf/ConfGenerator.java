@@ -8,10 +8,7 @@ import xlite.excel.cell.XCell;
 import xlite.gen.Writer;
 import xlite.gen.XGenerator;
 import xlite.language.Java;
-import xlite.type.TypeBuilder;
-import xlite.type.XBean;
-import xlite.type.XEnum;
-import xlite.type.XType;
+import xlite.type.*;
 import xlite.type.visitor.BoxName;
 import xlite.util.Util;
 import xlite.xml.XParser;
@@ -108,6 +105,7 @@ public class ConfGenerator {
     }
 
     private void addInitClass(XPackage root) {
+        final String paramGeneratorName = "generator";
         List<XEnumer> allEnums = new ArrayList<>();
         root.getAllEnum(allEnums);
         List<XClass> allClass = new ArrayList<>();
@@ -128,25 +126,14 @@ public class ConfGenerator {
         allClass.stream()
             .map(c -> (ConfClass)c)
             .forEach(c -> {
-                for (String excel : Util.getExcels(c.getFromExcel())) {
-                    if (Util.isEmpty(excel)) {
-                        continue;
-                    }
-                    XField idField = null;
-                    for (XField f : c.getFields()) {
-                        ConfBeanField cf = (ConfBeanField) f;
-                        if (cf.getFromCol().equals(ConfExcelHook.COL_ID_TITLE)) {
-                            idField = f;
-                            break;
-                        }
-                    }
-                    if (Objects.nonNull(idField)) {
-                        XType idType = idField.getType();
-                        if (idType instanceof XEnum) {
-                            XEnum e = ((XEnum) idType);
-                            String fullName = XClass.getFullName(e.getName(), Java.INSTANCE);
-                            body.println(2, String.format("hook.registerEnumIdExcel(\"%s\", \"%s\");", excel, fullName));
-                        }
+                XField idField = c.getIdField();
+                List<String> excels = Util.getExcels(c.getFromExcel());
+                for (String excel : excels) {
+                    XType idType = idField.getType();
+                    if (idType instanceof XEnum) {
+                        XEnum e = ((XEnum) idType);
+                        String fullName = XClass.getFullName(e.getName(), Java.INSTANCE);
+                        body.println(2, String.format("hook.registerEnumIdExcel(\"%s\", %s.class);", excel, fullName));
                     }
                 }});
 
@@ -155,23 +142,26 @@ public class ConfGenerator {
         allClass.stream()
             .map(c -> (ConfClass)c)
             .forEach(c -> {
+                XField idField = c.getIdField();
                 for (String excel : Util.getExcels(c.getFromExcel())) {
-                    if (Util.isEmpty(excel)) {
-                        continue;
-                    }
                     String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, Java.INSTANCE);
                     int tab = 2;
                     body.println(tab, "{");
                     body.println(tab + 1, String.format("XExcel excel = excels.get(\"%s\");", excel));
+                    String idBoxName = idField.getType().accept(BoxName.INSTANCE, Java.INSTANCE);
+                    body.println(tab +1, String.format("java.util.Map<%s, %s> conf = new java.util.HashMap<>();", idBoxName, boxName));
                     body.println(tab + 1, "excel.iterator().forEachRemaining(sheet -> sheet.rows().forEach(row -> {");
                     body.println(tab + 2, String.format("%s obj = new %s();", boxName, boxName));
                     body.println(tab + 2, "obj.load(row, 0);");
-                    body.println(tab + 2, "System.out.println(obj);");
+                    String idGetter = "get" + Util.firstToUpper(idField.getName());
+                    body.println(tab + 2, String.format("conf.put(obj.%s(), obj);", idGetter));
                     body.println(tab + 1, "}));");
+                    body.println(tab + 1, String.format("%s.export(conf);", paramGeneratorName));
                     body.println(tab, "}");
                 }
             });
         body.deleteEnd(1);//去掉最后一个换行
+
         XClass clazz = new XClass("Init", root);
         clazz.addImport("java.io.File");
         clazz.addImport("java.util.Map");
@@ -180,13 +170,19 @@ public class ConfGenerator {
         clazz.addImport("xlite.conf.ConfGenerator");
         clazz.addImport("xlite.excel.XReader");
         XMethod load = new XMethod("loadAll", clazz);
-        XField file = new XField("excelDir", new XBean(File.class), load);
+        XField paramExcelDir = new XField("excelDir", new XBean(File.class), load);
+        XField paramGenerator = new XField(paramGeneratorName, new XBean(ConfGenerator.class), load);
         load.staticed()
             .returned(TypeBuilder.VOID)
-            .addParam(file)
+            .addParam(paramExcelDir)
+            .addParam(paramGenerator)
             .throwed("Exception")
             .addBody(body.getString());
         clazz.addMethod(load);
         root.addClass(clazz);
+    }
+
+    public void export(Map<?, ?> confs) {
+        System.out.println(confs);
     }
 }

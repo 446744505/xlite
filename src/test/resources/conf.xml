@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package name="conf">
     <bean name="Item" excel="道具.xlsx"> 道具
-        <var name="id" type="ItemID" from="ID"/> ID
+        <var name="itemId" type="ItemID" from="ID"/> ID
         <var name="name" type="string" from="道具名称"/> 道具名称
     </bean>
-    <!--
     <bean name="Equip" parent="Item" excel="装备.xlsx"> 装备
         <var name="properties" type="Properties"/> 属性
     </bean>
@@ -16,7 +15,6 @@
         <var name="atk" type="float" from="攻击"/> 攻击
         <var name="def" type="float" from="防御"/> 防御
     </bean>
-    -->
     <enum name="Const" excel="常量表.xlsx">
         <var name="name" type="any" from="value" comment="备注"/>
     </enum>
