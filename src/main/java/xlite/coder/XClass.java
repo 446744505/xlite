@@ -46,6 +46,20 @@ public class XClass extends XInterface {
         return this;
     }
 
+    public XClass getTopParent() {
+        if (extendes.isEmpty()) {
+            return null;
+        }
+        XClass parent = (XClass) extendes.get(0);
+        if (Objects.nonNull(parent)) {
+            XClass pp = parent.getTopParent();
+            if (Objects.nonNull(pp)) {
+                return pp;
+            }
+        }
+        return parent;
+    }
+
     private void addGetter(GenContext context) {
         GenConf conf = context.getConf();
         if (conf.genGetter(this, context.getLanguage())) {

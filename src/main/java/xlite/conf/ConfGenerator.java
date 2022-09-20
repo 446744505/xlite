@@ -2,13 +2,17 @@ package xlite.conf;
 
 import org.dom4j.DocumentException;
 import xlite.coder.*;
+import xlite.conf.formatter.DataFormatter;
 import xlite.excel.XExcel;
 import xlite.excel.XReader;
 import xlite.excel.cell.XCell;
 import xlite.gen.Writer;
 import xlite.gen.XGenerator;
 import xlite.language.Java;
-import xlite.type.*;
+import xlite.type.TypeBuilder;
+import xlite.type.XBean;
+import xlite.type.XEnum;
+import xlite.type.XType;
 import xlite.type.visitor.BoxName;
 import xlite.util.Util;
 import xlite.xml.XParser;
@@ -28,14 +32,17 @@ public class ConfGenerator {
     private final XParser parser;
     private final XGenerator generator;
     private final XmlContext context;
+    private String dataOut;
+    private String dataFormat;
     private final File excelDir;//enum用
 
-    public ConfGenerator(URL xml, File excelDir, String out, String language) throws DocumentException {
+    public ConfGenerator(URL xml, File excelDir, String srcOut, String language) throws DocumentException {
         ConfFactory factory = new ConfFactory();
         context = new XmlContext(factory);
         parser = new XParser(xml, context);
-        generator = new XGenerator(out, language, factory);
+        generator = new XGenerator(srcOut, language, factory);
         this.excelDir = excelDir;
+        setDataConf("conf", "json");
     }
 
     public void gen(boolean isLoadCode, String endPoint) throws Exception {
@@ -156,7 +163,11 @@ public class ConfGenerator {
                     String idGetter = "get" + Util.firstToUpper(idField.getName());
                     body.println(tab + 2, String.format("conf.put(obj.%s(), obj);", idGetter));
                     body.println(tab + 1, "}));");
-                    body.println(tab + 1, String.format("%s.export(conf);", paramGeneratorName));
+                    XClass topParent = c.getTopParent();
+                    if (Objects.isNull(topParent)) {
+                        topParent = c;
+                    }
+                    body.println(tab + 1, String.format("%s.export(conf, %s.class, %s.class);", paramGeneratorName, boxName, topParent.getFullName(Java.INSTANCE)));
                     body.println(tab, "}");
                 }
             });
@@ -182,7 +193,27 @@ public class ConfGenerator {
         root.addClass(clazz);
     }
 
-    public void export(Map<?, ?> confs) {
-        System.out.println(confs);
+    public void setDataConf(String dataOut, String dataFormat) {
+        this.dataOut = dataOut;
+        this.dataFormat = dataFormat;
+        File dir = new File(dataOut);
+        dir.mkdirs();
+        Util.cleanDir(dir);
+    }
+
+    private final Map<Class, Set<Object>> allIds = new HashMap<>();
+
+    public void export(Map<?, ?> conf, Class clazz, Class parent) throws Exception {
+        Set<Object> ids = allIds.get(parent);
+        if (Objects.isNull(ids)) {
+            ids = new HashSet<>();
+            allIds.put(parent, ids);
+        }
+        for (Object id : conf.keySet()) {
+            if (!ids.add(id)) {
+                throw new IllegalStateException(String.format("multi id %s at %s", id, parent.getName()));
+            }
+        }
+        DataFormatter.createFormatter(dataFormat, new File(dataOut)).export(conf, clazz);
     }
 }

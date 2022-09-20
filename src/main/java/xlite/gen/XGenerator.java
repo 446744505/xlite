@@ -7,20 +7,20 @@ import xlite.util.Util;
 import java.io.File;
 
 public class XGenerator {
-    private final File outDir;
+    private final File srcOutDir;
     private final XLanguage language;
     private final GenConf conf;
 
-    public XGenerator(String out, String language, XGenFactory factory) {
-        this.outDir = new File(out);
+    public XGenerator(String srcOut, String language, XGenFactory factory) {
+        this.srcOutDir = new File(srcOut);
         this.conf = factory.createConf();
         this.language = factory.createLanguage(language);
     }
 
     public void gen(GenCoder code) {
-        outDir.mkdirs();
-        Util.cleanDir(outDir);
-        GenContext context = new GenContext(outDir, language, conf);
+        srcOutDir.mkdirs();
+        Util.cleanDir(srcOutDir);
+        GenContext context = new GenContext(srcOutDir, language, conf);
         code.gen(context);
     }
 }

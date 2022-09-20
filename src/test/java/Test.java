@@ -12,7 +12,6 @@ public class Test {
         File excelDir = Paths.get(excelURL.toURI()).toFile();
         ConfGenerator generator = new ConfGenerator(xmlUrl, excelDir,"gen", "java");
         generator.gen(true, ConfGenerator.ENDPOINT_ALL);
-
         Init.loadAll(excelDir, generator);
     }
 }
