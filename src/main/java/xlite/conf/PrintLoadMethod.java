@@ -70,6 +70,11 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     }
 
     @Override
+    public String visit(XLanguage language, XByte t) {
+        return visitBase(language, t);
+    }
+
+    @Override
     public String visit(XLanguage language, XInt t) {
         return visitBase(language, t);
     }
@@ -126,6 +131,13 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     public String visit(XLanguage language, XBean t) {
         assertJava(language);
         return String.format("this.%s.%s(%s, %s);", field.getName(), methodName, rowName, countName);
+    }
+
+    @Override
+    public String visit(XLanguage language, XEnum t) {
+        assertJava(language);
+        t.assertInner();
+        return String.format("this.%s = %s.readID();", field.getName(), rowName);
     }
 
     @Override

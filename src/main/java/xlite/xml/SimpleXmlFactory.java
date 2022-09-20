@@ -66,7 +66,7 @@ public class SimpleXmlFactory implements XXmlFactory {
     }
 
     @Override
-    public XEnum createEnum(String name, XCoder parent) {
-        return new XEnum(name, parent);
+    public XEnumer createEnum(String name, XCoder parent) {
+        return new XEnumer(name, parent);
     }
 }

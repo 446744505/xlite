@@ -10,6 +10,8 @@ import xlite.gen.XGenerator;
 import xlite.language.Java;
 import xlite.type.TypeBuilder;
 import xlite.type.XBean;
+import xlite.type.XEnum;
+import xlite.type.XType;
 import xlite.type.visitor.BoxName;
 import xlite.util.Util;
 import xlite.xml.XParser;
@@ -58,26 +60,20 @@ public class ConfGenerator {
     }
 
     private void loadEnumField(XPackage root) throws Exception {
-        List<XEnum> allEnums = new ArrayList<>();
+        List<XEnumer> allEnums = new ArrayList<>();
         root.getAllEnum(allEnums);
         ConfExcelHook hook = new ConfExcelHook(true);
         allEnums.stream().map(e -> (ConfEnum)e).forEach(e -> {
-            List<String> enumExcels = Util.getExcels(e.getFromExcel());
             e.getFields().stream().map(f -> (ConfEnumField)f).forEach(f -> {
-                List<String> fieldExcels = Util.getExcels(f.getExcel());
-                fieldExcels.addAll(enumExcels);
-                fieldExcels.forEach(excel -> hook.addEnumExcel(excel, f.getName()));
+                getExcels(e, f).forEach(excel -> hook.registerEnumExcel(excel, f.getName()));
             });
         });
 
         Map<String, XExcel> excels = new XReader(excelDir, hook).read();
         allEnums.stream().map(e -> (ConfEnum)e).forEach(e -> {
-            List<String> enumExcels = Util.getExcels(e.getFromExcel());
             List<ConfEnumField> newFields = new ArrayList<>();
             e.getFields().stream().map(f -> (ConfEnumField)f).forEach(f -> {
-                List<String> fieldExcels = Util.getExcels(f.getExcel());
-                fieldExcels.addAll(enumExcels);
-                fieldExcels.forEach(excel -> {
+                getExcels(e, f).forEach(excel -> {
                     XExcel data = excels.get(excel);
                     data.iterator().forEachRemaining(sheet -> sheet.rows().forEach(row -> {
                         XCell nameCell = row.getCell(f.getName());
@@ -104,27 +100,58 @@ public class ConfGenerator {
                 .forEach(c -> new PrintLoadMethod(c, null).make());
     }
 
+    private List<String> getExcels(ConfEnum e, ConfEnumField field) {
+        List<String> enumExcels = Util.getExcels(e.getFromExcel());
+        List<String> fieldExcels = Util.getExcels(field.getExcel());
+        fieldExcels.addAll(enumExcels);
+        return fieldExcels;
+    }
+
     private void addInitClass(XPackage root) {
-        List<XEnum> allEnums = new ArrayList<>();
+        List<XEnumer> allEnums = new ArrayList<>();
         root.getAllEnum(allEnums);
+        List<XClass> allClass = new ArrayList<>();
+        root.getAllClass(allClass);
         Map<String, String> allEnumExcels = new HashMap<>();
         allEnums.stream().map(e -> (ConfEnum)e).forEach(e -> {
-            List<String> enumExcels = Util.getExcels(e.getFromExcel());
-            e.getFields().stream().map(f -> (ConfEnumField)f).filter(f -> Objects.isNull(f.getValue())).forEach(f -> {
-                List<String> fieldExcels = Util.getExcels(f.getExcel());
-                fieldExcels.addAll(enumExcels);
-                fieldExcels.forEach(excel -> allEnumExcels.put(excel, f.getName()));
+            e.getFields().stream()
+                    .map(f -> (ConfEnumField)f).filter(f -> Objects.isNull(f.getValue())).forEach(f -> {
+                getExcels(e, f).forEach(excel -> allEnumExcels.put(excel, f.getName()));
             });
         });
 
         Writer body = new Writer();
         body.println("ConfExcelHook hook = new ConfExcelHook(false);");
         allEnumExcels.forEach((excel, keyCol) -> {
-            body.println(2, String.format("hook.addEnumExcel(\"%s\", \"%s\");", excel, keyCol));
+            body.println(2, String.format("hook.registerEnumExcel(\"%s\", \"%s\");", excel, keyCol));
         });
+        allClass.stream()
+            .map(c -> (ConfClass)c)
+            .forEach(c -> {
+                for (String excel : Util.getExcels(c.getFromExcel())) {
+                    if (Util.isEmpty(excel)) {
+                        continue;
+                    }
+                    XField idField = null;
+                    for (XField f : c.getFields()) {
+                        ConfBeanField cf = (ConfBeanField) f;
+                        if (cf.getFromCol().equals(ConfExcelHook.COL_ID_TITLE)) {
+                            idField = f;
+                            break;
+                        }
+                    }
+                    if (Objects.nonNull(idField)) {
+                        XType idType = idField.getType();
+                        if (idType instanceof XEnum) {
+                            XEnum e = ((XEnum) idType);
+                            String fullName = XClass.getFullName(e.getName(), Java.INSTANCE);
+                            body.println(2, String.format("hook.registerEnumIdExcel(\"%s\", \"%s\");", excel, fullName));
+                        }
+                    }
+                }});
+
         body.println(2, "Map<String, XExcel> excels = new XReader(excelDir, hook).read();");
-        List<XClass> allClass = new ArrayList<>();
-        root.getAllClass(allClass);
+
         allClass.stream()
             .map(c -> (ConfClass)c)
             .forEach(c -> {

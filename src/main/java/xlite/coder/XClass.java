@@ -158,7 +158,7 @@ public class XClass extends XInterface {
     }
 
     protected void printField(GenContext context) {
-        fields.forEach(f -> context.println(1, new Field(f)));
+        fields.forEach(f -> context.println(1, new PrintField(f)));
     }
 
     @Override

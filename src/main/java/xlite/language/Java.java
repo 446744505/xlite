@@ -33,6 +33,21 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String simpleName(XByte t) {
+        return "byte";
+    }
+
+    @Override
+    public String boxName(XByte t) {
+        return "Byte";
+    }
+
+    @Override
+    public String defaultValue(XByte t) {
+        return "0";
+    }
+
+    @Override
     public String simpleName(XShort t) {
         return "short";
     }
@@ -195,11 +210,50 @@ public class Java implements XLanguage {
 
     @Override
     public String simpleName(XAny t) {
-        XType inner = t.getInner();
+        return simpleName(t.getInner());
+    }
+
+    @Override
+    public String boxName(XAny t) {
+        return boxName(t.getInner());
+    }
+
+    @Override
+    public String defaultValue(XAny t) {
+        return defaultValue(t.getInner());
+    }
+
+    @Override
+    public String simpleName(XEnum t) {
+        t.assertInner();
+        return simpleName(t.getInner());
+    }
+
+    @Override
+    public String boxName(XEnum t) {
+        t.assertInner();
+        return boxName(t.getInner());
+    }
+
+    @Override
+    public String defaultValue(XEnum t) {
+        t.assertInner();
+        return defaultValue(t.getInner());
+    }
+
+    private String simpleName(XType inner) {
         if (inner instanceof XBool) {
             return simpleName((XBool) inner);
+        } else if (inner instanceof XByte) {
+            return simpleName((XByte) inner);
+        } else if (inner instanceof XShort) {
+            return simpleName((XShort) inner);
         } else if (inner instanceof XInt) {
             return simpleName((XInt) inner);
+        } else if (inner instanceof XLong) {
+            return simpleName((XLong) inner);
+        } else if (inner instanceof XFloat) {
+            return simpleName((XFloat) inner);
         } else if (inner instanceof XDouble) {
             return simpleName((XDouble) inner);
         } else if (inner instanceof XString) {
@@ -208,13 +262,19 @@ public class Java implements XLanguage {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public String boxName(XAny t) {
-        XType inner = t.getInner();
+    private String boxName(XType inner) {
         if (inner instanceof XBool) {
             return boxName((XBool) inner);
+        } else if (inner instanceof XByte) {
+            return boxName((XByte) inner);
+        } else if (inner instanceof XShort) {
+            return boxName((XShort) inner);
         } else if (inner instanceof XInt) {
             return boxName((XInt) inner);
+        } else if (inner instanceof XLong) {
+            return boxName((XLong) inner);
+        } else if (inner instanceof XFloat) {
+            return boxName((XFloat) inner);
         } else if (inner instanceof XDouble) {
             return boxName((XDouble) inner);
         } else if (inner instanceof XString) {
@@ -223,13 +283,19 @@ public class Java implements XLanguage {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public String defaultValue(XAny t) {
-        XType inner = t.getInner();
+    private String defaultValue(XType inner) {
         if (inner instanceof XBool) {
             return defaultValue((XBool) inner);
+        } else if (inner instanceof XByte) {
+            return defaultValue((XByte) inner);
+        } else if (inner instanceof XShort) {
+            return defaultValue((XShort) inner);
         } else if (inner instanceof XInt) {
             return defaultValue((XInt) inner);
+        } else if (inner instanceof XLong) {
+            return defaultValue((XLong) inner);
+        } else if (inner instanceof XFloat) {
+            return defaultValue((XFloat) inner);
         } else if (inner instanceof XDouble) {
             return defaultValue((XDouble) inner);
         } else if (inner instanceof XString) {

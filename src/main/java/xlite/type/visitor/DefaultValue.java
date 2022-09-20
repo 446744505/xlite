@@ -14,6 +14,11 @@ public class DefaultValue implements TypeVisitor<String> {
     }
 
     @Override
+    public String visit(XLanguage language, XByte t) {
+        return language.defaultValue(t);
+    }
+
+    @Override
     public String visit(XLanguage language, XInt t) {
         return language.defaultValue(t);
     }
@@ -55,6 +60,11 @@ public class DefaultValue implements TypeVisitor<String> {
 
     @Override
     public String visit(XLanguage language, XBean t) {
+        return language.defaultValue(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XEnum t) {
         return language.defaultValue(t);
     }
 

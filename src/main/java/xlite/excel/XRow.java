@@ -37,6 +37,11 @@ public class XRow {
         return cells.get(colIndex);
     }
 
+    public <T> T readID() {
+        XExcelHook hook = sheet.getExcel().getHook();
+        return (T) hook.key(this);
+    }
+
     public static class DefStartRow extends XRow {
         @Getter private final String name;
 

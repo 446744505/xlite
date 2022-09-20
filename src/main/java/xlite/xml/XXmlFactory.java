@@ -13,5 +13,5 @@ public interface XXmlFactory {
     XField createField(String name, XType type, XCoder parent);
     XEnumField createEnumField(String name, XType type, XCoder parent);
     XClass createClass(String name, XCoder parent);
-    XEnum createEnum(String name, XCoder parent);
+    XEnumer createEnum(String name, XCoder parent);
 }

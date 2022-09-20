@@ -15,7 +15,7 @@ public class XPackage extends AbsCoder implements GenCoder {
     @Getter private final String name;
     private final List<XPackage> children = new ArrayList<>();
     private final List<XClass> classes = new ArrayList<>();
-    private final List<XEnum> enums = new ArrayList<>();
+    private final List<XEnumer> enums = new ArrayList<>();
 
     public XPackage(String name, XCoder parent) {
         super(parent);
@@ -32,7 +32,7 @@ public class XPackage extends AbsCoder implements GenCoder {
         return this;
     }
 
-    public XPackage addEnum(XEnum e) {
+    public XPackage addEnum(XEnumer e) {
         enums.add(e);
         return this;
     }
@@ -64,7 +64,7 @@ public class XPackage extends AbsCoder implements GenCoder {
             }
         }
 
-        for (XEnum e : enums) {
+        for (XEnumer e : enums) {
             try {
                 String fileName = context.getLanguage().accept(new FileName(e.name));
                 File file = new File(dir, fileName);
@@ -91,7 +91,7 @@ public class XPackage extends AbsCoder implements GenCoder {
             clazz.checkLoopDepend(depends);
         });
 
-        List<XEnum> allEnum = new ArrayList<>();
+        List<XEnumer> allEnum = new ArrayList<>();
         getAllEnum(allEnum);
         allEnum.forEach(e -> {
             Set<String> consts = new HashSet<>();
@@ -108,7 +108,7 @@ public class XPackage extends AbsCoder implements GenCoder {
         children.forEach(pak -> pak.getAllClass(allClass));
     }
 
-    public void getAllEnum(List<XEnum> allEnums) {
+    public void getAllEnum(List<XEnumer> allEnums) {
         allEnums.addAll(enums);
         children.forEach(pak -> pak.getAllEnum(allEnums));
     }

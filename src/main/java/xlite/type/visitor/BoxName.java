@@ -14,6 +14,11 @@ public class BoxName implements TypeVisitor<String> {
     }
 
     @Override
+    public String visit(XLanguage language, XByte t) {
+        return language.boxName(t);
+    }
+
+    @Override
     public String visit(XLanguage language, XInt t) {
         return language.boxName(t);
     }
@@ -55,6 +60,11 @@ public class BoxName implements TypeVisitor<String> {
 
     @Override
     public String visit(XLanguage language, XBean t) {
+        return language.boxName(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XEnum t) {
         return language.boxName(t);
     }
 

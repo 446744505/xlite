@@ -1,10 +1,10 @@
 package xlite.coder;
 
 import xlite.gen.GenContext;
-import xlite.gen.visitor.Enumer;
+import xlite.gen.visitor.PrintConst;
 
-public class XEnum extends XClass {
-    public XEnum(String name, XCoder parent) {
+public class XEnumer extends XClass {
+    public XEnumer(String name, XCoder parent) {
         super(name, parent);
     }
 
@@ -20,6 +20,6 @@ public class XEnum extends XClass {
 
     @Override
     protected void printField(GenContext context) {
-        fields.stream().map(f -> (XEnumField)f).forEach(f -> context.println(1, new Enumer(f)));
+        fields.stream().map(f -> (XEnumField)f).forEach(f -> context.println(1, new PrintConst(f)));
     }
 }

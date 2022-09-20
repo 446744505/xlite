@@ -71,7 +71,7 @@ public class XReader {
     }
 
     private XExcel parseBook(String fileName, Workbook book) {
-        XExcel excel = new XExcel(fileName);
+        XExcel excel = new XExcel(fileName, hook);
         book.sheetIterator().forEachRemaining(sheet -> excel.addSheet(parseSheet(excel, sheet)));
         return excel;
     }

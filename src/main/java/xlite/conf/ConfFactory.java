@@ -60,7 +60,7 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
     }
 
     @Override
-    public XEnum createEnum(String name, XCoder parent) {
+    public XEnumer createEnum(String name, XCoder parent) {
         return new ConfEnum(name, parent);
     }
 

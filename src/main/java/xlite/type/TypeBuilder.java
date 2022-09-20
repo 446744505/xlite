@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 public class TypeBuilder {
     private static final String TYPE_ANY = "any";
     private static final String TYPE_BOOL = "bool";
+    private static final String TYPE_BYTE = "byte";
     private static final String TYPE_SHORT = "short";
     private static final String TYPE_INT = "int";
     private static final String TYPE_LONG = "long";
@@ -21,6 +22,7 @@ public class TypeBuilder {
 
     public static final XVoid VOID = new XVoid();
     public static final XBool BOOL = new XBool();
+    public static final XByte BYTE = new XByte();
     public static final XShort SHORT = new XShort();
     public static final XInt INT = new XInt();
     public static final XLong LONG = new XLong();
@@ -30,6 +32,7 @@ public class TypeBuilder {
 
     static {
         baseTypes.put(TYPE_BOOL, BOOL);
+        baseTypes.put(TYPE_BYTE, BYTE);
         baseTypes.put(TYPE_SHORT, SHORT);
         baseTypes.put(TYPE_INT, INT);
         baseTypes.put(TYPE_LONG, LONG);

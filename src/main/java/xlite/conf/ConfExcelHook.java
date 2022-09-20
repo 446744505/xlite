@@ -4,23 +4,30 @@ import xlite.excel.XExcelHook;
 import xlite.excel.XRow;
 import xlite.excel.XSheet;
 import xlite.excel.cell.XCell;
+import xlite.util.Util;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class ConfExcelHook implements XExcelHook {
-    private static final String COL_ID_TITLE = "ID";
+    public static final String COL_ID_TITLE = "ID";
 
     private final boolean onlyLoadEnum;
     private final Map<String, String> enumExcels = new HashMap<>();
+    private final Map<String, String> enumIdExcels = new HashMap<>();
 
     public ConfExcelHook(boolean onlyLoadEnum) {
         this.onlyLoadEnum = onlyLoadEnum;
     }
 
-    public void addEnumExcel(String fileName, String keyCol) {
+    public void registerEnumExcel(String fileName, String keyCol) {
         enumExcels.put(fileName, keyCol);
+    }
+
+    public void registerEnumIdExcel(String fileName, String enumName) {
+        enumIdExcels.put(fileName, enumName);
     }
 
     private boolean isEnumExcel(String fileName) {
@@ -67,6 +74,20 @@ public class ConfExcelHook implements XExcelHook {
         if (Objects.isNull(idCell)) {
             throw new IllegalStateException(String.format("there is no id column @ %s", sheet));
         }
-        return idCell.asInteger();
+        String fileName = row.getSheet().getExcel().getFileName();
+        String enumName = enumIdExcels.get(fileName);
+        if (Util.isEmpty(enumName)) {
+            return idCell.asInteger();
+        }
+
+        //id是enum
+        String id = idCell.asString();
+        try {
+            Class clazz = Class.forName(enumName);
+            Field f = clazz.getField(id);
+            return f.get(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -10,6 +10,10 @@ public interface XLanguage {
     String boxName(XBool t);
     String defaultValue(XBool t);
 
+    String simpleName(XByte t);
+    String boxName(XByte t);
+    String defaultValue(XByte t);
+
     String simpleName(XShort t);
     String boxName(XShort t);
     String defaultValue(XShort t);
@@ -53,4 +57,8 @@ public interface XLanguage {
     String simpleName(XAny t);
     String boxName(XAny t);
     String defaultValue(XAny t);
+
+    String simpleName(XEnum t);
+    String boxName(XEnum t);
+    String defaultValue(XEnum t);
 }
