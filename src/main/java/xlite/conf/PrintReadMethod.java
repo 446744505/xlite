@@ -11,15 +11,15 @@ import xlite.type.visitor.BoxName;
 import xlite.type.visitor.DefaultValue;
 import xlite.type.visitor.TypeVisitor;
 
-public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<String> {
+public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<String> {
     private static final String rowName = "row";
     private static final String countName = "count";
-    private static final String methodName = "load";
+    private static final String methodName = "read";
 
     private final XClass clazz;
     private final ConfBeanField field;
 
-    public PrintLoadMethod(XClass clazz, ConfBeanField field) {
+    public PrintReadMethod(XClass clazz, ConfBeanField field) {
         this.clazz = clazz;
         this.field = field;
     }
@@ -31,7 +31,7 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     @Override
     public XMethod visit(Java java) {
         clazz.addImport("xlite.excel.XRow")
-                .implement(new XInterface("Loader", XPackage.wrap("xlite.excel")));
+                .implement(new XInterface("Reader", XPackage.wrap("xlite.excel")));
         Writer body = new Writer();
         boolean isFirstLine = true;
         if (clazz.hasExtend()) {
@@ -44,7 +44,7 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
             if (isFirstLine) {
                 isFirstLine = false;
             }
-            String line = confField.getType().accept(new PrintLoadMethod(clazz, confField), java);
+            String line = confField.getType().accept(new PrintReadMethod(clazz, confField), java);
             body.println(line);
         }
         body.deleteEnd(1);//去掉最后一个换行

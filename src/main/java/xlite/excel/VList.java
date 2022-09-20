@@ -21,11 +21,11 @@ public class VList {
             }
         }
     }
-    public static <T extends Loader> void read(XRow row, Supplier<T> factory, Consumer<T> cb) {
+    public static <T extends Reader> void read(XRow row, Supplier<T> factory, Consumer<T> cb) {
         for (int i = 1; i <= MAX_SAME_NAME_COLUMN; i++) {
             try {
                 T loader = factory.get();
-                loader.load(row, i);
+                loader.read(row, i);
                 cb.accept(loader);
             } catch (NullPointerException e) {
                 //skip

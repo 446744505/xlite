@@ -45,19 +45,19 @@ public class ConfGenerator {
         setDataConf("conf", "json");
     }
 
-    public void gen(boolean isLoadCode, String endPoint) throws Exception {
+    public void gen(boolean isReadCode, String endPoint) throws Exception {
         XElement root = parser.parse();
         if (!(root instanceof PackageElement)) {
             throw new RuntimeException("conf xml root must be package");
         }
-        context.setConfLoadCode(isLoadCode);
+        context.setConfReadCode(isReadCode);
         context.setEndPoint(endPoint);
         PackageElement packageElement = (PackageElement) root;
         XPackage xPackage = packageElement.build(context);
         loadEnumField(xPackage);
         xPackage.check();
-        if (isLoadCode) {
-            addLoadMethod(xPackage);
+        if (isReadCode) {
+            addReadMethod(xPackage);
             addInitClass(xPackage);
         }
         generator.gen(xPackage);
@@ -96,12 +96,12 @@ public class ConfGenerator {
         });
     }
 
-    private void addLoadMethod(XPackage root) {
+    private void addReadMethod(XPackage root) {
         List<XClass> allClass = new ArrayList<>();
         root.getAllClass(allClass);
         allClass.stream()
                 .map(c -> (ConfClass)c)
-                .forEach(c -> new PrintLoadMethod(c, null).make());
+                .forEach(c -> new PrintReadMethod(c, null).make());
     }
 
     private List<String> getExcels(ConfEnum e, ConfEnumField field) {
@@ -159,7 +159,7 @@ public class ConfGenerator {
                     body.println(tab +1, String.format("java.util.Map<%s, %s> conf = new java.util.HashMap<>();", idBoxName, boxName));
                     body.println(tab + 1, "excel.iterator().forEachRemaining(sheet -> sheet.rows().forEach(row -> {");
                     body.println(tab + 2, String.format("%s obj = new %s();", boxName, boxName));
-                    body.println(tab + 2, "obj.load(row, 0);");
+                    body.println(tab + 2, "obj.read(row, 0);");
                     String idGetter = "get" + Util.firstToUpper(idField.getName());
                     body.println(tab + 2, String.format("conf.put(obj.%s(), obj);", idGetter));
                     body.println(tab + 1, "}));");

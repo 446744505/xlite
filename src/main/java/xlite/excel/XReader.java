@@ -59,14 +59,17 @@ public class XReader {
         }
     }
 
-    private Map<String, XExcel> readExcels() {
+    private Map<String, XExcel> readExcels() throws IOException {
         Map<String, XExcel> excels = new HashMap<>(books.size());
-        books.forEach((fileName, book) -> {
+        for (Map.Entry<String, Workbook> en : books.entrySet()) {
+            String fileName = en.getKey();
+            Workbook book = en.getValue();
             if (hook.isLoadExcel(fileName)) {
                 XExcel excel = parseBook(fileName, book);
                 excels.put(excel.getFileName(), excel);
             }
-        });
+            book.close();
+        }
         return excels;
     }
 
