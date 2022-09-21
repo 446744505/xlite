@@ -33,7 +33,7 @@ public class AddLoaderClass implements LanguageVisitor<XClass> {
                 .forEach(c -> {
                     int tab = body.length() == 0 ? 0 : 2;
                     String boxName = c.getFullName(java);
-                    body.println(tab, String.format("%s.load(%s);", boxName, paramDataDirName));
+                    body.println(tab, String.format("%s.%s(%s);", boxName, PrintLoadMethod.methodName, paramDataDirName));
                 });
         body.deleteEnd(1);
 

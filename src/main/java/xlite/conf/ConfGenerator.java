@@ -131,7 +131,10 @@ public class ConfGenerator {
         allClass.stream()
                 .map(c -> (ConfClass)c)
                 .filter(c -> Util.notEmpty(c.getFromExcel()))
-                .forEach(c -> new PrintLoadMethod(c, null).make());
+                .forEach(c -> {
+                    language.accept(new PrintLoadMethod(c));
+                    language.accept(new PrintOneMethod(c));
+                });
     }
 
     private List<String> getExcels(ConfEnum e, ConfEnumField field) {

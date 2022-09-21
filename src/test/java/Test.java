@@ -1,3 +1,5 @@
+import conf.Item;
+import conf.ItemID;
 import conf.Loader;
 import xlite.conf.ConfGenerator;
 
@@ -20,5 +22,6 @@ public class Test {
         URL dataURL = Test.class.getResource("data");
         File dataDir = Paths.get(dataURL.toURI()).toFile();
         Loader.loadAll(dataDir);
+        System.out.println(Item.one(ItemID.Item1));
     }
 }

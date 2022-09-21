@@ -5,28 +5,22 @@ import xlite.coder.XMethod;
 import xlite.gen.Writer;
 import xlite.gen.visitor.LanguageVisitor;
 import xlite.language.Java;
-import xlite.language.XLanguage;
-import xlite.type.*;
+import xlite.type.TypeBuilder;
+import xlite.type.XBean;
+import xlite.type.XType;
 import xlite.type.visitor.BoxName;
-import xlite.type.visitor.TypeVisitor;
 
 import java.io.File;
 
-public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<String> {
-    private static final String methodName = "load";
-    private static final String dataFieldName = "confs";
+public class PrintLoadMethod implements LanguageVisitor<XMethod> {
+    public static final String methodName = "load";
+    public static final String dataFieldName = "confs";
     private static final String dataDirName = "dataDir";
 
     private final ConfClass clazz;
-    private final ConfBeanField field;
 
-    public PrintLoadMethod(ConfClass clazz, ConfBeanField field) {
+    public PrintLoadMethod(ConfClass clazz) {
         this.clazz = clazz;
-        this.field = field;
-    }
-
-    public void make() {
-        Java.INSTANCE.accept(this);
     }
 
     @Override
@@ -53,7 +47,8 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
         body.println(tab, "String ext = FilenameUtils.getExtension(file.getName());");
         body.println(tab, "DataFormatter formatter = DataFormatter.createFormatter(ext);");
         String keyBoxName = idType.accept(BoxName.INSTANCE, java);
-        body.print(tab, String.format("%s.putAll(formatter.load(file, new TypeReference<Map<%s, %s>>(){}));", dataFieldName, keyBoxName, clazz.getName()));
+        body.println(tab, String.format("Map<%s, %s> conf = formatter.load(file, new TypeReference<Map<%s, %s>>(){});", keyBoxName, clazz.getName(), keyBoxName, clazz.getName()));
+        body.print(tab, String.format("%s = conf;", dataFieldName));
         XField paramDataDir = new XField(dataDirName, new XBean(File.class), method);
         method.staticed()
             .addParam(paramDataDir)
@@ -63,73 +58,4 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
         return method;
     }
 
-    @Override
-    public String visit(XLanguage language, XBool t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XByte t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XInt t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XShort t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XLong t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XFloat t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XDouble t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XString t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XList t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XMap t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XBean t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XEnum t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XVoid t) {
-        return null;
-    }
-
-    @Override
-    public String visit(XLanguage language, XAny t) {
-        return null;
-    }
 }
