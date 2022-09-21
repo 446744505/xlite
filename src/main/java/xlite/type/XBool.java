@@ -8,4 +8,9 @@ public class XBool extends TypeBase {
     public <T> T accept(TypeVisitor<T> visitor, XLanguage language) {
         return visitor.visit(language, this);
     }
+
+    @Override
+    public String name() {
+        return TypeBuilder.TYPE_BOOL;
+    }
 }

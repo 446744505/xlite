@@ -9,7 +9,7 @@ import xlite.excel.cell.XCell;
 import xlite.gen.Writer;
 import xlite.gen.XGenerator;
 import xlite.language.Java;
-import xlite.type.TypeBuilder;
+import xlite.language.XLanguage;
 import xlite.type.XBean;
 import xlite.type.XEnum;
 import xlite.type.XType;
@@ -32,20 +32,38 @@ public class ConfGenerator {
     private final XParser parser;
     private final XGenerator generator;
     private final XmlContext context;
+    private final XLanguage language;
     private String dataOut;
     private String dataFormat;
     private final File excelDir;//enum用
 
-    public ConfGenerator(URL xml, File excelDir, String srcOut, String language) throws DocumentException {
+    public ConfGenerator(URL xml, File excelDir, String srcOut, String lan) throws DocumentException {
         ConfFactory factory = new ConfFactory();
         context = new XmlContext(factory);
         parser = new XParser(xml, context);
+        language = factory.createLanguage(lan);
         generator = new XGenerator(srcOut, language, factory);
         this.excelDir = excelDir;
-        setDataConf("conf", "json");
     }
 
-    public void gen(boolean isReadCode, String endPoint) throws Exception {
+    public void genCode(String endPoint) throws Exception {
+        gen(false, endPoint);
+    }
+
+    public void genData(String endPoint) throws Exception {
+        if (Util.isEmpty(dataOut)) {
+            dataOut = "conf";
+        }
+        if (Util.isEmpty(dataFormat)) {
+            dataFormat = "json";
+        }
+        File dir = new File(dataOut);
+        dir.mkdirs();
+        Util.cleanDir(dir);
+        gen(true, endPoint);
+    }
+
+    private void gen(boolean isReadCode, String endPoint) throws Exception {
         XElement root = parser.parse();
         if (!(root instanceof PackageElement)) {
             throw new RuntimeException("conf xml root must be package");
@@ -59,6 +77,9 @@ public class ConfGenerator {
         if (isReadCode) {
             addReadMethod(xPackage);
             addInitClass(xPackage);
+        } else {
+            addLoadMethod(xPackage);
+            addLoaderClass(xPackage);
         }
         generator.gen(xPackage);
     }
@@ -104,6 +125,15 @@ public class ConfGenerator {
                 .forEach(c -> new PrintReadMethod(c, null).make());
     }
 
+    private void addLoadMethod(XPackage root) {
+        List<XClass> allClass = new ArrayList<>();
+        root.getAllClass(allClass);
+        allClass.stream()
+                .map(c -> (ConfClass)c)
+                .filter(c -> Util.notEmpty(c.getFromExcel()))
+                .forEach(c -> new PrintLoadMethod(c, null).make());
+    }
+
     private List<String> getExcels(ConfEnum e, ConfEnumField field) {
         List<String> enumExcels = Util.getExcels(e.getFromExcel());
         List<String> fieldExcels = Util.getExcels(field.getExcel());
@@ -139,6 +169,7 @@ public class ConfGenerator {
                     XType idType = idField.getType();
                     if (idType instanceof XEnum) {
                         XEnum e = ((XEnum) idType);
+                        //这里不用BoxName,因为BoxName返回了inner的BoxName
                         String fullName = XClass.getFullName(e.getName(), Java.INSTANCE);
                         body.println(2, String.format("hook.registerEnumIdExcel(\"%s\", %s.class);", excel, fullName));
                     }
@@ -174,17 +205,16 @@ public class ConfGenerator {
         body.deleteEnd(1);//去掉最后一个换行
 
         XClass clazz = new XClass("Init", root);
-        clazz.addImport("java.io.File");
-        clazz.addImport("java.util.Map");
-        clazz.addImport("xlite.conf.ConfExcelHook");
-        clazz.addImport("xlite.excel.XExcel");
-        clazz.addImport("xlite.conf.ConfGenerator");
-        clazz.addImport("xlite.excel.XReader");
+        clazz.addImport("java.io.File")
+            .addImport("java.util.Map")
+            .addImport("xlite.conf.ConfExcelHook")
+            .addImport("xlite.excel.XExcel")
+            .addImport("xlite.conf.ConfGenerator")
+            .addImport("xlite.excel.XReader");
         XMethod load = new XMethod("loadAll", clazz);
         XField paramExcelDir = new XField("excelDir", new XBean(File.class), load);
         XField paramGenerator = new XField(paramGeneratorName, new XBean(ConfGenerator.class), load);
         load.staticed()
-            .returned(TypeBuilder.VOID)
             .addParam(paramExcelDir)
             .addParam(paramGenerator)
             .throwed("Exception")
@@ -193,12 +223,14 @@ public class ConfGenerator {
         root.addClass(clazz);
     }
 
+    private void addLoaderClass(XPackage root) {
+        XClass clazz = language.accept(new AddLoaderClass(root));
+        root.addClass(clazz);
+    }
+
     public void setDataConf(String dataOut, String dataFormat) {
         this.dataOut = dataOut;
         this.dataFormat = dataFormat;
-        File dir = new File(dataOut);
-        dir.mkdirs();
-        Util.cleanDir(dir);
     }
 
     private final Map<Class, Set<Object>> allIds = new HashMap<>();
@@ -214,6 +246,6 @@ public class ConfGenerator {
                 throw new IllegalStateException(String.format("multi id %s at %s", id, parent.getName()));
             }
         }
-        DataFormatter.createFormatter(dataFormat, new File(dataOut)).export(conf, clazz);
+        DataFormatter.createFormatter(dataFormat).export(conf, clazz, new File(dataOut));
     }
 }

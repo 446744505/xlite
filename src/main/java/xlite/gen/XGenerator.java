@@ -11,10 +11,10 @@ public class XGenerator {
     private final XLanguage language;
     private final GenConf conf;
 
-    public XGenerator(String srcOut, String language, XGenFactory factory) {
+    public XGenerator(String srcOut, XLanguage language, XGenFactory factory) {
         this.srcOutDir = new File(srcOut);
         this.conf = factory.createConf();
-        this.language = factory.createLanguage(language);
+        this.language = language;
     }
 
     public void gen(GenCoder code) {

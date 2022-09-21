@@ -24,9 +24,9 @@ public class VList {
     public static <T extends Reader> void read(XRow row, Supplier<T> factory, Consumer<T> cb) {
         for (int i = 1; i <= MAX_SAME_NAME_COLUMN; i++) {
             try {
-                T loader = factory.get();
-                loader.read(row, i);
-                cb.accept(loader);
+                T reader = factory.get();
+                reader.read(row, i);
+                cb.accept(reader);
             } catch (NullPointerException e) {
                 //skip
             }

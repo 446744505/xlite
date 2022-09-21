@@ -17,4 +17,9 @@ public class XList implements XType {
     public boolean isBase() {
         return false;
     }
+
+    @Override
+    public String name() {
+        return TypeBuilder.TYPE_LIST;
+    }
 }

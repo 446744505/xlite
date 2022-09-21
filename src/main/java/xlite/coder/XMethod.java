@@ -1,14 +1,16 @@
 package xlite.coder;
 
 import lombok.Getter;
+import xlite.type.TypeBuilder;
 import xlite.type.XType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class XMethod extends XConstructor {
     @Getter private final String name;
-    @Getter private XType returned;
+    private XType returned;
     @Getter private boolean isStatic;
     @Getter private boolean isOverride;
     @Getter private List<String> exceptions = new ArrayList<>();
@@ -54,5 +56,12 @@ public class XMethod extends XConstructor {
 
     public String getBody() {
         return body.toString();
+    }
+
+    public XType getReturned() {
+        if (Objects.isNull(returned)) {
+            return TypeBuilder.VOID;
+        }
+        return returned;
     }
 }

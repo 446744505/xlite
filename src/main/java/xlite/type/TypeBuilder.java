@@ -4,17 +4,18 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class TypeBuilder {
-    private static final String TYPE_ANY = "any";
-    private static final String TYPE_BOOL = "bool";
-    private static final String TYPE_BYTE = "byte";
-    private static final String TYPE_SHORT = "short";
-    private static final String TYPE_INT = "int";
-    private static final String TYPE_LONG = "long";
-    private static final String TYPE_FLOAT = "float";
-    private static final String TYPE_DOUBLE = "double";
-    private static final String TYPE_STRING = "string";
-    private static final String TYPE_LIST = "list";
-    private static final String TYPE_MAP = "map";
+    public static final String TYPE_VOID = "void";
+    public static final String TYPE_ANY = "any";
+    public static final String TYPE_BOOL = "bool";
+    public static final String TYPE_BYTE = "byte";
+    public static final String TYPE_SHORT = "short";
+    public static final String TYPE_INT = "int";
+    public static final String TYPE_LONG = "long";
+    public static final String TYPE_FLOAT = "float";
+    public static final String TYPE_DOUBLE = "double";
+    public static final String TYPE_STRING = "string";
+    public static final String TYPE_LIST = "list";
+    public static final String TYPE_MAP = "map";
 
     private static final Map<String, XType> baseTypes = new HashMap<>();
     private static final Map<String, XType> defineTypes = new HashMap<>();

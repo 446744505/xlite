@@ -4,7 +4,6 @@ import xlite.coder.XClass;
 import xlite.coder.XField;
 import xlite.coder.XMethod;
 import xlite.language.Java;
-import xlite.type.TypeBuilder;
 import xlite.util.Util;
 
 public class AddSetter implements LanguageVisitor<Void> {
@@ -21,8 +20,7 @@ public class AddSetter implements LanguageVisitor<Void> {
         String methodName = "set" + Util.firstToUpper(field.getName());
         XMethod setter = new XMethod(methodName, clazz);
         final String paramName = "v";
-        setter.returned(TypeBuilder.VOID)
-                .addParam(new XField(paramName, field.getType(), setter))
+        setter.addParam(new XField(paramName, field.getType(), setter))
                 .addBody(String.format("this.%s = %s;", field.getName(), paramName));
         clazz.addMethod(setter);
         return null;

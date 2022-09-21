@@ -109,4 +109,11 @@ public class Writer implements Closeable, Printer {
         return sb.toString();
     }
 
+    public int length() {
+        if (Objects.isNull(sb)) {
+            throw new UnsupportedOperationException();
+        }
+        return sb.length();
+    }
+
 }

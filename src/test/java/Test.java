@@ -1,4 +1,4 @@
-import conf.Init;
+import conf.Loader;
 import xlite.conf.ConfGenerator;
 
 import java.io.File;
@@ -11,7 +11,14 @@ public class Test {
         URL excelURL = Test.class.getResource("excel");
         File excelDir = Paths.get(excelURL.toURI()).toFile();
         ConfGenerator generator = new ConfGenerator(xmlUrl, excelDir,"gen", "java");
-        generator.gen(true, ConfGenerator.ENDPOINT_ALL);
-        Init.loadAll(excelDir, generator);
+
+//        generator.setDataConf("conf/data", "json");
+//        generator.genData(ConfGenerator.ENDPOINT_ALL);
+//        Init.loadAll(excelDir, generator);//TODO 动态编译
+
+        generator.genCode(ConfGenerator.ENDPOINT_ALL);
+        URL dataURL = Test.class.getResource("data");
+        File dataDir = Paths.get(dataURL.toURI()).toFile();
+        Loader.loadAll(dataDir);
     }
 }

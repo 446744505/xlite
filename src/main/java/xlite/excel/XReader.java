@@ -1,5 +1,6 @@
 package xlite.excel;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -47,9 +48,10 @@ public class XReader {
         }
 
         Workbook workbook = null;
-        if (fileName.endsWith(".xlsx")) {
+        String ext = FilenameUtils.getExtension(fileName);
+        if (ext.equals("xlsx")) {
             workbook = new XSSFWorkbook(file);
-        } else if (fileName.endsWith("xls")) {
+        } else if (ext.equals("xls")) {
             workbook = new HSSFWorkbook(new FileInputStream(file));
         }
         if (Objects.nonNull(workbook)) {

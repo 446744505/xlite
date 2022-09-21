@@ -1,19 +1,23 @@
 package xlite.conf.formatter;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.util.Map;
 
 public class JsonFormatter extends DataFormatter {
-    protected JsonFormatter(File dir) {
-        super(dir);
+
+    @Override
+    public void export(Map<?, ?> conf, Class clazz, File outDir) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        File file = new File(outDir, clazz.getSimpleName() + ".json");
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, conf);
     }
 
     @Override
-    public void export(Map<?, ?> conf, Class clazz) throws Exception {
+    public <K, V> Map<K, V> load(File file, TypeReference<Map<K, V>> ref) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        File file = new File(dir, clazz.getSimpleName() + ".json");
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, conf);
+        return (Map<K, V>) mapper.readValue(file, ref);
     }
 }

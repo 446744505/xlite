@@ -52,7 +52,6 @@ public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
         loader.overrided()
                 .addParam(new XField(rowName, new XBean(XRow.class), loader))
                 .addParam(new XField(countName, TypeBuilder.INT, loader))
-                .returned(TypeBuilder.VOID)
                 .addBody(body.getString());
         clazz.addMethod(loader);
         return loader;

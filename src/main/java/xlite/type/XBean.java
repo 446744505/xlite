@@ -3,6 +3,7 @@ package xlite.type;
 import lombok.Getter;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
+import xlite.util.Util;
 
 public class XBean implements XType {
     @Getter private String name;
@@ -24,5 +25,13 @@ public class XBean implements XType {
     @Override
     public boolean isBase() {
         return false;
+    }
+
+    @Override
+    public String name() {
+        if (Util.notEmpty(name)) {
+            return name;
+        }
+        return clazz.getName();
     }
 }
