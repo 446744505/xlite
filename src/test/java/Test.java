@@ -1,6 +1,3 @@
-import conf.Item;
-import conf.ItemID;
-import conf.Loader;
 import xlite.conf.ConfGenerator;
 
 import java.io.File;
@@ -14,14 +11,10 @@ public class Test {
         File excelDir = Paths.get(excelURL.toURI()).toFile();
         ConfGenerator generator = new ConfGenerator(xmlUrl, excelDir,"gen", "java");
 
-//        generator.setDataConf("conf/data", "json");
-//        generator.genData(ConfGenerator.ENDPOINT_ALL);
+        generator.genData(ConfGenerator.ENDPOINT_ALL);
 //        Init.loadAll(excelDir, generator);//TODO 动态编译
 
-        generator.genCode(ConfGenerator.ENDPOINT_ALL);
-        URL dataURL = Test.class.getResource("data");
-        File dataDir = Paths.get(dataURL.toURI()).toFile();
-        Loader.loadAll(dataDir);
-        System.out.println(Item.one(ItemID.Item1));
+//        generator.genCode(ConfGenerator.ENDPOINT_ALL);
+//        Loader.loadAll(new File("conf"));
     }
 }

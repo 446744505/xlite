@@ -1,5 +1,7 @@
 package xlite.util;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,5 +43,20 @@ public class Util {
             }
         }
         return excels;
+    }
+
+    public static List<File> javaFiles(File file) {
+        List<File> files = new ArrayList<>();
+        if (file.isDirectory()) {
+            Arrays.stream(file.listFiles()).forEach(f -> {
+                files.addAll(javaFiles(f));
+            });
+            return files;
+        }
+        String ext = FilenameUtils.getExtension(file.getName());
+        if ("java".equals(ext)) {
+            files.add(file);
+        }
+        return files;
     }
 }

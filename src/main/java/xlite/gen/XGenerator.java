@@ -23,4 +23,8 @@ public class XGenerator {
         GenContext context = new GenContext(srcOutDir, language, conf);
         code.gen(context);
     }
+
+    public ClassLoader compile() {
+        return new xlite.compile.Compiler(srcOutDir).compile();
+    }
 }

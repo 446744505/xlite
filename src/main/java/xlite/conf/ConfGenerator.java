@@ -21,6 +21,7 @@ import xlite.xml.element.PackageElement;
 import xlite.xml.element.XElement;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 
@@ -28,6 +29,7 @@ public class ConfGenerator {
     public static final String ENDPOINT_ALL = "all";
     public static final String ENDPOINT_SERVER = "server";
     public static final String ENDPOINT_CLIENT = "client";
+    private static final String loadAllMethodName = "loadAll";
 
     private final XParser parser;
     private final XGenerator generator;
@@ -74,14 +76,22 @@ public class ConfGenerator {
         XPackage xPackage = packageElement.build(context);
         loadEnumField(xPackage);
         xPackage.check();
+
+        XClass initClass = null;
         if (isReadCode) {
             addReadMethod(xPackage);
-            addInitClass(xPackage);
+            initClass = addInitClass(xPackage);
         } else {
             addLoadMethod(xPackage);
             addLoaderClass(xPackage);
         }
         generator.gen(xPackage);
+        if (isReadCode) {
+            ClassLoader classLoader = generator.compile();
+            Class<?> clazz = classLoader.loadClass(initClass.getFullName(Java.INSTANCE));
+            Method loadMethod = clazz.getMethod(loadAllMethodName, File.class, ConfGenerator.class);
+            loadMethod.invoke(null, excelDir, this);
+        }
     }
 
     private void loadEnumField(XPackage root) throws Exception {
@@ -144,7 +154,7 @@ public class ConfGenerator {
         return fieldExcels;
     }
 
-    private void addInitClass(XPackage root) {
+    private XClass addInitClass(XPackage root) {
         final String paramGeneratorName = "generator";
         List<XEnumer> allEnums = new ArrayList<>();
         root.getAllEnum(allEnums);
@@ -214,7 +224,7 @@ public class ConfGenerator {
             .addImport("xlite.excel.XExcel")
             .addImport("xlite.conf.ConfGenerator")
             .addImport("xlite.excel.XReader");
-        XMethod load = new XMethod("loadAll", clazz);
+        XMethod load = new XMethod(loadAllMethodName, clazz);
         XField paramExcelDir = new XField("excelDir", new XBean(File.class), load);
         XField paramGenerator = new XField(paramGeneratorName, new XBean(ConfGenerator.class), load);
         load.staticed()
@@ -224,6 +234,7 @@ public class ConfGenerator {
             .addBody(body.getString());
         clazz.addMethod(load);
         root.addClass(clazz);
+        return clazz;
     }
 
     private void addLoaderClass(XPackage root) {
