@@ -2,6 +2,7 @@ package xlite.xml.element;
 
 import org.w3c.dom.*;
 import xlite.coder.XCoder;
+import xlite.util.Util;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
@@ -54,6 +55,19 @@ public abstract class AbsElement implements XElement {
             XAttr xAttr = parseAttr(attr, context);
             this.attrs.put(xAttr.getName(), xAttr);
         }
+
+        Node c = src.getNextSibling();
+        if (c != null && Node.TEXT_NODE == c.getNodeType()) {
+            comment = c.getTextContent().trim().replaceAll("[\r\n]", "");
+        }
+        if (Util.isEmpty(comment)) {
+            c = src.getPreviousSibling();
+            if (c != null && Node.TEXT_NODE == c.getNodeType()) {
+                comment = c.getTextContent().trim().replaceAll("[\r\n]", "");
+            }
+        }
+        setComment(comment);
+
         return this;
     }
 
@@ -74,11 +88,7 @@ public abstract class AbsElement implements XElement {
 
     @Override
     public void setComment(String comment) {
-        if (Objects.nonNull(this.comment)) {
-            this.comment += comment;
-        } else {
-            this.comment = comment;
-        }
+        this.comment = comment;
     }
 
     protected <T> T getAttr(String name) {
