@@ -1,10 +1,10 @@
 package xlite.xml.attr;
 
-import org.dom4j.Attribute;
+import org.w3c.dom.Attr;
 import xlite.xml.element.XElement;
 
 public class SimpleAttr extends AbsAttr {
-    public SimpleAttr(Attribute src, XElement parent) {
+    public SimpleAttr(Attr src, XElement parent) {
         super(src, parent);
     }
 }

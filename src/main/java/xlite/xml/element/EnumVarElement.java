@@ -1,6 +1,6 @@
 package xlite.xml.element;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XCoder;
 import xlite.coder.XEnumField;
 import xlite.coder.XField;
@@ -24,13 +24,6 @@ public class EnumVarElement extends VarElement {
     @Override
     protected XField createField(XmlContext context, String name, XType type, XCoder parent) {
         return context.getFactory().createEnumField(name, type, parent);
-    }
-
-    @Override
-    protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name) ||
-                XAttr.ATTR_TYPE.equals(name) ||
-                XAttr.ATTR_VALUE.equals(name);
     }
 
     @Override

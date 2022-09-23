@@ -1,7 +1,7 @@
 package xlite.xml;
 
-import org.dom4j.Attribute;
-import org.dom4j.Element;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 import xlite.coder.*;
 import xlite.type.XType;
 import xlite.xml.attr.SimpleAttr;
@@ -13,7 +13,7 @@ public class SimpleXmlFactory implements XXmlFactory {
 
     @Override
     public XElement createElement(Element src, XElement parent) {
-        String name = src.getName();
+        String name = src.getNodeName();
         if (XElement.ELEMENT_PACKAGE.equals(name)) {
             return new PackageElement(src, parent);
         } else if (XElement.ELEMENT_BEAN.equals(name)) {
@@ -23,31 +23,19 @@ public class SimpleXmlFactory implements XXmlFactory {
                 return new EnumVarElement(src, parent);
             }
             return new BeanVarElement(src, parent);
+        } else {
+            return new NullElement();
         }
-        throw new UnsupportedOperationException(String.format("unsupported element %s", name));
     }
 
     @Override
-    public XAttr createAttr(Attribute src, XElement parent) {
+    public XAttr createAttr(Attr src, XElement parent) {
         String name = src.getName();
-        if (XAttr.ATTR_NAME.equals(name)) {
-            return new SimpleAttr(src, parent);
-        } else if (XAttr.ATTR_TYPE.equals(name)) {
+        if (XAttr.ATTR_TYPE.equals(name)) {
             return new TypeAttr(src, parent);
-        } else if (XAttr.ATTR_KEY.equals(name)) {
-            return new SimpleAttr(src, parent);
-        } else if (XAttr.ATTR_VALUE.equals(name)) {
-            return new SimpleAttr(src, parent);
-        } else if (XAttr.ATTR_COLFROM.equals(name)) {
-            return new SimpleAttr(src, parent);
-        } else if (XAttr.ATTR_PARENT.equals(name)) {
-            return new SimpleAttr(src, parent);
-        } else if (XAttr.ATTR_EXCEL.equals(name)) {
-            return new SimpleAttr(src, parent);
-        } else if (XAttr.ATTR_ENDPOINT.equals(name)) {
+        } else {
             return new SimpleAttr(src, parent);
         }
-        throw new UnsupportedOperationException(String.format("unsupported attribute %s", name));
     }
 
     @Override

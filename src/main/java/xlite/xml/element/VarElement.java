@@ -1,6 +1,6 @@
 package xlite.xml.element;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.type.XType;
@@ -17,14 +17,6 @@ public abstract class VarElement extends AbsElement {
 
     public abstract String getParentName();
     protected abstract XField createField(XmlContext context, String name, XType type, XCoder parent);
-
-    @Override
-    protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name) ||
-                XAttr.ATTR_TYPE.equals(name) ||
-                XAttr.ATTR_KEY.equals(name) ||
-                XAttr.ATTR_VALUE.equals(name);
-    }
 
     @Override
     public XField build0(XmlContext context) {

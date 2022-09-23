@@ -1,8 +1,7 @@
 package xlite.xml.element;
 
-import org.dom4j.*;
+import org.w3c.dom.*;
 import xlite.coder.XCoder;
-import xlite.util.Util;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
@@ -21,7 +20,6 @@ public abstract class AbsElement implements XElement {
         this.parent = parent;
     }
 
-    protected abstract boolean checkAttr(String name);
     protected abstract XCoder build0(XmlContext context);
 
     protected <T extends XCoder> T setCache(T coder) {
@@ -40,40 +38,33 @@ public abstract class AbsElement implements XElement {
 
     @Override
     public XElement parse(XElement preEle, XmlContext context) {
-        for (int i = 0; i < src.nodeCount(); i++) {
-            Node node = src.node(i);
-            if (node instanceof Element) {
-                Element ele = (Element) node;
-                preEle = context.getFactory().createElement(ele, this);
-                elements.add(preEle.parse(preEle, context));
-            } else if (node instanceof Comment) {
-                Comment comment = (Comment) node;
-                if (Objects.nonNull(preEle)) {
-                    preEle.setComment(comment.getText());
-                }
-            } else if (node instanceof Text) {
-                Text txt = (Text) node;
-                String line = txt.getText();
-                if (Util.notEmpty(line)) {
-                    preEle.setComment(line.trim());
-                }
+        NodeList nodes = src.getChildNodes();
+        for(int i = 0, size = nodes.getLength(); i < size; i++) {
+            Node node = nodes.item(i);
+            if(!(node instanceof Element)) {
+                continue;
             }
+            Element ele = (Element) node;
+            preEle = context.getFactory().createElement(ele, this);
+            elements.add(preEle.parse(preEle, context));
         }
-        for (Iterator<Attribute> it = src.attributeIterator(); it.hasNext();) {
-            Attribute attr = it.next();
+        NamedNodeMap attrs = src.getAttributes();
+        for (int i = 0, size = attrs.getLength(); i < size; i++) {
+            Attr attr = (Attr) attrs.item(i);
             XAttr xAttr = parseAttr(attr, context);
-            attrs.put(xAttr.getName(), xAttr);
+            this.attrs.put(xAttr.getName(), xAttr);
         }
         return this;
     }
 
     @Override
-    public XAttr parseAttr(Attribute src, XmlContext context) {
-        String attrName = src.getName();
-        if (!checkAttr(attrName)) {
-            throw new UnsupportedOperationException(String.format("element [%s] unsupported attribute [%s]", this.src.getName(), attrName));
-        }
+    public XAttr parseAttr(Attr src, XmlContext context) {
         return context.getFactory().createAttr(src, this);
+    }
+
+    @Override
+    public List<XElement> getChildren() {
+        return elements;
     }
 
     @Override

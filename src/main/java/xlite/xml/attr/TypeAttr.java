@@ -1,16 +1,15 @@
 package xlite.xml.attr;
 
-import org.dom4j.Attribute;
+import org.w3c.dom.Attr;
 import xlite.type.TypeBuilder;
 import xlite.type.XType;
 import xlite.xml.element.XElement;
-
 
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class TypeAttr extends AbsAttr {
-    public TypeAttr(Attribute src, XElement parent) {
+    public TypeAttr(Attr src, XElement parent) {
         super(src, parent);
     }
 

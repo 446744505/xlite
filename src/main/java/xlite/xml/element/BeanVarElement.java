@@ -1,6 +1,6 @@
 package xlite.xml.element;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.type.XType;

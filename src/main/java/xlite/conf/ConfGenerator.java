@@ -1,6 +1,5 @@
 package xlite.conf;
 
-import org.dom4j.DocumentException;
 import xlite.coder.*;
 import xlite.conf.formatter.DataFormatter;
 import xlite.excel.XExcel;
@@ -22,7 +21,6 @@ import xlite.xml.element.XElement;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.*;
 
 public class ConfGenerator {
@@ -39,7 +37,7 @@ public class ConfGenerator {
     private String dataFormat;
     private final File excelDir;//enum用
 
-    public ConfGenerator(URL xml, File excelDir, String srcOut, String lan) throws DocumentException {
+    public ConfGenerator(File xml, File excelDir, String srcOut, String lan) throws Exception {
         ConfFactory factory = new ConfFactory();
         context = new XmlContext(factory);
         parser = new XParser(xml, context);

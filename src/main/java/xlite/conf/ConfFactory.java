@@ -1,9 +1,12 @@
 package xlite.conf;
 
-import org.dom4j.Attribute;
-import org.dom4j.Element;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 import xlite.coder.*;
-import xlite.conf.elem.*;
+import xlite.conf.elem.ConfBeanElement;
+import xlite.conf.elem.ConfBeanVarElement;
+import xlite.conf.elem.ConfEnumElement;
+import xlite.conf.elem.ConfEnumVarElement;
 import xlite.gen.GenConf;
 import xlite.gen.SimpleGenFactory;
 import xlite.gen.XGenFactory;
@@ -21,7 +24,7 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
 
     @Override
     public XElement createElement(Element src, XElement parent) {
-        String name = src.getName();
+        String name = src.getNodeName();
         if (XElement.ELEMENT_BEAN.equals(name)) {
             return new ConfBeanElement(src, parent);
         } else if (XElement.ELEMENT_VAR.equals(name)) {
@@ -36,7 +39,7 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
     }
 
     @Override
-    public XAttr createAttr(Attribute src, XElement parent) {
+    public XAttr createAttr(Attr src, XElement parent) {
         String name = src.getName();
         if (XAttr.ATTR_COMMENT.equals(name)) {
             return new SimpleAttr(src, parent);

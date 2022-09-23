@@ -1,6 +1,6 @@
 package xlite.conf.elem;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XField;
 import xlite.conf.ConfEnumField;
 import xlite.xml.XmlContext;
@@ -13,16 +13,6 @@ import java.util.Objects;
 public class ConfEnumVarElement extends EnumVarElement {
     public ConfEnumVarElement(Element element, XElement parent) {
         super(element, parent);
-    }
-
-    @Override
-    protected boolean checkAttr(String name) {
-        if (super.checkAttr(name)) {
-            return true;
-        }
-        return XAttr.ATTR_COLFROM.equals(name) ||
-                XAttr.ATTR_COMMENT.equals(name) ||
-                XAttr.ATTR_EXCEL.equals(name);
     }
 
     @Override

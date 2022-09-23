@@ -1,6 +1,6 @@
 package xlite.xml.element;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XClass;
 import xlite.type.TypeBuilder;
 import xlite.type.XBean;
@@ -12,12 +12,6 @@ import java.util.Objects;
 public class BeanElement extends AbsElement {
     public BeanElement(Element element, XElement parent) {
         super(element, parent);
-    }
-
-    @Override
-    protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name)
-                || XAttr.ATTR_PARENT.equals(name);
     }
 
     @Override

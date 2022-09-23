@@ -1,6 +1,6 @@
 package xlite.xml.element;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XEnumer;
 import xlite.coder.XField;
 import xlite.type.*;
@@ -12,11 +12,6 @@ import java.util.Objects;
 public class EnumElement extends AbsElement {
     public EnumElement(Element src, XElement parent) {
         super(src, parent);
-    }
-
-    @Override
-    protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name);
     }
 
     @Override

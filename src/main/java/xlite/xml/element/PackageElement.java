@@ -1,6 +1,6 @@
 package xlite.xml.element;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XPackage;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
@@ -28,11 +28,6 @@ public class PackageElement extends AbsElement {
                     children.add(ele);
                 });
         return this;
-    }
-
-    @Override
-    protected boolean checkAttr(String name) {
-        return XAttr.ATTR_NAME.equals(name);
     }
 
     @Override

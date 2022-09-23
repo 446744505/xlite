@@ -1,26 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<package name="conf">
-    <bean name="Item" excel="道具.xlsx"> 道具
-        <var name="itemId" type="ItemID" from="ID"/> ID
-        <var name="name" type="string" from="道具名称"/> 道具名称
-    </bean>
-    <bean name="Equip" parent="Item" excel="装备.xlsx"> 装备
-        <var name="properties" type="Properties"/> 属性
-    </bean>
-    <bean name="Material" parent="Item" excel="材料.xlsx"> 材料
-        <var name="awards" type="list" value="int" from="拆解物品"/> 拆解物品
-        <var name="properties" type="list" value="Properties"/> 属性
-    </bean>
-    <bean name="Properties"> 属性
-        <var name="atk" type="float" from="攻击"/> 攻击
-        <var name="def" type="float" from="防御"/> 防御
-    </bean>
+<package name="conf" xmlns:xi="http://www.w3.org/2001/XInclude">
     <enum name="Const" excel="常量表.xlsx">
         <var name="name" type="any" from="value" comment="备注"/>
     </enum>
-    <enum name="ItemID">
-        <var name="Const_1" type="int" value="10011"/> xml常量
-        <var name="道具" type="int" from="道具ID" excel="道具ID.xlsx,材料ID.xlsx" comment="备注"/>
-        <var name="装备" type="int" from="装备ID" excel="装备ID.xlsx" comment="备注"/>
-    </enum>
+
+    <xi:include href="item.xml"/>
 </package>

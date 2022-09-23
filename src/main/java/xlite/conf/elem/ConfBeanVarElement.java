@@ -1,6 +1,6 @@
 package xlite.conf.elem;
 
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import xlite.coder.XField;
 import xlite.conf.ConfBeanField;
 import xlite.conf.ConfGenerator;
@@ -14,16 +14,6 @@ import java.util.Objects;
 public class ConfBeanVarElement extends BeanVarElement {
     public ConfBeanVarElement(Element element, XElement parent) {
         super(element, parent);
-    }
-
-    @Override
-    protected boolean checkAttr(String name) {
-        if (super.checkAttr(name)) {
-            return true;
-        }
-        return XAttr.ATTR_COLFROM.equals(name) ||
-                XAttr.ATTR_ENDPOINT.equals(name) ||
-                XAttr.ATTR_COMMENT.equals(name);
     }
 
     @Override
