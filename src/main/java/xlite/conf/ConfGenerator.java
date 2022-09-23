@@ -35,6 +35,7 @@ public class ConfGenerator {
     private final XLanguage language;
     private String dataOut;
     private String dataFormat;
+    private String def;
     private final File excelDir;//enum用
     /*
     * 部分导表：
@@ -55,6 +56,10 @@ public class ConfGenerator {
 
     public void addPartExcel(String file) {
         partExcels.add(file);
+    }
+
+    public void readDef(String def) {
+        this.def = def;
     }
 
     public void genCode(String endPoint) throws Exception {
@@ -121,7 +126,7 @@ public class ConfGenerator {
             e.getFields().stream().map(f -> (ConfEnumField)f).forEach(f -> {
                 getExcels(e, f).forEach(excel -> {
                     XExcel data = excels.get(excel);
-                    data.iterator().forEachRemaining(sheet -> sheet.rows().forEach(row -> {
+                    data.iterator().forEachRemaining(sheet -> sheet.rows(def).forEach(row -> {
                         XCell nameCell = row.getCell(f.getName());
                         XCell valueCell = row.getCell(f.getFromCol());
                         XCell commentCell = row.getCell(f.getComment());
@@ -220,7 +225,8 @@ public class ConfGenerator {
                     body.println(tab + 1, String.format("XExcel excel = excels.get(\"%s\");", excel));
                     String idBoxName = idField.getType().accept(BoxName.INSTANCE, Java.INSTANCE);
                     body.println(tab +1, String.format("java.util.Map<%s, %s> conf = new java.util.HashMap<>();", idBoxName, boxName));
-                    body.println(tab + 1, "excel.iterator().forEachRemaining(sheet -> sheet.rows().forEach(row -> {");
+                    String def = Util.isEmpty(this.def) ? "null" : "\"" + this.def + "\"";
+                    body.println(tab + 1, String.format("excel.iterator().forEachRemaining(sheet -> sheet.rows(%s).forEach(row -> {", def));
                     body.println(tab + 2, String.format("%s obj = new %s();", boxName, boxName));
                     body.println(tab + 2, "obj.read(row, 0);");
                     String idGetter = "get" + Util.firstToUpper(idField.getName());
