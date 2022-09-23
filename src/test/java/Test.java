@@ -12,6 +12,7 @@ public class Test {
         File excelDir = Paths.get(excelURL.toURI()).toFile();
         ConfGenerator generator = new ConfGenerator(xml, excelDir,"gen", "java");
 
+//        generator.addPartExcel("角色装备.xlsx");
         generator.genData(ConfGenerator.ENDPOINT_ALL);
 
 //        generator.genCode(ConfGenerator.ENDPOINT_ALL);

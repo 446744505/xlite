@@ -36,6 +36,13 @@ public class ConfGenerator {
     private String dataOut;
     private String dataFormat;
     private final File excelDir;//enum用
+    /*
+    * 部分导表：
+    * 1、enum永远导出，这是为了简单，不用去分析bean对enum的依赖
+    * 2、（外部addPartExcel传入）找出增加、修改的xml、excel，再找出xml里的所有excel(比如在xml里删除了某个bean的一个from excel)
+    * 3、再找出跟上面两种excel在同一个bean里的excel则为本次部分打表的所有excel
+    * */
+    private final Set<String> partExcels = new HashSet<>();
 
     public ConfGenerator(File xml, File excelDir, String srcOut, String lan) throws Exception {
         ConfFactory factory = new ConfFactory();
@@ -44,6 +51,10 @@ public class ConfGenerator {
         language = factory.createLanguage(lan);
         generator = new XGenerator(srcOut, language, factory);
         this.excelDir = excelDir;
+    }
+
+    public void addPartExcel(String file) {
+        partExcels.add(file);
     }
 
     public void genCode(String endPoint) throws Exception {
@@ -171,13 +182,18 @@ public class ConfGenerator {
         allEnumExcels.forEach((excel, keyCol) -> {
             body.println(2, String.format("hook.registerEnumExcel(\"%s\", \"%s\");", excel, keyCol));
         });
+
+        Set<String> allPartExcels = new HashSet<>(partExcels);
         allClass.stream()
             .map(c -> (ConfClass)c)
             .forEach(c -> {
                 XField idField = c.getIdField();
                 List<String> excels = Util.getExcels(c.getFromExcel());
                 for (String excel : excels) {
-                    XType idType = idField.getType();
+                    if (!allPartExcels.isEmpty() && allPartExcels.contains(excel)) {
+                        allPartExcels.addAll(excels);
+                    }
+                    XType idType = idField.getType();//有excel则idField一定不为null
                     if (idType instanceof XEnum) {
                         XEnum e = ((XEnum) idType);
                         //这里不用BoxName,因为BoxName返回了inner的BoxName
@@ -193,6 +209,9 @@ public class ConfGenerator {
             .forEach(c -> {
                 XField idField = c.getIdField();
                 for (String excel : Util.getExcels(c.getFromExcel())) {
+                    if (!allPartExcels.isEmpty() && !allPartExcels.contains(excel)) {
+                        continue;
+                    }
                     String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, Java.INSTANCE);
                     int tab = 2;
                     body.println(tab, "{");
@@ -213,6 +232,7 @@ public class ConfGenerator {
                     body.println(tab, "}");
                 }
             });
+        body.println(2, paramGeneratorName + ".flush();");
         body.deleteEnd(1);//去掉最后一个换行
 
         XClass clazz = new XClass("Init", root);
@@ -246,8 +266,8 @@ public class ConfGenerator {
     }
 
     private final Map<Class, Set<Object>> allIds = new HashMap<>();
-
-    public void export(Map<?, ?> conf, Class clazz, Class parent) throws Exception {
+    private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
+    public void export(Map<?, ?> conf, Class clazz, Class parent) {
         Set<Object> ids = allIds.get(parent);
         if (Objects.isNull(ids)) {
             ids = new HashSet<>();
@@ -258,6 +278,20 @@ public class ConfGenerator {
                 throw new IllegalStateException(String.format("multi id %s at %s", id, parent.getName()));
             }
         }
-        DataFormatter.createFormatter(dataFormat).export(conf, clazz, new File(dataOut));
+        Map<Object, Object> confs = allConf.get(clazz);
+        if (Objects.isNull(confs)) {
+            confs = new TreeMap<>();
+            allConf.put(clazz, confs);
+        }
+        confs.putAll(conf);
+    }
+
+    public void flush() throws Exception {
+        File dataDir = new File(dataOut);
+        for (Map.Entry<Class, Map<Object, Object>> en : allConf.entrySet()) {
+            Class clazz = en.getKey();
+            Map<Object, Object> conf = en.getValue();
+            DataFormatter.createFormatter(dataFormat).export(conf, clazz, dataDir);
+        }
     }
 }

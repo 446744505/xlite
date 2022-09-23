@@ -4,7 +4,7 @@
         <var name="itemId" type="ItemID" from="ID"/> ID
         <var name="name" type="string" from="道具名称"/> 道具名称
     </bean>
-    <bean name="Equip" parent="Item" excel="装备.xlsx"> 装备
+    <bean name="Equip" parent="Item" excel="角色装备.xlsx,宠物装备.xlsx"> 装备
         <var name="properties" type="Properties"/> 属性
     </bean>
     <bean name="Material" parent="Item" excel="材料.xlsx"> 材料
