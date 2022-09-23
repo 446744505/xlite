@@ -70,7 +70,9 @@ public class ConfGenerator {
         }
         File dir = new File(dataOut);
         dir.mkdirs();
-        Util.cleanDir(dir);
+        if (partExcels.isEmpty()) {
+            Util.cleanDir(dir);
+        }
         gen(true, endPoint);
     }
 
