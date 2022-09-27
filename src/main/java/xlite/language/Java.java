@@ -210,17 +210,17 @@ public class Java implements XLanguage {
 
     @Override
     public String simpleName(XAny t) {
-        return simpleName(t.getInner());
+        return simpleName(t.getValue());
     }
 
     @Override
     public String boxName(XAny t) {
-        return boxName(t.getInner());
+        return boxName(t.getValue());
     }
 
     @Override
     public String defaultValue(XAny t) {
-        return defaultValue(t.getInner());
+        return defaultValue(t.getValue());
     }
 
     @Override
@@ -241,6 +241,24 @@ public class Java implements XLanguage {
         return defaultValue(t.getInner());
     }
 
+    @Override
+    public String simpleName(XRange t) {
+        String valBoxName = t.getValue().accept(BoxName.INSTANCE, this);
+        return String.format("xlite.type.inner.Range<%s>", valBoxName);
+    }
+
+    @Override
+    public String boxName(XRange t) {
+        String valBoxName = t.getValue().accept(BoxName.INSTANCE, this);
+        return String.format("xlite.type.inner.Range<%s>", valBoxName);
+    }
+
+    @Override
+    public String defaultValue(XRange t) {
+        String valBoxName = t.getValue().accept(BoxName.INSTANCE, this);
+        return String.format("xlite.type.inner.Range.toRange(\"%s\", \"\")", valBoxName);
+    }
+
     private String simpleName(XType inner) {
         if (inner instanceof XBool) {
             return simpleName((XBool) inner);
@@ -259,7 +277,7 @@ public class Java implements XLanguage {
         } else if (inner instanceof XString) {
             return simpleName((XString) inner);
         }
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("unsupported inner type " + inner.name());
     }
 
     private String boxName(XType inner) {

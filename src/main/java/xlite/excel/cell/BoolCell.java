@@ -1,6 +1,7 @@
 package xlite.excel.cell;
 
 import org.apache.poi.ss.usermodel.Cell;
+import xlite.type.inner.Range;
 
 public class BoolCell extends AbsCell {
     protected BoolCell(Cell cell) {
@@ -45,5 +46,10 @@ public class BoolCell extends AbsCell {
     @Override
     public String asString() {
         return asBoolean() ? "true" : "false";
+    }
+
+    @Override
+    public Range<?> asRange(String valType) {
+        throw new UnsupportedOperationException("type range unsupported a bool cell");
     }
 }

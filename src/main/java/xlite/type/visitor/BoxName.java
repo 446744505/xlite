@@ -77,4 +77,9 @@ public class BoxName implements TypeVisitor<String> {
     public String visit(XLanguage language, XAny t) {
         return language.boxName(t);
     }
+
+    @Override
+    public String visit(XLanguage language, XRange t) {
+        return language.boxName(t);
+    }
 }

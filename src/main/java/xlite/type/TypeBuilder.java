@@ -16,6 +16,7 @@ public class TypeBuilder {
     public static final String TYPE_STRING = "string";
     public static final String TYPE_LIST = "list";
     public static final String TYPE_MAP = "map";
+    public static final String TYPE_RANGE = "range";
 
     private static final Map<String, XType> baseTypes = new HashMap<>();
     private static final Map<String, XType> defineTypes = new HashMap<>();
@@ -49,6 +50,12 @@ public class TypeBuilder {
         XType typ = baseTypes.get(type);
         if (Objects.nonNull(typ)) {
             return typ;
+        }
+        if (TYPE_RANGE.equals(type)) {
+            XRange r = new XRange();
+            XType v = build(value, null, null, t -> r.setValue(t));
+            r.setValue(v);
+            return r;
         }
         typ = defineTypes.get(type);
         if (Objects.nonNull(typ)) {

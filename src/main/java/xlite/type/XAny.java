@@ -5,8 +5,8 @@ import lombok.Setter;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
-public class XAny implements XType {
-    @Getter @Setter private TypeBase inner;
+public class XAny implements XType, HaveValue {
+    @Getter @Setter private XType value;
 
     public XAny() {}
 

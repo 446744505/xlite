@@ -15,6 +15,6 @@ public abstract class DataFormatter {
         } else if ("xml".equals(formatter)) {
             return new XmlFormatter();
         }
-        throw new UnsupportedOperationException(formatter);
+        throw new UnsupportedOperationException("unsupported data output format " + formatter);
     }
 }

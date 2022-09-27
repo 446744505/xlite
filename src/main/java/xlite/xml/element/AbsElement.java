@@ -2,7 +2,6 @@ package xlite.xml.element;
 
 import org.w3c.dom.*;
 import xlite.coder.XCoder;
-import xlite.util.Util;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
@@ -59,12 +58,6 @@ public abstract class AbsElement implements XElement {
         Node c = src.getNextSibling();
         if (c != null && Node.TEXT_NODE == c.getNodeType()) {
             comment = c.getTextContent().trim().replaceAll("[\r\n]", "");
-        }
-        if (Util.isEmpty(comment)) {
-            c = src.getPreviousSibling();
-            if (c != null && Node.TEXT_NODE == c.getNodeType()) {
-                comment = c.getTextContent().trim().replaceAll("[\r\n]", "");
-            }
         }
         setComment(comment);
 

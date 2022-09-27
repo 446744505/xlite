@@ -1,6 +1,7 @@
 package xlite.excel.cell;
 
 import org.apache.poi.ss.usermodel.Cell;
+import xlite.type.inner.Range;
 
 public class StringCell extends AbsCell {
     protected StringCell(Cell cell) {
@@ -45,5 +46,10 @@ public class StringCell extends AbsCell {
     @Override
     public String asString() {
         return cell.getStringCellValue();
+    }
+
+    @Override
+    public Range<?> asRange(String valType) {
+        return Range.toRange(valType, asString());
     }
 }

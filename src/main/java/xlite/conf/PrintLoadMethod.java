@@ -34,6 +34,7 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
                 .addImport("xlite.conf.formatter.DataFormatter")
                 .addImport("java.io.File")
                 .addImport("java.io.FilenameFilter")
+                .addImport("java.util.Collections")
                 .addImport("java.util.Map")
                 .addField(dataField);
         XMethod method = new XMethod(methodName, clazz);

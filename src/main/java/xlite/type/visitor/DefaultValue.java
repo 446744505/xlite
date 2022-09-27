@@ -77,4 +77,9 @@ public class DefaultValue implements TypeVisitor<String> {
     public String visit(XLanguage language, XAny t) {
         return language.defaultValue(t);
     }
+
+    @Override
+    public String visit(XLanguage language, XRange t) {
+        return language.defaultValue(t);
+    }
 }

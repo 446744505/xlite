@@ -2,6 +2,7 @@ package xlite.excel.cell;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import xlite.type.inner.Range;
 
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public interface XCell {
     float asFloat();
     double asDouble();
     String asString();
+    <T extends Comparable<T>> Range<T> asRange(String valType);
 
     static XCell createCell(Cell cell) {
         if (Objects.isNull(cell)) {

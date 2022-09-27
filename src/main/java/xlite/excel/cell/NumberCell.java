@@ -1,6 +1,7 @@
 package xlite.excel.cell;
 
 import org.apache.poi.ss.usermodel.Cell;
+import xlite.type.inner.Range;
 
 public class NumberCell extends AbsCell {
     protected NumberCell(Cell cell) {
@@ -83,5 +84,10 @@ public class NumberCell extends AbsCell {
     public String asString() {
         double v = asDouble();
         return String.valueOf(v);
+    }
+
+    @Override
+    public Range<?> asRange(String valType) {
+        throw new UnsupportedOperationException("type range unsupported a number cell");
     }
 }

@@ -1,5 +1,7 @@
 package xlite.excel.cell;
 
+import xlite.type.inner.Range;
+
 public class BlankCell implements XCell {
     public static final BlankCell INSTANCE = new BlankCell();
 
@@ -41,5 +43,10 @@ public class BlankCell implements XCell {
     @Override
     public String asString() {
         return "";
+    }
+
+    @Override
+    public Range<?> asRange(String valType) {
+        return Range.toRange(valType, "");
     }
 }

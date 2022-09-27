@@ -159,6 +159,7 @@ public class ConfGenerator {
                 .filter(c -> Util.notEmpty(c.getFromExcel()))
                 .forEach(c -> {
                     language.accept(new PrintLoadMethod(c));
+                    language.accept(new PrintAllMethod(c));
                     language.accept(new PrintOneMethod(c));
                 });
     }

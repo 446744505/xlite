@@ -5,8 +5,7 @@ import lombok.Setter;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
-public class XMap implements XType, HaveValue {
-    @Getter @Setter private XType key;
+public class XRange implements XType, HaveValue {
     @Getter @Setter private XType value;
 
     @Override
@@ -21,6 +20,6 @@ public class XMap implements XType, HaveValue {
 
     @Override
     public String name() {
-        return TypeBuilder.TYPE_MAP;
+        return TypeBuilder.TYPE_RANGE;
     }
 }

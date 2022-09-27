@@ -6,10 +6,7 @@ import xlite.gen.GenConf;
 import xlite.gen.GenContext;
 import xlite.gen.visitor.*;
 import xlite.language.XLanguage;
-import xlite.type.XBean;
-import xlite.type.XList;
-import xlite.type.XMap;
-import xlite.type.XType;
+import xlite.type.*;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -139,10 +136,8 @@ public class XClass extends XInterface {
             if (type.isBase()) {
                 continue;
             }
-            if (type instanceof XList) {
-                type = ((XList) type).getValue();
-            } else if (type instanceof XMap) {
-                type = ((XMap) type).getValue();
+            if (type instanceof HaveValue) {
+                type = ((HaveValue) type).getValue();
             }
 
             checkExist(type, f.getName());

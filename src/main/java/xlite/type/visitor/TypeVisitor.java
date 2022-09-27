@@ -18,4 +18,5 @@ public interface TypeVisitor<R> {
     R visit(XLanguage language, XEnum t);
     R visit(XLanguage language, XVoid t);
     R visit(XLanguage language, XAny t);
+    R visit(XLanguage language, XRange t);
 }

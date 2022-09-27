@@ -1,6 +1,7 @@
 package xlite.excel;
 
 import lombok.Getter;
+import xlite.excel.cell.BlankCell;
 import xlite.excel.cell.XCell;
 
 import java.util.HashMap;
@@ -34,7 +35,11 @@ public class XRow {
         if (Objects.isNull(colIndex)) {
             throw new NullPointerException(String.format("there is no column %s @ %s", title, sheet));
         }
-        return cells.get(colIndex);
+        XCell cell = cells.get(colIndex);
+        if (Objects.isNull(cell)) {
+            cell = BlankCell.INSTANCE;
+        }
+        return cell;
     }
 
     public <T> T readID() {

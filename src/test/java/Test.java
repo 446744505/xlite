@@ -14,10 +14,10 @@ public class Test {
 
 //        generator.addPartExcel("角色装备.xlsx");
 //        generator.readDef("TEST");
-        generator.genData(ConfGenerator.ENDPOINT_ALL);
+//        generator.genData(ConfGenerator.ENDPOINT_ALL);
 
-//        generator.genCode(ConfGenerator.ENDPOINT_ALL);
+        generator.genCode(ConfGenerator.ENDPOINT_ALL);
 //        Loader.loadAll(new File("conf"));
-//        System.out.println(Item.one(ItemID.Item1));
+//        System.out.println(Equip.one(ItemID.PetEquip2));
     }
 }

@@ -6,6 +6,7 @@
     </bean> 道具
     <bean name="Equip" parent="Item" excel="角色装备.xlsx,宠物装备.xlsx">
         <var name="properties" type="Properties"/> 属性
+        <var name="equipLv" type="range" value="int" from="可装备等级"/>
     </bean> 装备
     <bean name="Material" parent="Item" excel="材料.xlsx">
         <var name="awards" type="list" value="int" from="拆解物品"/> 拆解物品

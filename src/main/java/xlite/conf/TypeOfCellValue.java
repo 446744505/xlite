@@ -3,6 +3,7 @@ package xlite.conf;
 import xlite.excel.cell.*;
 import xlite.language.XLanguage;
 import xlite.type.*;
+import xlite.type.visitor.BoxName;
 import xlite.type.visitor.TypeVisitor;
 
 import java.util.Objects;
@@ -124,7 +125,13 @@ public class TypeOfCellValue implements TypeVisitor<Object> {
         if (Objects.isNull(inner)) {
             throw new UnsupportedOperationException("cellVal=" + cell.asString());
         }
-        t.setInner(inner);
+        t.setValue(inner);
         return rst;
+    }
+
+    @Override
+    public Object visit(XLanguage language, XRange t) {
+        String valBoxName = t.getValue().accept(BoxName.INSTANCE, language);
+        return cell.asRange(valBoxName);
     }
 }

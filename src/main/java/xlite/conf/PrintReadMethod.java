@@ -148,4 +148,11 @@ public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     public String visit(XLanguage language, XAny t) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public String visit(XLanguage language, XRange t) {
+        assertJava(language);
+        String valBoxName = t.getValue().accept(BoxName.INSTANCE, language);
+        return String.format("this.%s = %s.getCell(\"%s\", %s).asRange(\"%s\");", field.getName(), rowName, field.getFromCol(), countName, valBoxName);
+    }
 }

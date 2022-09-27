@@ -5,7 +5,7 @@ import lombok.Setter;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
-public class XList implements XType {
+public class XList implements XType, HaveValue {
     @Getter @Setter private XType value;
 
     @Override

@@ -61,4 +61,8 @@ public interface XLanguage {
     String simpleName(XEnum t);
     String boxName(XEnum t);
     String defaultValue(XEnum t);
+
+    String simpleName(XRange t);
+    String boxName(XRange t);
+    String defaultValue(XRange t);
 }
