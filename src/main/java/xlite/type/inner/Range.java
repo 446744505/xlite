@@ -1,6 +1,9 @@
 package xlite.type.inner;
 
 import lombok.Getter;
+import xlite.coder.XClass;
+import xlite.type.TypeBuilder;
+import xlite.type.XBean;
 import xlite.util.Util;
 
 import java.util.HashMap;
@@ -12,12 +15,12 @@ public class Range<T extends Comparable<T>> {
     private static final Map<String, Ranger> handler = new HashMap<>();
 
     static {
-        register(Byte.class, B.INSTANCE);
-        register(Short.class, S.INSTANCE);
-        register(Integer.class, I.INSTANCE);
-        register(Long.class, L.INSTANCE);
-        register(Float.class, F.INSTANCE);
-        register(Double.class, D.INSTANCE);
+        register0(TypeBuilder.TYPE_BYTE, B.INSTANCE);
+        register0(TypeBuilder.TYPE_SHORT, S.INSTANCE);
+        register0(TypeBuilder.TYPE_INT, I.INSTANCE);
+        register0(TypeBuilder.TYPE_LONG, L.INSTANCE);
+        register0(TypeBuilder.TYPE_FLOAT, F.INSTANCE);
+        register0(TypeBuilder.TYPE_DOUBLE, D.INSTANCE);
     }
 
     @Getter private final T min;
@@ -25,7 +28,7 @@ public class Range<T extends Comparable<T>> {
     @Getter private final boolean rightOpen;
     @Getter private final boolean leftOpen;
 
-    private Range(T min, T max, boolean leftOpen, boolean rigthOpen) {
+    public Range(T min, T max, boolean leftOpen, boolean rigthOpen) {
         this.min = min;
         this.max = max;
         this.leftOpen = leftOpen;
@@ -88,8 +91,14 @@ public class Range<T extends Comparable<T>> {
         return false;
     }
 
+    private static void register0(String type, Ranger ranger) {
+        handler.put(type, ranger);
+    }
+
     public static void register(Class clazz, Ranger ranger) {
         handler.put(clazz.getSimpleName(), ranger);
+        TypeBuilder.registerBean(new XBean(clazz));
+        XClass.register(clazz);
     }
 
     public static <T extends Comparable<T>> Range<T> toRange(String valType, String format) {

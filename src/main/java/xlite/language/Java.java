@@ -176,7 +176,7 @@ public class Java implements XLanguage {
         if (Objects.nonNull(clazz)) {
             return clazz.getSimpleName();
         }
-        return XClass.getFullName(t.getName(), this);
+        return XClass.getFullName(t.name(), this);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class Java implements XLanguage {
         if (Objects.nonNull(clazz)) {
             return clazz.getName();
         }
-        return XClass.getFullName(t.getName(), this);
+        return XClass.getFullName(t.name(), this);
     }
 
     @Override
@@ -255,8 +255,7 @@ public class Java implements XLanguage {
 
     @Override
     public String defaultValue(XRange t) {
-        String valBoxName = t.getValue().accept(BoxName.INSTANCE, this);
-        return String.format("xlite.type.inner.Range.toRange(\"%s\", \"\")", valBoxName);
+        return String.format("xlite.type.inner.Range.toRange(\"%s\", \"\")", t.getValue().name());
     }
 
     private String simpleName(XType inner) {

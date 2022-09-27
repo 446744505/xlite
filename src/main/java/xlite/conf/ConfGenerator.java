@@ -205,7 +205,7 @@ public class ConfGenerator {
                     if (idType instanceof XEnum) {
                         XEnum e = ((XEnum) idType);
                         //这里不用BoxName,因为BoxName返回了inner的BoxName
-                        String fullName = XClass.getFullName(e.getName(), Java.INSTANCE);
+                        String fullName = XClass.getFullName(e.name(), Java.INSTANCE);
                         body.println(2, String.format("hook.registerEnumIdExcel(\"%s\", %s.class);", excel, fullName));
                     }
                 }});

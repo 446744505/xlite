@@ -86,7 +86,7 @@ public class TypeBuilder {
     }
 
     public static void registerBean(XBean bean) {
-        String name = bean.getName();
+        String name = bean.name();
         if (null != defineTypes.put(name, bean)) {
             throw new IllegalStateException(String.format("type of repetition:", name));
         }

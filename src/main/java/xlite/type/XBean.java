@@ -6,7 +6,7 @@ import xlite.type.visitor.TypeVisitor;
 import xlite.util.Util;
 
 public class XBean implements XType {
-    @Getter private String name;
+    private String name;
     @Getter private Class clazz;
 
     public XBean(String name) {
@@ -32,6 +32,6 @@ public class XBean implements XType {
         if (Util.notEmpty(name)) {
             return name;
         }
-        return clazz.getName();
+        return clazz.getSimpleName();
     }
 }

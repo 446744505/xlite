@@ -21,7 +21,7 @@ public class XEnum extends XBean {
 
     public void assertInner() {
         if (Objects.isNull(inner)) {
-            throw new IllegalStateException("if enum as a var`type, it all fields must same type at " + getName());
+            throw new IllegalStateException("if enum as a var`type, it all fields must same type at " + name());
         }
     }
 }

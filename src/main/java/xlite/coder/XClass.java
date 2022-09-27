@@ -6,7 +6,9 @@ import xlite.gen.GenConf;
 import xlite.gen.GenContext;
 import xlite.gen.visitor.*;
 import xlite.language.XLanguage;
-import xlite.type.*;
+import xlite.type.HaveValue;
+import xlite.type.XBean;
+import xlite.type.XType;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -21,11 +23,23 @@ public class XClass extends XInterface {
 
     public XClass(String name, XCoder parent) {
         super(name, parent);
-        clazzCache.put(name, this);
+        if (Objects.nonNull(clazzCache.put(name, this))) {
+            throw new IllegalStateException(String.format("type of repetition:", name));
+        }
         List<Consumer<XClass>> wait = waitBuildClass.get(name);
         if (Objects.nonNull(wait)) {
             wait.forEach(cb -> cb.accept(this));
         }
+    }
+
+    public static void register(Class clazz) {
+        String[] paks = clazz.getName().split("\\.");
+        StringBuilder pakPath = new StringBuilder();
+        for (int i = 0; i < paks.length - 1; i++) {
+            pakPath.append(paks[i]);
+        }
+        XPackage pak = new XPackage(pakPath.toString(), null);
+        new XClass(clazz.getSimpleName(), pak);
     }
 
     @Override
@@ -142,7 +156,7 @@ public class XClass extends XInterface {
 
             checkExist(type, f.getName());
             if (type instanceof XBean) {
-                String name = ((XBean) type).getName();
+                String name = type.name();
                 getClass(name).checkLoopDepend(depends);
             }
         }
