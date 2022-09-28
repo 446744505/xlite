@@ -3,14 +3,13 @@ package xlite.conf;
 import xlite.excel.cell.*;
 import xlite.language.XLanguage;
 import xlite.type.*;
-import xlite.type.inner.DateTime;
-import xlite.type.visitor.BoxName;
 import xlite.type.visitor.TypeVisitor;
 import xlite.util.Util;
 
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
-public class TypeOfCellValue implements TypeVisitor<Object> {
+public class TypeOfCellValue implements TypeVisitor<String> {
     private final XCell cell;
 
     public TypeOfCellValue(XCell cell) {
@@ -18,73 +17,73 @@ public class TypeOfCellValue implements TypeVisitor<Object> {
     }
 
     @Override
-    public Object visit(XLanguage language, XBool t) {
-        return cell.asBoolean();
+    public String visit(XLanguage language, XBool t) {
+        return String.valueOf(cell.asBoolean());
     }
 
     @Override
-    public Object visit(XLanguage language, XByte t) {
-        return cell.asByte();
+    public String visit(XLanguage language, XByte t) {
+        return String.valueOf(cell.asByte());
     }
 
     @Override
-    public Object visit(XLanguage language, XInt t) {
-        return cell.asInteger();
+    public String visit(XLanguage language, XInt t) {
+        return String.valueOf(cell.asInteger());
     }
 
     @Override
-    public Object visit(XLanguage language, XShort t) {
-        return cell.asShort();
+    public String visit(XLanguage language, XShort t) {
+        return String.valueOf(cell.asShort());
     }
 
     @Override
-    public Object visit(XLanguage language, XLong t) {
-        return cell.asLong();
+    public String visit(XLanguage language, XLong t) {
+        return String.valueOf(cell.asLong());
     }
 
     @Override
-    public Object visit(XLanguage language, XFloat t) {
-        return cell.asFloat();
+    public String visit(XLanguage language, XFloat t) {
+        return String.valueOf(cell.asFloat());
     }
 
     @Override
-    public Object visit(XLanguage language, XDouble t) {
-        return cell.asDouble();
+    public String visit(XLanguage language, XDouble t) {
+        return String.valueOf(cell.asDouble());
     }
 
     @Override
-    public Object visit(XLanguage language, XString t) {
+    public String visit(XLanguage language, XString t) {
         return cell.asString();
     }
 
     @Override
-    public Object visit(XLanguage language, XList t) {
+    public String visit(XLanguage language, XList t) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object visit(XLanguage language, XMap t) {
+    public String visit(XLanguage language, XMap t) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object visit(XLanguage language, XBean t) {
+    public String visit(XLanguage language, XBean t) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object visit(XLanguage language, XEnum t) {
+    public String visit(XLanguage language, XEnum t) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object visit(XLanguage language, XVoid t) {
+    public String visit(XLanguage language, XVoid t) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object visit(XLanguage language, XAny t) {
-        TypeBase inner = null;
+    public String visit(XLanguage language, XAny t) {
+        XType inner = null;
         Object rst = cell.asString();
         if (cell instanceof BoolCell) {
             inner = TypeBuilder.BOOL;
@@ -101,25 +100,35 @@ public class TypeOfCellValue implements TypeVisitor<Object> {
             }
         } else if (cell instanceof BlankCell) {
             inner = TypeBuilder.STRING;
-            rst = "\"\"";
+            rst = "";
         } else if (cell instanceof StringCell) {
             String val = cell.asString();
             try {
-                Integer.parseInt(val);
-                inner = TypeBuilder.INT;
-                rst = cell.asInteger();
-            } catch (NumberFormatException e1) {
+                Util.strToDate(val);
+                inner = TypeBuilder.DATE;
+                rst = val;
+            } catch (DateTimeParseException e0) {
                 try {
-                    Double.parseDouble(val);
-                    inner = TypeBuilder.DOUBLE;
-                    rst = cell.asDouble();
-                } catch (NumberFormatException e2) {
-                    if ("true".equalsIgnoreCase(val) || "false".equalsIgnoreCase(val)) {
-                        inner = TypeBuilder.BOOL;
-                        rst = cell.asBoolean();
-                    } else {
-                        inner = TypeBuilder.STRING;
-                        rst = "\"" + val + "\"";
+                    Integer.parseInt(val);
+                    inner = TypeBuilder.INT;
+                    rst = cell.asInteger();
+                } catch (NumberFormatException e1) {
+                    try {
+                        Double.parseDouble(val);
+                        inner = TypeBuilder.DOUBLE;
+                        rst = cell.asDouble();
+                    } catch (NumberFormatException e2) {
+                        if ("true".equalsIgnoreCase(val) || "false".equalsIgnoreCase(val)) {
+                            inner = TypeBuilder.BOOL;
+                            rst = cell.asBoolean();
+                        } else {
+                            long time = Util.strToTime(val);
+                            if (time > 0) {
+                                inner = TypeBuilder.TIME;
+                            } else {
+                                inner = TypeBuilder.STRING;
+                            }
+                        }
                     }
                 }
             }
@@ -128,24 +137,21 @@ public class TypeOfCellValue implements TypeVisitor<Object> {
             throw new UnsupportedOperationException("cellVal=" + cell.asString());
         }
         t.setValue(inner);
-        return rst;
+        return rst.toString();
     }
 
     @Override
-    public Object visit(XLanguage language, XRange t) {
-        String valBoxName = t.getValue().accept(BoxName.INSTANCE, language);
-        return cell.asRange(valBoxName);
+    public String visit(XLanguage language, XRange t) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object visit(XLanguage language, XTime t) {
-        String val = cell.asString();
-        return Util.strToTime(val);
+    public String visit(XLanguage language, XTime t) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object visit(XLanguage language, XDate t) {
-        String val = cell.asString();
-        return new DateTime(val);
+    public String visit(XLanguage language, XDate t) {
+        throw new UnsupportedOperationException();
     }
 }

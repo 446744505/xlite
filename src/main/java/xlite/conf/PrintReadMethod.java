@@ -113,7 +113,7 @@ public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     public String visit(XLanguage language, XList t) {
         assertJava(language);
         XType vt = t.getValue();
-        if (vt.isBase()) {
+        if (vt instanceof TypeBase) {
             String boxName = vt.accept(BoxName.INSTANCE, language);
             return String.format("xlite.excel.VList.read(\"%s\", %s, cell -> this.%s.add(cell.as%s()));", field.getFromCol(), rowName, field.getName(), boxName);
         }

@@ -7,6 +7,7 @@ import xlite.gen.GenContext;
 import xlite.gen.visitor.*;
 import xlite.language.XLanguage;
 import xlite.type.HaveValue;
+import xlite.type.TypeBase;
 import xlite.type.XBean;
 import xlite.type.XType;
 
@@ -147,7 +148,7 @@ public class XClass extends XInterface {
         for (XField f : fields) {
             XType type = f.getType();
             checkExist(type, f.getName());
-            if (type.isBase()) {
+            if (type instanceof TypeBase) {
                 continue;
             }
             if (type instanceof HaveValue) {

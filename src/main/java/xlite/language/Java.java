@@ -33,6 +33,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XBool t, String v) {
+        return v;
+    }
+
+    @Override
     public String simpleName(XByte t) {
         return "byte";
     }
@@ -48,6 +53,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XByte t, String v) {
+        return v;
+    }
+
+    @Override
     public String simpleName(XShort t) {
         return "short";
     }
@@ -60,6 +70,11 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XShort t) {
         return "0";
+    }
+
+    @Override
+    public String valueOf(XShort t, String v) {
+        return v;
     }
 
     @Override
@@ -99,6 +114,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XInt t, String v) {
+        return v;
+    }
+
+    @Override
     public String simpleName(XLong t) {
         return "long";
     }
@@ -111,6 +131,11 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XLong t) {
         return "0l";
+    }
+
+    @Override
+    public String valueOf(XLong t, String v) {
+        return v;
     }
 
     @Override
@@ -129,6 +154,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XFloat t, String v) {
+        return v;
+    }
+
+    @Override
     public String simpleName(XDouble t) {
         return "double";
     }
@@ -144,13 +174,28 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XDouble t, String v) {
+        return v;
+    }
+
+    @Override
     public String defaultValue(XString t) {
         return "\"\"";
     }
 
     @Override
+    public String valueOf(XString t, String v) {
+        return "\"" + v + "\"";
+    }
+
+    @Override
     public String defaultValue(XList t) {
         return "new java.util.ArrayList<>()";
+    }
+
+    @Override
+    public String valueOf(XList t, String v) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -168,6 +213,11 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XMap t) {
         return "new java.util.HashMap<>()";
+    }
+
+    @Override
+    public String valueOf(XMap t, String v) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -194,6 +244,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XBean t, String v) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public String simpleName(XVoid t) {
         return "void";
     }
@@ -209,6 +264,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XVoid t, String v) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public String simpleName(XAny t) {
         return simpleName(t.getValue());
     }
@@ -221,6 +281,11 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XAny t) {
         return defaultValue(t.getValue());
+    }
+
+    @Override
+    public String valueOf(XAny t, String v) {
+        return valueOf(t.getValue(), v);
     }
 
     @Override
@@ -242,6 +307,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XEnum t, String v) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public String simpleName(XRange t) {
         String valBoxName = t.getValue().accept(BoxName.INSTANCE, this);
         return String.format("xlite.type.inner.Range<%s>", valBoxName);
@@ -256,6 +326,11 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XRange t) {
         return String.format("xlite.type.inner.Range.toRange(\"%s\", \"\")", t.getValue().name());
+    }
+
+    @Override
+    public String valueOf(XRange t, String v) {
+        return String.format("new xlite.type.inner.toRange(\"%s\", \"%s\")", t.getValue().name(), v);
     }
 
     @Override
@@ -274,6 +349,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String valueOf(XTime t, String v) {
+        return String.format("xlite.util.Util.strToTime(\"%s\")", v);
+    }
+
+    @Override
     public String simpleName(XDate t) {
         return "xlite.type.inner.DateTime";
     }
@@ -286,6 +366,11 @@ public class Java implements XLanguage {
     @Override
     public String defaultValue(XDate t) {
         return "new xlite.type.inner.DateTime()";
+    }
+
+    @Override
+    public String valueOf(XDate t, String v) {
+        return String.format("new xlite.type.inner.DateTime(\"%s\")", v);
     }
 
     private String simpleName(XType inner) {
@@ -305,6 +390,10 @@ public class Java implements XLanguage {
             return simpleName((XDouble) inner);
         } else if (inner instanceof XString) {
             return simpleName((XString) inner);
+        } else if (inner instanceof XDate) {
+            return simpleName((XDate) inner);
+        }  else if (inner instanceof XTime) {
+            return simpleName((XTime) inner);
         }
         throw new UnsupportedOperationException("unsupported inner type " + inner.name());
     }
@@ -326,6 +415,10 @@ public class Java implements XLanguage {
             return boxName((XDouble) inner);
         } else if (inner instanceof XString) {
             return boxName((XString) inner);
+        } else if (inner instanceof XDate) {
+            return boxName((XDate) inner);
+        } else if (inner instanceof XTime) {
+            return boxName((XTime) inner);
         }
         throw new UnsupportedOperationException();
     }
@@ -347,6 +440,35 @@ public class Java implements XLanguage {
             return defaultValue((XDouble) inner);
         } else if (inner instanceof XString) {
             return defaultValue((XString) inner);
+        } else if (inner instanceof XDate) {
+            return defaultValue((XDate) inner);
+        } else if (inner instanceof XTime) {
+            return defaultValue((XTime) inner);
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    private String valueOf(XType inner, String v) {
+        if (inner instanceof XBool) {
+            return valueOf((XBool) inner, v);
+        } else if (inner instanceof XByte) {
+            return valueOf((XByte) inner, v);
+        } else if (inner instanceof XShort) {
+            return valueOf((XShort) inner, v);
+        } else if (inner instanceof XInt) {
+            return valueOf((XInt) inner, v);
+        } else if (inner instanceof XLong) {
+            return valueOf((XLong) inner, v);
+        } else if (inner instanceof XFloat) {
+            return valueOf((XFloat) inner, v);
+        } else if (inner instanceof XDouble) {
+            return valueOf((XDouble) inner, v);
+        } else if (inner instanceof XString) {
+            return valueOf((XString) inner, v);
+        } else if (inner instanceof XDate) {
+            return valueOf((XDate) inner, v);
+        } else if (inner instanceof XTime) {
+            return valueOf((XTime) inner, v);
         }
         throw new UnsupportedOperationException();
     }

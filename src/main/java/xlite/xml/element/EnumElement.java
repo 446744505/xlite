@@ -29,11 +29,9 @@ public class EnumElement extends AbsElement {
         TypeBase inner = null;
         for (XField f : e.getFields()) {
             XType ft = f.getType();
-            if (ft instanceof XAny) {
-                break;
-            }
             if (!(ft instanceof TypeBase)) {
-                throw new IllegalStateException("enum`s field type must base type at " + name);
+                inner = null;
+                break;
             }
             if (Objects.isNull(inner)) {
                 inner = (TypeBase) ft;

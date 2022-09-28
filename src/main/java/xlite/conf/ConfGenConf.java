@@ -5,6 +5,7 @@ import xlite.coder.XField;
 import xlite.coder.XMethod;
 import xlite.gen.GenConf;
 import xlite.language.XLanguage;
+import xlite.type.TypeBase;
 
 public class ConfGenConf implements GenConf {
     @Override
@@ -14,7 +15,7 @@ public class ConfGenConf implements GenConf {
 
     @Override
     public boolean genSetter(XClass clazz, XField field, XLanguage language) {
-        return field.getType().isBase();
+        return field.getType() instanceof TypeBase;
     }
 
     @Override

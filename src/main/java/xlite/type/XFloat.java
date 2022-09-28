@@ -3,7 +3,7 @@ package xlite.type;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
-public class XFloat extends TypeBase {
+public class XFloat implements XType, TypeBase {
     XFloat() {}
 
     @Override

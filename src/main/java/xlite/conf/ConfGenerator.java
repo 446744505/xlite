@@ -165,6 +165,9 @@ public class ConfGenerator {
     }
 
     private List<String> getExcels(ConfEnum e, ConfEnumField field) {
+        if (Objects.nonNull(field.getValue())) {
+            return Collections.emptyList();
+        }
         List<String> enumExcels = Util.getExcels(e.getFromExcel());
         List<String> fieldExcels = Util.getExcels(field.getExcel());
         fieldExcels.addAll(enumExcels);

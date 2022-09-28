@@ -23,11 +23,6 @@ public class XBean implements XType {
     }
 
     @Override
-    public boolean isBase() {
-        return false;
-    }
-
-    @Override
     public String name() {
         if (Util.notEmpty(name)) {
             return name;

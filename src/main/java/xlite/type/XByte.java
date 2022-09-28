@@ -3,7 +3,7 @@ package xlite.type;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
-public class XByte extends TypeBase {
+public class XByte implements XType, TypeBase {
     XByte() {}
 
     @Override

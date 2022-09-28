@@ -3,7 +3,7 @@ package xlite.type;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
-public class XDouble extends TypeBase {
+public class XDouble implements XType, TypeBase {
     @Override
     public <T> T accept(TypeVisitor<T> visitor, XLanguage language) {
         return visitor.visit(language, this);

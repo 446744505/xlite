@@ -22,7 +22,7 @@ public class ConfEnumField extends XEnumField {
         if (type instanceof XAny) {
             setType(new XAny());
         }
-        Object val = getType().accept(new TypeOfCellValue(cell), Java.INSTANCE);
-        setValue(val.toString());
+        String val = getType().accept(new TypeOfCellValue(cell), Java.INSTANCE);
+        setValue(val);
     }
 }

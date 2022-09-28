@@ -3,7 +3,7 @@ package xlite.type;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
-public class XInt extends TypeBase {
+public class XInt implements XType, TypeBase {
     XInt() {}
 
     @Override

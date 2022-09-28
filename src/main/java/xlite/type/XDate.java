@@ -12,11 +12,6 @@ public class XDate implements XType {
     }
 
     @Override
-    public boolean isBase() {
-        return false;
-    }
-
-    @Override
     public String name() {
         return TypeBuilder.TYPE_DATE;
     }
