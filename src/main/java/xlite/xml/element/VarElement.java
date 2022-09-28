@@ -34,6 +34,10 @@ public abstract class VarElement extends AbsElement {
         XField field = setCache(createField(context, nameAttr.getValue(),
                 typeAttr.build(keyAttr, valueAttr, t -> ((XField)buildCache).setType(t)), parent.build(context)));
         field.setComment(getComment());
+        XAttr rangeAttr = getAttr(XAttr.ATTR_RANGE_CHECK);
+        if (Objects.nonNull(rangeAttr)) {
+            field.setRangeCheck(rangeAttr.getValue());
+        }
         return field;
     }
 }

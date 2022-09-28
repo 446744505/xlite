@@ -14,7 +14,6 @@ import xlite.language.XLanguage;
 import xlite.type.XType;
 import xlite.xml.SimpleXmlFactory;
 import xlite.xml.XXmlFactory;
-import xlite.xml.attr.SimpleAttr;
 import xlite.xml.attr.XAttr;
 import xlite.xml.element.XElement;
 
@@ -40,10 +39,6 @@ public class ConfFactory implements XXmlFactory, XGenFactory {
 
     @Override
     public XAttr createAttr(Attr src, XElement parent) {
-        String name = src.getName();
-        if (XAttr.ATTR_COMMENT.equals(name)) {
-            return new SimpleAttr(src, parent);
-        }
         return xmlFactory.createAttr(src, parent);
     }
 

@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.Objects;
 
 public class XRow {
+    private final int rowNum;
     @Getter private final XSheet sheet;
     private final Map<Integer, XCell> cells = new HashMap<>();
 
-    public XRow(XSheet sheet) {
+    public XRow(XSheet sheet, int rowNum) {
         this.sheet = sheet;
+        this.rowNum = rowNum;
     }
 
     public void addCell(int colIndex, XCell cell) {
@@ -47,11 +49,16 @@ public class XRow {
         return (T) hook.key(this);
     }
 
+    @Override
+    public String toString() {
+        return sheet + " at row " + rowNum;
+    }
+
     public static class DefStartRow extends XRow {
         @Getter private final String name;
 
         public DefStartRow(String name) {
-            super(null);
+            super(null, 0);
             this.name = name;
         }
     }
@@ -59,7 +66,7 @@ public class XRow {
     public static class DefEndRow extends XRow {
         public static final DefEndRow INSTANCE = new DefEndRow();
         private DefEndRow() {
-            super(null);
+            super(null, 0);
         }
     }
 }

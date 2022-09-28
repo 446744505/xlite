@@ -34,6 +34,10 @@ public class EnumVarElement extends VarElement {
         if (checkValueAttr() && Objects.isNull(valueAttr)) {
             throw new NullPointerException("var mush have a value attr at enum " + getParentName());
         }
+        XAttr commentAttr = getAttr(XAttr.ATTR_COMMENT);
+        if (Objects.nonNull(commentAttr)) {
+            field.setComment(commentAttr.getValue());
+        }
         if (Objects.nonNull(valueAttr)) {
             enumField.setValue(valueAttr.getValue());
         }

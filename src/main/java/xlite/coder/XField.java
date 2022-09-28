@@ -9,6 +9,7 @@ public class XField extends AbsCoder {
     @Getter private boolean staticed;
     @Getter @Setter private XType type;
     @Getter @Setter private String comment;
+    @Getter @Setter private String rangeCheck = "";
 
     public XField(String name, XType type, XCoder parent) {
         super(parent);

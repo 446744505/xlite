@@ -6,6 +6,7 @@ import xlite.type.TypeBuilder;
 import xlite.type.XBean;
 import xlite.util.Util;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +22,6 @@ public class Range<T extends Comparable<T>> {
         register0(TypeBuilder.TYPE_LONG, Lng.INSTANCE);
         register0(TypeBuilder.TYPE_FLOAT, Flt.INSTANCE);
         register0(TypeBuilder.TYPE_DOUBLE, Dub.INSTANCE);
-        register0(TypeBuilder.TYPE_STRING, Str.INSTANCE);
         register0(TypeBuilder.TYPE_DATE, Date.INSTANCE);
     }
 
@@ -50,22 +50,28 @@ public class Range<T extends Comparable<T>> {
         }
 
         boolean pass;
-        int c = v.compareTo(min);
-        if (leftOpen) {
-            pass = c > 0;
+        if (Objects.isNull(min)) {
+            pass = true;
         } else {
-            pass = c > 0 || c == 0;
+            int c = v.compareTo(min);
+            if (leftOpen) {
+                pass = c > 0;
+            } else {
+                pass = c > 0 || c == 0;
+            }
         }
 
         if (!pass) {
             return false;
         }
 
-        c = v.compareTo(max);
-        if (rightOpen) {
-            pass = c < 0;
-        } else {
-            pass = c < 0 || c == 0;
+        if (Objects.nonNull(max)) {
+            int c = v.compareTo(max);
+            if (rightOpen) {
+                pass = c < 0;
+            } else {
+                pass = c < 0 || c == 0;
+            }
         }
 
         return pass;
@@ -126,7 +132,7 @@ public class Range<T extends Comparable<T>> {
             rightOpen = true;
         }
         String[] arr = format.split(",");
-        String min = arr[0].substring(1, arr[0].length()).trim();
+        String min = arr[0].substring(1).trim();
         String max = arr[1].substring(0, arr[1].length() - 1).trim();
         return ranger.create(min, max, leftOpen, rightOpen);
     }
@@ -135,9 +141,9 @@ public class Range<T extends Comparable<T>> {
         private static final Int INSTANCE = new Int();
         @Override
         public Range<Integer> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            Integer m1 = Integer.valueOf(min);
-            Integer m2 = Integer.valueOf(max);
-            if (m1 > m2) {
+            Integer m1 = Util.isEmpty(min) ? null : Integer.valueOf(min);
+            Integer m2 = Util.isEmpty(max) ? null : Integer.valueOf(max);
+            if (Objects.nonNull(m1) && Objects.nonNull(m2) && m1 > m2) {
                 throw new IllegalArgumentException("min > max : " + min + " > " + max);
             }
             return new Range(m1, m2, leftOpen, rightOpen);
@@ -147,9 +153,9 @@ public class Range<T extends Comparable<T>> {
         private static final Byt INSTANCE = new Byt();
         @Override
         public Range<Byte> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            Byte m1 = Byte.valueOf(min);
-            Byte m2 = Byte.valueOf(max);
-            if (m1 > m2) {
+            Byte m1 = Util.isEmpty(min) ? null : Byte.valueOf(min);
+            Byte m2 = Util.isEmpty(max) ? null : Byte.valueOf(max);
+            if (Objects.nonNull(m1) && Objects.nonNull(m2) && m1 > m2) {
                 throw new IllegalArgumentException("min > max : " + min + " > " + max);
             }
             return new Range(m1, m2, leftOpen, rightOpen);
@@ -159,9 +165,9 @@ public class Range<T extends Comparable<T>> {
         private static final Srt INSTANCE = new Srt();
         @Override
         public Range<Short> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            Short m1 = Short.valueOf(min);
-            Short m2 = Short.valueOf(max);
-            if (m1 > m2) {
+            Short m1 = Util.isEmpty(min) ? null : Short.valueOf(min);
+            Short m2 = Util.isEmpty(max) ? null : Short.valueOf(max);
+            if (Objects.nonNull(m1) && Objects.nonNull(m2) && m1 > m2) {
                 throw new IllegalArgumentException("min > max : " + min + " > " + max);
             }
             return new Range(m1, m2, leftOpen, rightOpen);
@@ -171,9 +177,9 @@ public class Range<T extends Comparable<T>> {
         private static final Lng INSTANCE = new Lng();
         @Override
         public Range<Long> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            Long m1 = Long.valueOf(min);
-            Long m2 = Long.valueOf(max);
-            if (m1 > m2) {
+            Long m1 = Util.isEmpty(min) ? null : Long.valueOf(min);
+            Long m2 = Util.isEmpty(max) ? null : Long.valueOf(max);
+            if (Objects.nonNull(m1) && Objects.nonNull(m2) && m1 > m2) {
                 throw new IllegalArgumentException("min > max : " + min + " > " + max);
             }
             return new Range(m1, m2, leftOpen, rightOpen);
@@ -183,9 +189,9 @@ public class Range<T extends Comparable<T>> {
         private static final Flt INSTANCE = new Flt();
         @Override
         public Range<Float> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            Float m1 = Float.valueOf(min);
-            Float m2 = Float.valueOf(max);
-            if (m1 > m2) {
+            Float m1 = Util.isEmpty(min) ? null : Float.valueOf(min);
+            Float m2 = Util.isEmpty(max) ? null : Float.valueOf(max);
+            if (Objects.nonNull(m1) && Objects.nonNull(m2) && m1 > m2) {
                 throw new IllegalArgumentException("min > max : " + min + " > " + max);
             }
             return new Range(m1, m2, leftOpen, rightOpen);
@@ -195,20 +201,12 @@ public class Range<T extends Comparable<T>> {
         private static final Dub INSTANCE = new Dub();
         @Override
         public Range<Double> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            Double m1 = Double.valueOf(min);
-            Double m2 = Double.valueOf(max);
-            if (m1 > m2) {
+            Double m1 = Util.isEmpty(min) ? null : Double.valueOf(min);
+            Double m2 = Util.isEmpty(max) ? null : Double.valueOf(max);
+            if (Objects.nonNull(m1) && Objects.nonNull(m2) && m1 > m2) {
                 throw new IllegalArgumentException("min > max : " + min + " > " + max);
             }
             return new Range(m1, m2, leftOpen, rightOpen);
-        }
-    }
-
-    private static class Str implements Ranger<Double> {
-        private static final Str INSTANCE = new Str();
-        @Override
-        public Range<Double> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            return new Range(min, max, leftOpen, rightOpen);
         }
     }
 
@@ -216,8 +214,15 @@ public class Range<T extends Comparable<T>> {
         private static final Date INSTANCE = new Date();
         @Override
         public Range<DateTime> create(String min, String max, boolean leftOpen, boolean rightOpen) {
-            DateTime m1 = new DateTime(min);
-            DateTime m2 = new DateTime(max);
+            DateTime m1 = Util.isEmpty(min) ? null : new DateTime(min);
+            DateTime m2 = Util.isEmpty(max) ? null : new DateTime(max);
+            if (Objects.nonNull(m1) && Objects.nonNull(m2)) {
+                LocalDateTime l1 = m1.asLocalDateTime();
+                LocalDateTime l2 = m2.asLocalDateTime();
+                if (l1.isAfter(l2)) {
+                    throw new IllegalArgumentException("min > max : " + min + " > " + max);
+                }
+            }
             return new Range(m1, m2, leftOpen, rightOpen);
         }
     }

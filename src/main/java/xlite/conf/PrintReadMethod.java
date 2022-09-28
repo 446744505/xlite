@@ -24,10 +24,6 @@ public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
         this.field = field;
     }
 
-    public void make() {
-        Java.INSTANCE.accept(this);
-    }
-
     @Override
     public XMethod visit(Java java) {
         clazz.addImport("xlite.excel.XRow")

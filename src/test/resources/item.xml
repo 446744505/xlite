@@ -2,7 +2,7 @@
 <package name="item">
     <bean name="Item" excel="道具.xlsx">
         <var name="itemId" type="ItemID" from="ID"/> ID
-        <var name="name" type="string" from="道具名称"/> 道具名称
+        <var name="name" type="string" from="道具名称" range="[1,7]"/> 道具名称
     </bean> 道具
     <bean name="Equip" parent="Item" excel="角色装备.xlsx,宠物装备.xlsx">
         <var name="properties" type="Properties"/> 属性
@@ -13,8 +13,8 @@
         <var name="properties" type="list" value="Properties"/> 属性
     </bean> 材料
     <bean name="Properties">
-        <var name="atk" type="float" from="攻击"/> 攻击
-        <var name="def" type="float" from="防御"/> 防御
+        <var name="atk" type="float" from="攻击" range="[0,]"/> 攻击
+        <var name="def" type="float" from="防御" range="[0,]"/> 防御
     </bean> 属性
     <enum name="ItemID">
         <var name="Const_1" type="int" value="10011"/> xml常量

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package name="conf" xmlns:xi="http://www.w3.org/2001/XInclude">
     <enum name="Const" excel="常量表.xlsx">
-        <var name="Xml_Const1" type="date" value="2023-04-15"/>
+        <var name="Xml_Const1" type="date" value="2023-04-15" comment="日期"/>
         <var name="Xml_Const2" type="time" value="10s"/>
         <var name="Xml_Const3" type="string" value="xxx"/>
         <var name="name" type="any" from="value" comment="备注"/>

@@ -31,6 +31,14 @@ public class ConfBeanVarElement extends BeanVarElement {
         XAttr colFrom = getAttr(XAttr.ATTR_COLFROM);
         confField.setFromCol(Objects.isNull(colFrom) ? "" : colFrom.getValue());
         confField.setEndPoint(endPoint);
+        XAttr foreignAttr = getAttr(XAttr.ATTR_FOREIGN_CHECK);
+        if (Objects.nonNull(foreignAttr)) {
+            confField.setForeignCheck(foreignAttr.getValue());
+        }
+        XAttr uniqAttr = getAttr(XAttr.ATTR_UNIQ_CHECK);
+        if (Objects.nonNull(uniqAttr)) {
+            confField.setUniqCheck(uniqAttr.getValue());
+        }
         return confField;
     }
 }

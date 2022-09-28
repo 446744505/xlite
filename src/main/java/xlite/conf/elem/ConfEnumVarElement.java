@@ -19,10 +19,6 @@ public class ConfEnumVarElement extends EnumVarElement {
     public ConfEnumField build0(XmlContext context) {
         XField field = super.build0(context);
         ConfEnumField confEnumField = (ConfEnumField) field;
-        XAttr commentAttr = getAttr(XAttr.ATTR_COMMENT);
-        if (Objects.nonNull(commentAttr)) {
-            field.setComment(commentAttr.getValue());
-        }
         XAttr valueAttr = getAttr(XAttr.ATTR_VALUE);
         XAttr fromAttr = getAttr(XAttr.ATTR_COLFROM);
         if (Objects.isNull(valueAttr) && Objects.isNull(fromAttr)) {

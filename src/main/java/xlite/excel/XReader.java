@@ -131,7 +131,7 @@ public class XReader {
     }
 
     private XRow parseRow(XSheet sheet, Row row) {
-        XRow r = new XRow(sheet);
+        XRow r = new XRow(sheet, row.getRowNum());
         for (int colIndex = 0; colIndex < row.getLastCellNum(); colIndex++) {
             if (sheet.isCommentCol(colIndex)) {
                 continue;

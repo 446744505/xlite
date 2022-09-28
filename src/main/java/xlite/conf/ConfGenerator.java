@@ -5,6 +5,7 @@ import xlite.conf.formatter.DataFormatter;
 import xlite.excel.XExcel;
 import xlite.excel.XReader;
 import xlite.excel.cell.XCell;
+import xlite.gen.visitor.PrintCheckMethod;
 import xlite.gen.Writer;
 import xlite.gen.XGenerator;
 import xlite.language.Java;
@@ -148,7 +149,10 @@ public class ConfGenerator {
         root.getAllClass(allClass);
         allClass.stream()
                 .map(c -> (ConfClass)c)
-                .forEach(c -> new PrintReadMethod(c, null).make());
+                .forEach(c -> {
+                    language.accept(new PrintReadMethod(c, null));
+                    language.accept(new PrintCheckMethod(c, null));
+                });
     }
 
     private void addLoadMethod(XPackage root) {
@@ -233,6 +237,7 @@ public class ConfGenerator {
                     body.println(tab + 1, String.format("excel.iterator().forEachRemaining(sheet -> sheet.rows(%s).forEach(row -> {", def));
                     body.println(tab + 2, String.format("%s obj = new %s();", boxName, boxName));
                     body.println(tab + 2, "obj.read(row, 0);");
+                    body.println(tab + 2, "try {obj.check();} catch (CheckException e) {throw new RuntimeException(row.toString(), e);}");
                     String idGetter = "get" + Util.firstToUpper(idField.getName());
                     body.println(tab + 2, String.format("conf.put(obj.%s(), obj);", idGetter));
                     body.println(tab + 1, "}));");
@@ -253,6 +258,7 @@ public class ConfGenerator {
             .addImport("xlite.conf.ConfExcelHook")
             .addImport("xlite.excel.XExcel")
             .addImport("xlite.conf.ConfGenerator")
+            .addImport("xlite.CheckException")
             .addImport("xlite.excel.XReader");
         XMethod load = new XMethod(loadAllMethodName, clazz);
         XField paramExcelDir = new XField("excelDir", new XBean(File.class), load);

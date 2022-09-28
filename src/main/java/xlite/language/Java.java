@@ -37,6 +37,16 @@ public class Java implements XLanguage {
         return v;
     }
 
+    private String baseCheck(TypeBase t, String fieldName, String format) {
+        String boxName = t.accept(BoxName.INSTANCE, this);
+        return String.format("check%s(%s, \"%s\")", boxName, fieldName, format);
+    }
+
+    @Override
+    public String rangeCheck(XBool t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
+    }
+
     @Override
     public String simpleName(XByte t) {
         return "byte";
@@ -58,6 +68,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XByte t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
+    }
+
+    @Override
     public String simpleName(XShort t) {
         return "short";
     }
@@ -75,6 +90,11 @@ public class Java implements XLanguage {
     @Override
     public String valueOf(XShort t, String v) {
         return v;
+    }
+
+    @Override
+    public String rangeCheck(XShort t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
     }
 
     @Override
@@ -119,6 +139,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XInt t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
+    }
+
+    @Override
     public String simpleName(XLong t) {
         return "long";
     }
@@ -136,6 +161,11 @@ public class Java implements XLanguage {
     @Override
     public String valueOf(XLong t, String v) {
         return v;
+    }
+
+    @Override
+    public String rangeCheck(XLong t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
     }
 
     @Override
@@ -159,6 +189,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XFloat t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
+    }
+
+    @Override
     public String simpleName(XDouble t) {
         return "double";
     }
@@ -179,6 +214,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XDouble t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
+    }
+
+    @Override
     public String defaultValue(XString t) {
         return "\"\"";
     }
@@ -189,6 +229,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XString t, String fieldName, String format) {
+        return baseCheck(t, fieldName, format);
+    }
+
+    @Override
     public String defaultValue(XList t) {
         return "new java.util.ArrayList<>()";
     }
@@ -196,6 +241,11 @@ public class Java implements XLanguage {
     @Override
     public String valueOf(XList t, String v) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String rangeCheck(XList t, String fieldName, String format) {
+        return String.format("checkList(%s, \"%s\")", fieldName, format);
     }
 
     @Override
@@ -217,6 +267,11 @@ public class Java implements XLanguage {
 
     @Override
     public String valueOf(XMap t, String v) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String rangeCheck(XMap t, String fieldName, String format) {
         throw new UnsupportedOperationException();
     }
 
@@ -249,6 +304,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XBean t, String fieldName, String format) {
+        return fieldName + ".check()";
+    }
+
+    @Override
     public String simpleName(XVoid t) {
         return "void";
     }
@@ -265,6 +325,11 @@ public class Java implements XLanguage {
 
     @Override
     public String valueOf(XVoid t, String v) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String rangeCheck(XVoid t, String fieldName, String format) {
         throw new UnsupportedOperationException();
     }
 
@@ -289,6 +354,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XAny t, String fieldName, String format) {
+        return rangeCheck(t.getValue(), fieldName, format);
+    }
+
+    @Override
     public String simpleName(XEnum t) {
         t.assertInner();
         return simpleName(t.getInner());
@@ -308,7 +378,14 @@ public class Java implements XLanguage {
 
     @Override
     public String valueOf(XEnum t, String v) {
-        throw new UnsupportedOperationException();
+        t.assertInner();
+        return valueOf(t.getInner(), v);
+    }
+
+    @Override
+    public String rangeCheck(XEnum t, String fieldName, String format) {
+        t.assertInner();
+        return rangeCheck(t.getInner(), fieldName, format);
     }
 
     @Override
@@ -334,6 +411,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XRange t, String fieldName, String format) {
+        return "";
+    }
+
+    @Override
     public String simpleName(XTime t) {
         return simpleName(TypeBuilder.LONG);
     }
@@ -354,6 +436,11 @@ public class Java implements XLanguage {
     }
 
     @Override
+    public String rangeCheck(XTime t, String fieldName, String format) {
+        return rangeCheck(TypeBuilder.LONG, fieldName, format);
+    }
+
+    @Override
     public String simpleName(XDate t) {
         return "xlite.type.inner.DateTime";
     }
@@ -371,6 +458,11 @@ public class Java implements XLanguage {
     @Override
     public String valueOf(XDate t, String v) {
         return String.format("new xlite.type.inner.DateTime(\"%s\")", v);
+    }
+
+    @Override
+    public String rangeCheck(XDate t, String fieldName, String format) {
+        return String.format("checkDate(%s, \"%s\")", fieldName, format);
     }
 
     private String simpleName(XType inner) {
@@ -469,6 +561,31 @@ public class Java implements XLanguage {
             return valueOf((XDate) inner, v);
         } else if (inner instanceof XTime) {
             return valueOf((XTime) inner, v);
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    private String rangeCheck(XType inner, String fieldName, String format) {
+        if (inner instanceof XBool) {
+            return rangeCheck((XBool) inner, fieldName, format);
+        } else if (inner instanceof XByte) {
+            return rangeCheck((XByte) inner, fieldName, format);
+        } else if (inner instanceof XShort) {
+            return rangeCheck((XShort) inner, fieldName, format);
+        } else if (inner instanceof XInt) {
+            return rangeCheck((XInt) inner, fieldName, format);
+        } else if (inner instanceof XLong) {
+            return rangeCheck((XLong) inner, fieldName, format);
+        } else if (inner instanceof XFloat) {
+            return rangeCheck((XFloat) inner, fieldName, format);
+        } else if (inner instanceof XDouble) {
+            return rangeCheck((XDouble) inner, fieldName, format);
+        } else if (inner instanceof XString) {
+            return rangeCheck((XString) inner, fieldName, format);
+        } else if (inner instanceof XDate) {
+            return rangeCheck((XDate) inner, fieldName, format);
+        } else if (inner instanceof XTime) {
+            return rangeCheck((XTime) inner, fieldName, format);
         }
         throw new UnsupportedOperationException();
     }
