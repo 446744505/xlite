@@ -258,6 +258,36 @@ public class Java implements XLanguage {
         return String.format("xlite.type.inner.Range.toRange(\"%s\", \"\")", t.getValue().name());
     }
 
+    @Override
+    public String simpleName(XTime t) {
+        return simpleName(TypeBuilder.LONG);
+    }
+
+    @Override
+    public String boxName(XTime t) {
+        return boxName(TypeBuilder.LONG);
+    }
+
+    @Override
+    public String defaultValue(XTime t) {
+        return defaultValue(TypeBuilder.LONG);
+    }
+
+    @Override
+    public String simpleName(XDate t) {
+        return "xlite.type.inner.DateTime";
+    }
+
+    @Override
+    public String boxName(XDate t) {
+        return "xlite.type.inner.DateTime";
+    }
+
+    @Override
+    public String defaultValue(XDate t) {
+        return "new xlite.type.inner.DateTime()";
+    }
+
     private String simpleName(XType inner) {
         if (inner instanceof XBool) {
             return simpleName((XBool) inner);

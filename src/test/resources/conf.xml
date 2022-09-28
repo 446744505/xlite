@@ -3,6 +3,11 @@
     <enum name="Const" excel="常量表.xlsx">
         <var name="name" type="any" from="value" comment="备注"/>
     </enum>
+    <bean name="TestConf" excel="测试.xlsx">
+        <var name="id" type="int" from="ID"/> ID
+        <var name="time" type="time" from="时间"/>
+        <var name="date" type="date" from="日期"/>
+    </bean>
 
     <xi:include href="item.xml"/>
 </package>

@@ -3,8 +3,10 @@ package xlite.conf;
 import xlite.excel.cell.*;
 import xlite.language.XLanguage;
 import xlite.type.*;
+import xlite.type.inner.DateTime;
 import xlite.type.visitor.BoxName;
 import xlite.type.visitor.TypeVisitor;
+import xlite.util.Util;
 
 import java.util.Objects;
 
@@ -133,5 +135,17 @@ public class TypeOfCellValue implements TypeVisitor<Object> {
     public Object visit(XLanguage language, XRange t) {
         String valBoxName = t.getValue().accept(BoxName.INSTANCE, language);
         return cell.asRange(valBoxName);
+    }
+
+    @Override
+    public Object visit(XLanguage language, XTime t) {
+        String val = cell.asString();
+        return Util.strToTime(val);
+    }
+
+    @Override
+    public Object visit(XLanguage language, XDate t) {
+        String val = cell.asString();
+        return new DateTime(val);
     }
 }

@@ -65,4 +65,12 @@ public interface XLanguage {
     String simpleName(XRange t);
     String boxName(XRange t);
     String defaultValue(XRange t);
+
+    String simpleName(XTime t);
+    String boxName(XTime t);
+    String defaultValue(XTime t);
+
+    String simpleName(XDate t);
+    String boxName(XDate t);
+    String defaultValue(XDate t);
 }

@@ -82,4 +82,14 @@ public class SimpleName implements TypeVisitor<String> {
     public String visit(XLanguage language, XRange t) {
         return language.simpleName(t);
     }
+
+    @Override
+    public String visit(XLanguage language, XTime t) {
+        return language.simpleName(t);
+    }
+
+    @Override
+    public String visit(XLanguage language, XDate t) {
+        return language.simpleName(t);
+    }
 }

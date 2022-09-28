@@ -17,6 +17,8 @@ public class TypeBuilder {
     public static final String TYPE_LIST = "list";
     public static final String TYPE_MAP = "map";
     public static final String TYPE_RANGE = "range";
+    public static final String TYPE_TIME = "time";
+    public static final String TYPE_DATE = "date";
 
     private static final Map<String, XType> baseTypes = new HashMap<>();
     private static final Map<String, XType> defineTypes = new HashMap<>();
@@ -31,6 +33,8 @@ public class TypeBuilder {
     public static final XFloat FLOAT = new XFloat();
     public static final XDouble DOUBLE = new XDouble();
     public static final XString STRING = new XString();
+    public static final XTime TIME = new XTime();
+    public static final XDate DATE = new XDate();
 
     static {
         baseTypes.put(TYPE_BOOL, BOOL);
@@ -41,6 +45,9 @@ public class TypeBuilder {
         baseTypes.put(TYPE_STRING, STRING);
         baseTypes.put(TYPE_FLOAT, FLOAT);
         baseTypes.put(TYPE_DOUBLE, DOUBLE);
+
+        defineTypes.put(TYPE_TIME, TIME);
+        defineTypes.put(TYPE_DATE, DATE);
     }
 
     public static XType build(String type, String key, String value, Consumer<XType> cb) {

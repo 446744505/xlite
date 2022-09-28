@@ -154,4 +154,16 @@ public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
         assertJava(language);
         return String.format("this.%s = %s.getCell(\"%s\", %s).asRange(\"%s\");", field.getName(), rowName, field.getFromCol(), countName, t.getValue().name());
     }
+
+    @Override
+    public String visit(XLanguage language, XTime t) {
+        assertJava(language);
+        return String.format("this.%s = xlite.util.Util.strToTime(%s.getCell(\"%s\", %s).asString());", field.getName(), rowName, field.getFromCol(), countName);
+    }
+
+    @Override
+    public String visit(XLanguage language, XDate t) {
+        assertJava(language);
+        return String.format("this.%s = new xlite.type.inner.DateTime(%s.getCell(\"%s\", %s).asString());", field.getName(), rowName, field.getFromCol(), countName);
+    }
 }
