@@ -22,6 +22,7 @@ public class Range<T extends Comparable<T>> {
         register0(TypeBuilder.TYPE_FLOAT, Flt.INSTANCE);
         register0(TypeBuilder.TYPE_DOUBLE, Dub.INSTANCE);
         register0(TypeBuilder.TYPE_STRING, Str.INSTANCE);
+        register0(TypeBuilder.TYPE_DATE, Date.INSTANCE);
     }
 
     @Getter private final T min;
@@ -208,6 +209,16 @@ public class Range<T extends Comparable<T>> {
         @Override
         public Range<Double> create(String min, String max, boolean leftOpen, boolean rightOpen) {
             return new Range(min, max, leftOpen, rightOpen);
+        }
+    }
+
+    private static class Date implements Ranger<DateTime> {
+        private static final Date INSTANCE = new Date();
+        @Override
+        public Range<DateTime> create(String min, String max, boolean leftOpen, boolean rightOpen) {
+            DateTime m1 = new DateTime(min);
+            DateTime m2 = new DateTime(max);
+            return new Range(m1, m2, leftOpen, rightOpen);
         }
     }
 }

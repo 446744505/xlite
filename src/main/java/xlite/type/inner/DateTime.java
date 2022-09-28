@@ -6,7 +6,7 @@ import xlite.util.Util;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class DateTime {
+public class DateTime implements Comparable<DateTime> {
     @Getter private final String txt;
     private LocalDateTime localDateTime;
 
@@ -43,5 +43,12 @@ public class DateTime {
     @Override
     public String toString() {
         return txt;
+    }
+
+    @Override
+    public int compareTo(DateTime o) {
+        asLocalDateTime();
+        o.asLocalDateTime();
+        return localDateTime.compareTo(o.localDateTime);
     }
 }

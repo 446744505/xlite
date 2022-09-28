@@ -8,8 +8,6 @@ import xlite.type.TypeBuilder;
 import xlite.type.XType;
 
 public class PrintAllMethod implements LanguageVisitor<XMethod> {
-    private static final String methodName = "all";
-
     private final ConfClass clazz;
 
     public PrintAllMethod(ConfClass clazz) {
@@ -19,7 +17,7 @@ public class PrintAllMethod implements LanguageVisitor<XMethod> {
     @Override
     public XMethod visit(Java java) {
         XType idType = clazz.getIdField().getType();
-        XMethod method = new XMethod(methodName, clazz);
+        XMethod method = new XMethod("all" + clazz.getName(), clazz);
         Writer body = new Writer();
         body.print(String.format("return Collections.unmodifiableMap(%s);", PrintLoadMethod.dataFieldName));
         XType returnType = TypeBuilder.build(TypeBuilder.TYPE_MAP, idType.name(), clazz.getName(), null);
