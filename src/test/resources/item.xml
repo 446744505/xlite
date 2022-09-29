@@ -9,7 +9,7 @@
         <var name="equipLv" type="range" value="int" from="可装备等级"/>
     </bean> 装备
     <bean name="Material" parent="Item" excel="材料.xlsx">
-        <var name="awards" type="list" value="int" from="拆解物品"/> 拆解物品
+        <var name="awards" type="list" value="ItemID" from="拆解物品"/> 拆解物品
         <var name="properties" type="list" value="Properties"/> 属性
     </bean> 材料
     <bean name="Properties">

@@ -113,6 +113,11 @@ public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
             String boxName = vt.accept(BoxName.INSTANCE, language);
             return String.format("xlite.excel.VList.read(\"%s\", %s, cell -> this.%s.add(cell.as%s()));", field.getFromCol(), rowName, field.getName(), boxName);
         }
+        if (vt instanceof XEnum) {
+            String fullName = XClass.getFullName(vt.name(), language);
+            return String.format("xlite.excel.VList.read(\"%s\", %s, (fieldName -> %s.%s(fieldName)), val -> this.%s.add(val));",
+                    field.getFromCol(), rowName, fullName, PrintEnumValueMethod.ENUM_METHOD_VALUE, field.getName());
+        }
         String defaultValue = vt.accept(DefaultValue.INSTANCE, language);
         return String.format("xlite.excel.VList.read(%s, () -> %s, obj -> this.%s.add(obj));", rowName, defaultValue, field.getName());
     }

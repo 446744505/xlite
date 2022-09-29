@@ -27,7 +27,7 @@ public class PrintEnumValueMethod implements LanguageVisitor<XMethod> {
         String returnType = inner.accept(SimpleName.INSTANCE, java);
         body.println(tab + 1, String.format("return (%s) %s.class.getField(%s).get(null);", returnType, e.getName(), fieldName));
         body.println(tab, "} catch (Exception e) {");
-        body.println(tab + 1, String.format("throw new RuntimeException(%s, e);", fieldName));
+        body.println(tab + 1, String.format("throw new RuntimeException(%s + \" not exist in enum %s\", e);", fieldName, e.getName()));
         body.print(tab,"}");
         XMethod valuer = new XMethod(ENUM_METHOD_VALUE, e);
         valuer.returned(inner)
