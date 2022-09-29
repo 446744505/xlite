@@ -23,6 +23,7 @@ public class ConfEnumElement extends EnumElement {
         if (Objects.nonNull(fromAttr)) {//excel attr可以放在var上
             confEnum.setFromExcel(fromAttr.getValue());
         }
+
         return confEnum;
     }
 }

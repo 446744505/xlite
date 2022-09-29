@@ -20,8 +20,8 @@ public class ConfEnum extends XEnumer {
     @Override
     protected void printField(GenContext context) {
         fields.stream()
-                .map(f -> (ConfEnumField) f)
-                .filter(f -> Objects.nonNull(f.getValue()))
-                .forEach(f -> context.println(1, new PrintConst((XEnumField) f)));
+            .map(f -> (ConfEnumField) f)
+            .filter(f -> Objects.nonNull(f.getValue()))
+            .forEach(f -> context.println(1, new PrintConst((XEnumField) f)));
     }
 }

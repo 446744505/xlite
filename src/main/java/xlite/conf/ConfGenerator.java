@@ -96,6 +96,7 @@ public class ConfGenerator {
 
         XClass initClass = null;
         if (isReadCode) {
+            addEnumValueMethod(xPackage);
             addReadMethod(xPackage);
             initClass = addInitClass(xPackage);
         } else {
@@ -153,6 +154,16 @@ public class ConfGenerator {
                     language.accept(new PrintReadMethod(c, null));
                     language.accept(new PrintCheckMethod(c, null));
                 });
+    }
+
+    private void addEnumValueMethod(XPackage root) {
+        List<XEnumer> allEnums = new ArrayList<>();
+        root.getAllEnum(allEnums);
+        allEnums.stream()
+                .filter(e -> Objects.nonNull(e.getInner()))
+                .map(e -> (ConfEnum)e).forEach(e -> {
+            language.accept(new PrintEnumValueMethod(e));
+        });
     }
 
     private void addLoadMethod(XPackage root) {

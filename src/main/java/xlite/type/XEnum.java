@@ -7,9 +7,9 @@ import xlite.type.visitor.TypeVisitor;
 import java.util.Objects;
 
 public class XEnum extends XBean {
-    @Getter private final TypeBase inner;//所有字段的类型相同时的类型
+    @Getter private final XType inner;//所有字段的类型相同时的类型
 
-    public XEnum(String name, TypeBase inner) {
+    public XEnum(String name, XType inner) {
         super(name);
         this.inner = inner;
     }

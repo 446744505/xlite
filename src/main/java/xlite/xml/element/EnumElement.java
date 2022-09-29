@@ -3,7 +3,9 @@ package xlite.xml.element;
 import org.w3c.dom.Element;
 import xlite.coder.XEnumer;
 import xlite.coder.XField;
-import xlite.type.*;
+import xlite.type.TypeBuilder;
+import xlite.type.XEnum;
+import xlite.type.XType;
 import xlite.xml.XmlContext;
 import xlite.xml.attr.XAttr;
 
@@ -26,21 +28,18 @@ public class EnumElement extends AbsElement {
                 .filter(ele -> ele instanceof VarElement)
                 .map(ele -> (VarElement) ele)
                 .forEach(ele -> e.addField(ele.build(context)));
-        TypeBase inner = null;
+        XType inner = null;
         for (XField f : e.getFields()) {
             XType ft = f.getType();
-            if (!(ft instanceof TypeBase)) {
-                inner = null;
-                break;
-            }
             if (Objects.isNull(inner)) {
-                inner = (TypeBase) ft;
+                inner = ft;
             }
-            if (!ft.getClass().getName().equals(inner.getClass().getName())) {
+            if (!ft.getClass().getName().equals(inner.getClass().getName())) {//有不同类型
                 inner = null;
                 break;
             }
         }
+        e.setInner(inner);
         TypeBuilder.registerBean(new XEnum(e.getName(), inner));
         return e;
     }

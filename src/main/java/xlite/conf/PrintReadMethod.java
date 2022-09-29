@@ -132,7 +132,9 @@ public class PrintReadMethod implements LanguageVisitor<XMethod>, TypeVisitor<St
     public String visit(XLanguage language, XEnum t) {
         assertJava(language);
         t.assertInner();
-        return String.format("this.%s = %s.readID();", field.getName(), rowName);
+        String enumBoxName = XClass.getFullName(t.name(), language);
+        String enumFieldName = String.format("%s.getCell(\"%s\").asString()", rowName, field.getFromCol());
+        return String.format("this.%s = %s.%s(%s);", field.getName(), enumBoxName, PrintEnumValueMethod.ENUM_METHOD_VALUE, enumFieldName);
     }
 
     @Override

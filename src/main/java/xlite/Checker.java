@@ -3,6 +3,7 @@ package xlite;
 import xlite.type.TypeBuilder;
 import xlite.type.inner.DateTime;
 import xlite.type.inner.Range;
+import xlite.util.Util;
 
 import java.util.List;
 
@@ -65,7 +66,29 @@ public interface Checker {
         }
     }
 
-    default boolean checkList(List<?> list, String format) {
-        return false;
+    default <T> void checkList(List<T> list, String format) throws CheckException {
+        for (T val : list) {
+            if (val instanceof Checker) {
+                ((Checker) val).check();
+            } else if (Util.notEmpty(format)) {
+                if (val instanceof Byte) {
+                    checkByte((Byte) val, format);
+                } else if (val instanceof Short) {
+                    checkShort((Short) val, format);
+                } else if (val instanceof Integer) {
+                    checkInteger((Integer) val, format);
+                } else if (val instanceof Long) {
+                    checkLong((Long) val, format);
+                } else if (val instanceof Float) {
+                    checkFloat((Float) val, format);
+                } else if (val instanceof Double) {
+                    checkDouble((Double) val, format);
+                } else if (val instanceof String) {
+                    checkString((String) val, format);
+                } else if (val instanceof DateTime) {
+                    checkDate((DateTime) val, format);
+                }
+            }
+        }
     }
 }
