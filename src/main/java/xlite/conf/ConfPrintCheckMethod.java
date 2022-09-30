@@ -39,8 +39,23 @@ public class ConfPrintCheckMethod extends PrintCheckMethod {
                 body.println(tab, String.format("xlite.conf.UniqCheck.check(%s.class, \"%s\", %s);",
                         topParent.getFullName(java), field.getName(), field.getName()));
             }
+
+            String foreign = confBeanField.getForeignCheck();
+            if (Util.notEmpty(foreign)) {
+                boolean checkChild = foreign.startsWith("*");
+                String[] arr = foreign.replace("*", "").split("\\.");
+                String checker = arr[0];
+                checker = XClass.getFullName(checker, java);
+                String checkField = "id";
+                if (arr.length > 1) {
+                    checkField = arr[1];
+                }
+                body.println(tab, String.format("xlite.conf.ForeignCheck.addForeignCheck(this, \"%s\", %s.class, \"%s\", %s, %s);",
+                        field.getName(), checker, checkField, field.getName(), checkChild));
+            }
         }
         body.deleteEnd(1);
+
         method.addBody(body.getString());
         return method;
     }

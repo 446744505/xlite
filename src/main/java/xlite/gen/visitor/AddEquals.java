@@ -5,8 +5,7 @@ import xlite.coder.XField;
 import xlite.coder.XMethod;
 import xlite.gen.Writer;
 import xlite.language.Java;
-import xlite.type.TypeBuilder;
-import xlite.type.XBean;
+import xlite.type.*;
 
 public class AddEquals implements LanguageVisitor<XMethod> {
     private static final String methodName = "equals";
@@ -33,7 +32,12 @@ public class AddEquals implements LanguageVisitor<XMethod> {
         body.println(tab, String.format("if (%s == null || !(%s instanceof %s)) return false;", paramName, paramName, clazz.getName()));
         body.println(tab, String.format("%s other = (%s) o;", clazz.getName(), clazz.getName()));
         clazz.getFields().stream().filter(f -> !f.isStaticed()).forEach(field -> {
-            body.println(tab, String.format("if (!java.util.Objects.equals(%s, other.%s)) return false;", field.getName(), field.getName()));
+            XType type = field.getType();
+            if (type instanceof TypeBase && !(type instanceof XString)) {
+                body.println(tab, String.format("if (%s != other.%s) return false;", field.getName(), field.getName()));
+            } else {
+                body.println(tab, String.format("if (!java.util.Objects.equals(%s, other.%s)) return false;", field.getName(), field.getName()));
+            }
         });
 
         body.print(tab, "return true;");
