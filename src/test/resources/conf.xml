@@ -8,7 +8,7 @@
     </enum>
     <bean name="TestConf" excel="测试.xlsx">
         <var name="id" type="int" from="ID"/> ID
-        <var name="itemId" type="ItemID" from="道具ID"/>
+        <var name="itemId" type="int" from="道具ID" foreign="*Item.itemId"/>
         <var name="time" type="time" from="时间"/>
         <var name="date" type="date" from="日期"/>
         <var name="rangeDate" type="range" value="date" from="活动时间段"/>

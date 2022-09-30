@@ -1,5 +1,6 @@
 package xlite.conf;
 
+import xlite.CheckException;
 import xlite.coder.*;
 import xlite.conf.formatter.DataFormatter;
 import xlite.excel.XExcel;
@@ -19,6 +20,8 @@ import xlite.xml.element.PackageElement;
 import xlite.xml.element.XElement;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -45,6 +48,7 @@ public class ConfGenerator {
     private final Set<String> partExcels = new HashSet<>();
     private final Map<Class, Set<Object>> allIds = new HashMap<>();
     private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
+    private final List<ForeignCheck> foreignChecks = new ArrayList<>();
 
     public ConfGenerator(File xml, File excelDir, String srcOut, String lan) throws Exception {
         ConfFactory factory = new ConfFactory();
@@ -203,10 +207,11 @@ public class ConfGenerator {
             });
         });
 
+        final int tab = 2;
         Writer body = new Writer();
         body.println("ConfExcelHook hook = new ConfExcelHook(false);");
         allEnumExcels.forEach((excel, keyCol) -> {
-            body.println(2, String.format("hook.registerEnumExcel(\"%s\", \"%s\");", excel, keyCol));
+            body.println(tab, String.format("hook.registerEnumExcel(\"%s\", \"%s\");", excel, keyCol));
         });
 
         Set<String> allPartExcels = new HashSet<>(partExcels);
@@ -224,7 +229,7 @@ public class ConfGenerator {
                         XEnum e = ((XEnum) idType);
                         //这里不用BoxName,因为BoxName返回了inner的BoxName
                         String fullName = XClass.getFullName(e.name(), language);
-                        body.println(2, String.format("hook.registerEnumIdExcel(\"%s\", %s.class);", excel, fullName));
+                        body.println(tab, String.format("hook.registerEnumIdExcel(\"%s\", %s.class);", excel, fullName));
                     }
                 }});
 
@@ -239,7 +244,7 @@ public class ConfGenerator {
                         continue;
                     }
                     String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, language);
-                    int tab = 2;
+
                     body.println(tab, "{");
                     body.println(tab + 1, String.format("XExcel excel = excels.get(\"%s\");", excel));
                     String idBoxName = idField.getType().accept(BoxName.INSTANCE, language);
@@ -249,6 +254,22 @@ public class ConfGenerator {
                     body.println(tab + 2, String.format("%s obj = new %s();", boxName, boxName));
                     body.println(tab + 2, "obj.read(row, 0);");
                     body.println(tab + 2, "try {obj.check();} catch (CheckException e) {throw new RuntimeException(row.toString(), e);}");
+
+                    c.getFields().stream().filter(f -> !f.isStaticed()).map(f -> (ConfBeanField) f)
+                            .filter(f -> Util.notEmpty(f.getForeignCheck())).forEach(field -> {
+                                String check = field.getForeignCheck();
+                                boolean checkChild = check.startsWith("*");
+                                String[] arr = check.replace("*", "").split("\\.");
+                                String checker = arr[0];
+                                checker = XClass.getFullName(checker, language);
+                                String checkField = "id";
+                                if (arr.length > 1) {
+                                    checkField = arr[1];
+                                }
+                                body.println(tab + 2, String.format("%s.addForeignCheck(obj, \"%s\", %s.class, \"%s\", obj.get%s(), %s);",
+                                paramGeneratorName, field.getName(), checker, checkField, Util.firstToUpper(field.getName()), checkChild));
+                    });
+
                     String idGetter = "get" + Util.firstToUpper(idField.getName());
                     body.println(tab + 2, String.format("conf.put(obj.%s(), obj);", idGetter));
                     body.println(tab + 1, "}));");
@@ -260,8 +281,8 @@ public class ConfGenerator {
                     body.println(tab, "}");
                 }
             });
-        body.println(2, paramGeneratorName + ".flush();");
-        body.deleteEnd(1);//去掉最后一个换行
+        body.println(tab, paramGeneratorName + ".doForeignCheck();");
+        body.print(tab, paramGeneratorName + ".flush();");
 
         XClass clazz = new XClass("Exporter", root);
         clazz.addImport("java.io.File")
@@ -319,6 +340,42 @@ public class ConfGenerator {
             Class clazz = en.getKey();
             Map<Object, Object> conf = en.getValue();
             DataFormatter.createFormatter(dataFormat).export(conf, clazz, dataDir);
+        }
+    }
+
+    public void addForeignCheck(Object obj, String ownerField, Class checker, String checkField, Object val, boolean checkChild) {
+        foreignChecks.add(new ForeignCheck(obj.getClass(), ownerField, checker, checkField, val, checkChild));
+    }
+
+    public void doForeignCheck() throws Exception {
+        for (ForeignCheck check : foreignChecks) {
+            boolean pass = false;
+            for (Map.Entry<Class, Map<Object, Object>> en : allConf.entrySet()) {
+                if (pass) break;
+                Class clazz = en.getKey();
+                Class checker = check.getChecker();
+                if (clazz == checker || (check.isCheckChild() && Util.isChild(clazz, checker))) {
+                    Map<Object, Object> datas = en.getValue();
+                    for (Object obj : datas.values()) {
+                        Class objClass = obj.getClass();
+                        Field field = Util.getField(objClass, check.getCheckField());
+                        if (Objects.isNull(field)) {
+                            throw new FileNotFoundException(String.format("there is no field %s at bean %s",
+                                    check.getCheckField(), objClass.getName()));
+                        }
+                        field.setAccessible(true);
+                        Object val = field.get(obj);
+                        if (val.equals(check.getVal())) {
+                            pass = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!pass) {
+                throw new CheckException(String.format("%s`s field %s value %s not in %s.%s",
+                        check.getOwner().getName(), check.getOwnerField(), check.getVal(), check.getChecker().getName(), check.getCheckField()));
+            }
         }
     }
 }

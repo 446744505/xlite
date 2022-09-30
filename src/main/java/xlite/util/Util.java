@@ -3,6 +3,7 @@ package xlite.util;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -103,5 +104,29 @@ public class Util {
             files.add(file);
         }
         return files;
+    }
+
+    public static Field getField(Class clazz, String name) {
+        for (Field f : clazz.getDeclaredFields()) {
+            if (f.getName().equals(name)) {
+                return f;
+            }
+        }
+        Class parent = clazz.getSuperclass();
+        if (Objects.nonNull(parent)) {
+            return getField(parent, name);
+        }
+        return null;
+    }
+
+    public static boolean isChild(Class maybeChild, Class maybeParent) {
+        Class parent = maybeChild.getSuperclass();
+        if (Objects.isNull(parent)) {
+            return false;
+        }
+        if (parent == maybeParent) {
+            return true;
+        }
+        return isChild(parent, maybeParent);
     }
 }

@@ -1,7 +1,6 @@
 package xlite.gen.visitor;
 
 import xlite.coder.XClass;
-import xlite.coder.XField;
 import xlite.coder.XMethod;
 import xlite.gen.Writer;
 import xlite.language.Java;
@@ -28,9 +27,7 @@ public class AddHashCode implements LanguageVisitor<XMethod> {
         } else {
             body.print("return java.util.Objects.hash(");
         }
-        for (XField field : clazz.getFields()) {
-            body.print(field.getName() + ", ");
-        }
+        clazz.getFields().stream().filter(f -> !f.isStaticed()).forEach(field -> body.print(field.getName() + ", "));
         body.deleteEnd(2);
         body.print(");");
         method.overrided()

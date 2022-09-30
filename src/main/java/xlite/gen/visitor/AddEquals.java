@@ -32,12 +32,9 @@ public class AddEquals implements LanguageVisitor<XMethod> {
         body.println(isFirstLine ? 0 : tab, String.format("if (this == %s) return true;", paramName));
         body.println(tab, String.format("if (%s == null || !(%s instanceof %s)) return false;", paramName, paramName, clazz.getName()));
         body.println(tab, String.format("%s other = (%s) o;", clazz.getName(), clazz.getName()));
-        for (XField field : clazz.getFields()) {
-            if (field.isStaticed()) {
-                continue;
-            }
+        clazz.getFields().stream().filter(f -> !f.isStaticed()).forEach(field -> {
             body.println(tab, String.format("if (!java.util.Objects.equals(%s, other.%s)) return false;", field.getName(), field.getName()));
-        }
+        });
 
         body.print(tab, "return true;");
         method.overrided()
