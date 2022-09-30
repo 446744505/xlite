@@ -95,7 +95,15 @@ public class XClass extends XInterface {
     }
 
     private void addToString(GenContext context) {
-        fields.forEach(f -> context.getLanguage().accept(new AddToString(this, f)));
+        context.getLanguage().accept(new AddToString(this));
+    }
+
+    private void addEquals(GenContext context) {
+        context.getLanguage().accept(new AddEquals(this));
+    }
+
+    private void addHashCode(GenContext context) {
+        context.getLanguage().accept(new AddHashCode(this));
     }
 
     public static String getFullName(String name, XLanguage language) {
@@ -197,6 +205,8 @@ public class XClass extends XInterface {
         addGetter(context);
         addSetter(context);
         addToString(context);
+        addEquals(context);
+        addHashCode(context);
         methods.values().forEach(m -> {
             if (context.getConf().genMethod(this, m, context.getLanguage())) {
                 context.getLanguage().accept(new PrintMethod(m, context));

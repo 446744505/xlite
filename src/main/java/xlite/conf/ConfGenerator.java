@@ -5,10 +5,8 @@ import xlite.conf.formatter.DataFormatter;
 import xlite.excel.XExcel;
 import xlite.excel.XReader;
 import xlite.excel.cell.XCell;
-import xlite.gen.visitor.PrintCheckMethod;
 import xlite.gen.Writer;
 import xlite.gen.XGenerator;
-import xlite.language.Java;
 import xlite.language.XLanguage;
 import xlite.type.XBean;
 import xlite.type.XEnum;
@@ -28,7 +26,7 @@ public class ConfGenerator {
     public static final String ENDPOINT_ALL = "all";
     public static final String ENDPOINT_SERVER = "server";
     public static final String ENDPOINT_CLIENT = "client";
-    private static final String loadAllMethodName = "loadAll";
+    private static final String exportAllMethodName = "exportAll";
 
     private final XParser parser;
     private final XGenerator generator;
@@ -45,6 +43,8 @@ public class ConfGenerator {
     * 3、再找出跟上面两种excel在同一个bean里的excel则为本次部分打表的所有excel
     * */
     private final Set<String> partExcels = new HashSet<>();
+    private final Map<Class, Set<Object>> allIds = new HashMap<>();
+    private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
 
     public ConfGenerator(File xml, File excelDir, String srcOut, String lan) throws Exception {
         ConfFactory factory = new ConfFactory();
@@ -94,11 +94,11 @@ public class ConfGenerator {
         loadEnumField(xPackage);
         xPackage.check();
 
-        XClass initClass = null;
+        XClass exportClass = null;
         if (isReadCode) {
             addEnumValueMethod(xPackage);
             addReadMethod(xPackage);
-            initClass = addInitClass(xPackage);
+            exportClass = addExportClass(xPackage);
         } else {
             addLoadMethod(xPackage);
             addLoaderClass(xPackage);
@@ -106,8 +106,8 @@ public class ConfGenerator {
         generator.gen(xPackage);
         if (isReadCode) {
             ClassLoader classLoader = generator.compile();
-            Class<?> clazz = classLoader.loadClass(initClass.getFullName(Java.INSTANCE));
-            Method loadMethod = clazz.getMethod(loadAllMethodName, File.class, ConfGenerator.class);
+            Class<?> clazz = classLoader.loadClass(exportClass.getFullName(language));
+            Method loadMethod = clazz.getMethod(exportAllMethodName, File.class, ConfGenerator.class);
             loadMethod.invoke(null, excelDir, this);
         }
     }
@@ -152,7 +152,7 @@ public class ConfGenerator {
                 .map(c -> (ConfClass)c)
                 .forEach(c -> {
                     language.accept(new PrintReadMethod(c, null));
-                    language.accept(new PrintCheckMethod(c, null));
+                    language.accept(new ConfPrintCheckMethod(c));
                 });
     }
 
@@ -189,7 +189,7 @@ public class ConfGenerator {
         return fieldExcels;
     }
 
-    private XClass addInitClass(XPackage root) {
+    private XClass addExportClass(XPackage root) {
         final String paramGeneratorName = "generator";
         List<XEnumer> allEnums = new ArrayList<>();
         root.getAllEnum(allEnums);
@@ -223,7 +223,7 @@ public class ConfGenerator {
                     if (idType instanceof XEnum) {
                         XEnum e = ((XEnum) idType);
                         //这里不用BoxName,因为BoxName返回了inner的BoxName
-                        String fullName = XClass.getFullName(e.name(), Java.INSTANCE);
+                        String fullName = XClass.getFullName(e.name(), language);
                         body.println(2, String.format("hook.registerEnumIdExcel(\"%s\", %s.class);", excel, fullName));
                     }
                 }});
@@ -238,11 +238,11 @@ public class ConfGenerator {
                     if (!allPartExcels.isEmpty() && !allPartExcels.contains(excel)) {
                         continue;
                     }
-                    String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, Java.INSTANCE);
+                    String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, language);
                     int tab = 2;
                     body.println(tab, "{");
                     body.println(tab + 1, String.format("XExcel excel = excels.get(\"%s\");", excel));
-                    String idBoxName = idField.getType().accept(BoxName.INSTANCE, Java.INSTANCE);
+                    String idBoxName = idField.getType().accept(BoxName.INSTANCE, language);
                     body.println(tab +1, String.format("java.util.Map<%s, %s> conf = new java.util.HashMap<>();", idBoxName, boxName));
                     String def = Util.isEmpty(this.def) ? "null" : "\"" + this.def + "\"";
                     body.println(tab + 1, String.format("excel.iterator().forEachRemaining(sheet -> sheet.rows(%s).forEach(row -> {", def));
@@ -256,14 +256,14 @@ public class ConfGenerator {
                     if (Objects.isNull(topParent)) {
                         topParent = c;
                     }
-                    body.println(tab + 1, String.format("%s.export(conf, %s.class, %s.class);", paramGeneratorName, boxName, topParent.getFullName(Java.INSTANCE)));
+                    body.println(tab + 1, String.format("%s.export(conf, %s.class, %s.class);", paramGeneratorName, boxName, topParent.getFullName(language)));
                     body.println(tab, "}");
                 }
             });
         body.println(2, paramGeneratorName + ".flush();");
         body.deleteEnd(1);//去掉最后一个换行
 
-        XClass clazz = new XClass("Init", root);
+        XClass clazz = new XClass("Exporter", root);
         clazz.addImport("java.io.File")
             .addImport("java.util.Map")
             .addImport("xlite.conf.ConfExcelHook")
@@ -271,7 +271,7 @@ public class ConfGenerator {
             .addImport("xlite.conf.ConfGenerator")
             .addImport("xlite.CheckException")
             .addImport("xlite.excel.XReader");
-        XMethod load = new XMethod(loadAllMethodName, clazz);
+        XMethod load = new XMethod(exportAllMethodName, clazz);
         XField paramExcelDir = new XField("excelDir", new XBean(File.class), load);
         XField paramGenerator = new XField(paramGeneratorName, new XBean(ConfGenerator.class), load);
         load.staticed()
@@ -294,8 +294,6 @@ public class ConfGenerator {
         this.dataFormat = dataFormat;
     }
 
-    private final Map<Class, Set<Object>> allIds = new HashMap<>();
-    private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
     public void export(Map<?, ?> conf, Class clazz, Class parent) {
         Set<Object> ids = allIds.get(parent);
         if (Objects.isNull(ids)) {

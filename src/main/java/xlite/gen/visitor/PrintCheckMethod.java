@@ -11,17 +11,14 @@ import xlite.util.Util;
 
 public class PrintCheckMethod implements LanguageVisitor<XMethod> {
     private static final String methodName = "check";
-    private final XClass clazz;
-    private final XField field;
+    protected final XClass clazz;
 
-    public PrintCheckMethod(XClass clazz, XField field) {
+    public PrintCheckMethod(XClass clazz) {
         this.clazz = clazz;
-        this.field = field;
     }
 
     @Override
     public XMethod visit(Java java) {
-        clazz.addImport("xlite.Checker");
         clazz.implement(new XInterface("Checker", XPackage.wrap("xlite")));
         Writer body = new Writer();
         boolean isFirstLine = true;
@@ -38,11 +35,12 @@ public class PrintCheckMethod implements LanguageVisitor<XMethod> {
             }
             String line = checkType.accept(new RangeCheck(field.getName(), range), java);
             if (Util.notEmpty(line)) {
-                body.print(isFirstLine ? 0 : 2, "");
+                int tab = 2;
                 if (isFirstLine) {
+                    tab = 0;
                     isFirstLine = false;
                 }
-                body.println(line + ";");
+                body.println(tab, line + ";");
             }
         }
         body.deleteEnd(1);
