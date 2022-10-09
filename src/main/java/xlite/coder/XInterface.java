@@ -5,17 +5,16 @@ import xlite.gen.GenContext;
 import xlite.gen.visitor.Import;
 import xlite.gen.visitor.PrintDefine;
 import xlite.language.XLanguage;
+import xlite.util.Util;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class XInterface extends AbsCoder {
     @Getter protected final String name;
     @Getter protected List<XInterface> extendes = new ArrayList<>();
     protected final List<String> imports = new ArrayList<>();
     protected final Map<String, XMethod> methods = new LinkedHashMap<>();
+    @Getter private final List<String> contents = new ArrayList<>();
 
     public XInterface(String name, XCoder parent) {
         super(parent);
@@ -23,17 +22,30 @@ public class XInterface extends AbsCoder {
     }
 
     public XInterface addExtend(XInterface parent) {
-        extendes.add(parent);
+        if (Objects.nonNull(parent)) {
+            extendes.add(parent);
+        }
         return this;
     }
 
     public XInterface addImport(String importt) {
-        imports.add(importt);
+        if (Objects.nonNull(importt)) {
+            imports.add(importt);
+        }
         return this;
     }
 
     public XInterface addMethod(XMethod method) {
-        methods.put(method.getName(), method);
+        if (Objects.nonNull(method)) {
+            methods.put(method.getName(), method);
+        }
+        return this;
+    }
+
+    public XInterface addContent(String body) {
+        if (Util.notEmpty(body)) {
+            contents.add(body);
+        }
         return this;
     }
 
@@ -54,6 +66,8 @@ public class XInterface extends AbsCoder {
         printDefine(context);
         context.println();
         printMethod(context);
+        printContents(context);
+        context.println("}");
     }
 
     protected void printPackage(GenContext context) {
@@ -71,5 +85,9 @@ public class XInterface extends AbsCoder {
 
     protected void printMethod(GenContext context) {
 
+    }
+
+    protected void printContents(GenContext context) {
+        contents.forEach(body -> context.println(body));
     }
 }

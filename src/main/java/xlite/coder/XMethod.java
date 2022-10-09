@@ -13,6 +13,7 @@ public class XMethod extends XConstructor {
     private XType returned;
     @Getter private boolean isStatic;
     @Getter private boolean isOverride;
+    @Getter private Scope scope = Scope.PUBLIC;
     @Getter private List<String> exceptions = new ArrayList<>();
     private final StringBuilder body = new StringBuilder();
 
@@ -33,6 +34,11 @@ public class XMethod extends XConstructor {
 
     public XMethod overrided() {
         isOverride = true;
+        return this;
+    }
+
+    public XMethod scope(Scope scope) {
+        this.scope = scope;
         return this;
     }
 

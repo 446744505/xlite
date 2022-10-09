@@ -17,8 +17,9 @@ public class Test {
         generator.genData(ConfGenerator.ENDPOINT_ALL);
 
 //        generator.genCode(ConfGenerator.ENDPOINT_ALL);
+//        Equip.I.onLoad(values -> System.out.println(values));
 //        Loader.loadAll(new File("conf"));
-//        System.out.println(Equip.one(ItemID.Equip1));
-//        System.out.println(TestConf.all());
+//        System.out.println(Equip.I.one(ItemID.Equip1));
+//        System.out.println(TestConf.I.all());
     }
 }

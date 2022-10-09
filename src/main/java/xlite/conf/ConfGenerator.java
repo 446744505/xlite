@@ -177,6 +177,7 @@ public class ConfGenerator {
                     language.accept(new PrintLoadMethod(c));
                     language.accept(new PrintAllMethod(c));
                     language.accept(new PrintOneMethod(c));
+                    language.accept(new PrintConferBody(c));
                 });
     }
 

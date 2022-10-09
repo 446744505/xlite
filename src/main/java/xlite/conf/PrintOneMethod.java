@@ -1,5 +1,6 @@
 package xlite.conf;
 
+import xlite.coder.Scope;
 import xlite.coder.XField;
 import xlite.coder.XMethod;
 import xlite.gen.Writer;
@@ -9,7 +10,7 @@ import xlite.type.XBean;
 import xlite.type.XType;
 
 public class PrintOneMethod implements LanguageVisitor<XMethod> {
-    private static final String methodName = "one";
+    public static final String methodName = "one";
     private static final String paramIdName = "id";
 
     private final ConfClass clazz;
@@ -26,6 +27,7 @@ public class PrintOneMethod implements LanguageVisitor<XMethod> {
         body.print(String.format("return %s.get(%s);", PrintLoadMethod.dataFieldName, paramIdName));
         XField paramId = new XField(paramIdName, idType, method);
         method.staticed()
+            .scope(Scope.PRIVATE)
             .addParam(paramId)
             .returned(new XBean(clazz.getName()))
             .addBody(body.getString());

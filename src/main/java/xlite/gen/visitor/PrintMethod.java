@@ -38,10 +38,12 @@ public class PrintMethod implements LanguageVisitor<Void> {
             });
             exWriter.deleteEnd(1);
         }
+
+        String scope = method.getScope().scopeName(java);
         if (method.isStatic()) {
-            context.println(tab, String.format("public static %s %s(%s)%s {", returned, method.getName(), param.toString(), exWriter.getString()));
+            context.println(tab, String.format("%s static %s %s(%s)%s {", scope, returned, method.getName(), param.toString(), exWriter.getString()));
         } else {
-            context.println(tab, String.format("public %s %s(%s)%s {", returned, method.getName(), param.toString(), exWriter.getString()));
+            context.println(tab, String.format("%s %s %s(%s)%s {", scope, returned, method.getName(), param.toString(), exWriter.getString()));
         }
         context.println(tab + 1, method.getBody());
         context.println(tab, "}");

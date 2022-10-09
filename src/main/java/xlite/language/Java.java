@@ -1,5 +1,6 @@
 package xlite.language;
 
+import xlite.coder.Scope;
 import xlite.coder.XClass;
 import xlite.gen.visitor.LanguageVisitor;
 import xlite.type.*;
@@ -463,6 +464,17 @@ public class Java implements XLanguage {
     @Override
     public String rangeCheck(XDate t, String fieldName, String format) {
         return String.format("checkDate(%s, \"%s\")", fieldName, format);
+    }
+
+    @Override
+    public String scopeName(Scope scope) {
+        switch (scope) {
+            case PUBLIC: return "public";
+            case PACKAGE: return "";
+            case PRIVATE: return "private";
+            case PROTECTED: return "protected";
+        }
+        throw new UnsupportedOperationException("unsupported scope " + scope);
     }
 
     private String simpleName(XType inner) {

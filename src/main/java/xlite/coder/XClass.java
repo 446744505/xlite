@@ -129,9 +129,7 @@ public class XClass extends XInterface {
 
     @Override
     public XClass addImport(String importt) {
-        if (Objects.nonNull(importt)) {
-            super.addImport(importt);
-        }
+        super.addImport(importt);
         return this;
     }
 
@@ -146,6 +144,12 @@ public class XClass extends XInterface {
         if (Objects.nonNull(field)) {
             fields.add(field);
         }
+        return this;
+    }
+
+    @Override
+    public XClass addContent(String body) {
+        super.addContent(body);
         return this;
     }
 
@@ -189,6 +193,7 @@ public class XClass extends XInterface {
         printConstructor(context);
         context.println();
         printMethod(context);
+        printContents(context);
         context.println("}");
     }
 

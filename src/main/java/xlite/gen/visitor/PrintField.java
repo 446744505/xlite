@@ -17,7 +17,10 @@ public class PrintField implements LanguageVisitor<String> {
     public String visit(Java java) {
         String define;
         String sampleName = field.getType().accept(SimpleName.INSTANCE, java);
-        if (field.isStaticed()) {
+        if (field.isConsted()) {
+            String defaultVal = field.getType().accept(DefaultValue.INSTANCE, java);
+            define = String.format("private static final %s %s = %s;", sampleName, field.getName(), defaultVal);
+        } else if (field.isStaticed()) {
             String defaultVal = field.getType().accept(DefaultValue.INSTANCE, java);
             define = String.format("private static %s %s = %s;", sampleName, field.getName(), defaultVal);
         } else {

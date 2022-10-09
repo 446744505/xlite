@@ -49,7 +49,8 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
         body.println(tab, "DataFormatter formatter = DataFormatter.createFormatter(ext);");
         String keyBoxName = idType.accept(BoxName.INSTANCE, java);
         body.println(tab, String.format("Map<%s, %s> conf = formatter.load(file, new TypeReference<Map<%s, %s>>(){});", keyBoxName, clazz.getName(), keyBoxName, clazz.getName()));
-        body.print(tab, String.format("%s = conf;", dataFieldName));
+        body.println(tab, String.format("%s = Collections.unmodifiableMap(conf);", dataFieldName));
+        body.print(tab, String.format("%s.onLoad(conf);", PrintConferBody.fieldName));
         XField paramDataDir = new XField(dataDirName, new XBean(File.class), method);
         method.staticed()
             .addParam(paramDataDir)

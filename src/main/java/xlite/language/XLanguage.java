@@ -1,5 +1,6 @@
 package xlite.language;
 
+import xlite.coder.Scope;
 import xlite.gen.visitor.LanguageVisitor;
 import xlite.type.*;
 
@@ -107,4 +108,6 @@ public interface XLanguage {
     String defaultValue(XDate t);
     String valueOf(XDate t, String v);
     String rangeCheck(XDate t, String fieldName, String format);
+
+    String scopeName(Scope scope);
 }
