@@ -15,6 +15,7 @@ public interface XAttr {
     String ATTR_ENDPOINT = "to";
     String ATTR_FOREIGN_CHECK = "foreign";
     String ATTR_UNIQ_CHECK = "uniq";
+    String ATTR_MUST_CHECK = "must";
 
     String getName();
     String getValue();

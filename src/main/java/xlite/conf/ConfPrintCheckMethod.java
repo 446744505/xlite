@@ -53,6 +53,19 @@ public class ConfPrintCheckMethod extends PrintCheckMethod {
                 body.println(tab, String.format("xlite.conf.ForeignCheck.addForeignCheck(this, \"%s\", %s.class, \"%s\", %s, %s);",
                         field.getName(), checker, checkField, field.getName(), checkChild));
             }
+
+            String must = confBeanField.getMustCheck();
+            if (Util.notEmpty(must)) {
+                String[] arr = must.split("\\.");
+                String checker = arr[0];
+                checker = XClass.getFullName(checker, java);
+                String checkField = "id";
+                if (arr.length > 1) {
+                    checkField = arr[1];
+                }
+                body.println(tab, String.format("xlite.conf.MustCheck.addMustCheck(%s.class, \"%s\", %s.class, \"%s\");",
+                        clazz.getFullName(java), field.getName(), checker, checkField));
+            }
         }
         body.deleteEnd(1);
 

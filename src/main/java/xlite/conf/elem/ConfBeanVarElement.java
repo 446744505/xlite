@@ -39,6 +39,10 @@ public class ConfBeanVarElement extends BeanVarElement {
         if (Objects.nonNull(uniqAttr)) {
             confField.setUniqCheck(uniqAttr.getValue());
         }
+        XAttr mustAttr = getAttr(XAttr.ATTR_MUST_CHECK);
+        if (Objects.nonNull(mustAttr)) {
+            confField.setMustCheck(mustAttr.getValue());
+        }
         return confField;
     }
 }

@@ -264,6 +264,7 @@ public class ConfGenerator {
                 }
             });
         body.println(tab, String.format("xlite.conf.ForeignCheck.doForeignCheck(%s);", paramGeneratorName));
+        body.println(tab, String.format("xlite.conf.MustCheck.doMustCheck(%s);", paramGeneratorName));
         body.print(tab, paramGeneratorName + ".flush();");
 
         XClass clazz = new XClass("Exporter", root);
