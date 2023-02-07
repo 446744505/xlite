@@ -53,7 +53,7 @@ public class MustCheck {
                 allConf.remove(val);
             }
             if (!allConf.isEmpty()) {
-                throw new CheckException(String.format("%s`s field %s values %s not in %s.%s",
+                throw new CheckException(String.format("%s`s field %s values %s must exist at %s.%s",
                         check.checker, check.checkField, allConf, check.owner.getName(), check.ownerField));
             }
         }
