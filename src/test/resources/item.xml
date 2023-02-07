@@ -2,7 +2,7 @@
 <package name="item">
     <bean name="Item" excel="道具.xlsx">
         <var name="itemId" type="ItemID" from="ID"/> ID
-        <var name="name" type="string" from="道具名称" range="[1,7]"/> 道具名称
+        <var name="name" type="string" from="道具名称" range="[1,7]" index="true"/> 道具名称
     </bean> 道具
     <bean name="Equip" parent="Item" excel="角色装备.xlsx,宠物装备.xlsx">
         <var name="properties" type="Properties"/> 属性

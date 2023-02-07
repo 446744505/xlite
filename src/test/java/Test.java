@@ -1,3 +1,4 @@
+import conf.Loader;
 import xlite.conf.ConfGenerator;
 
 import java.io.File;
@@ -14,11 +15,11 @@ public class Test {
 
 //        generator.addPartExcel("角色装备.xlsx");
 //        generator.readDef("TEST");
-        generator.genData(ConfGenerator.ENDPOINT_ALL);
+//        generator.genData(ConfGenerator.ENDPOINT_ALL);
 
-//        generator.genCode(ConfGenerator.ENDPOINT_ALL);
+        generator.genCode(ConfGenerator.ENDPOINT_ALL);
 //        Equip.I.onLoad(values -> System.out.println(values));
-//        Loader.loadAll(new File("conf"));
+        Loader.loadAll(new File("conf"));
 //        System.out.println(Equip.I.one(ItemID.Equip1));
 //        System.out.println(TestConf.I.all());
     }

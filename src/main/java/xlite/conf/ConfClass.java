@@ -6,7 +6,10 @@ import xlite.coder.XClass;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.coder.XInterface;
+import xlite.util.Util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ConfClass extends XClass {
@@ -35,5 +38,26 @@ public class ConfClass extends XClass {
             }
         }
         return id;
+    }
+
+    public List<ConfBeanField> getIndexFields() {
+        List<ConfBeanField> rst = new ArrayList<>();
+
+        for (XInterface parent : extendes) {
+            if (parent instanceof ConfClass) {
+                rst.addAll(((ConfClass) parent).getIndexFields());
+            }
+        }
+        for (XField field : fields) {
+            if (!(field instanceof ConfBeanField))
+                continue;
+
+            ConfBeanField f = (ConfBeanField) field;
+            String index = f.getIndex();
+            if (Util.notEmpty(index) && "true".equals(index.toLowerCase())) {
+                rst.add(f);
+            }
+        }
+        return rst;
     }
 }

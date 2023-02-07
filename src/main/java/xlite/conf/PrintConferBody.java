@@ -5,6 +5,7 @@ import xlite.gen.visitor.LanguageVisitor;
 import xlite.language.Java;
 import xlite.type.XType;
 import xlite.type.visitor.BoxName;
+import xlite.util.Util;
 
 public class PrintConferBody implements LanguageVisitor<Void> {
     public static final String fieldName = "I";
@@ -26,6 +27,14 @@ public class PrintConferBody implements LanguageVisitor<Void> {
         body.println(tab + 1, String.format("@Override public Map<%s, %s> all() { return %s.%s(); }", key, val, val, PrintAllMethod.methodName));
         body.println(tab + 1, String.format("@Override public %s one(%s id) { return %s.%s(id); }", val, key, val, PrintOneMethod.methodName));
         body.println(tab, "};");
+
+        //index处理
+        for (ConfBeanField field : clazz.getIndexFields()) {
+            String fieldName = "Index" + Util.firstToUpper(field.getName());
+            String methodName = "get" + Util.firstToUpper(field.getName()) + "()";
+            body.println(tab, String.format("public static final xlite.conf.Index<%s, %s> %s = new xlite.conf.Index<>(val -> val.%s);",
+                    field.getType().accept(BoxName.INSTANCE, java), val, fieldName, methodName));
+        }
         clazz.addContent(body.getString());
         return null;
     }

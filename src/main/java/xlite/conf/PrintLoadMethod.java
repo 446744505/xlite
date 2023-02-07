@@ -9,6 +9,7 @@ import xlite.type.TypeBuilder;
 import xlite.type.XBean;
 import xlite.type.XType;
 import xlite.type.visitor.BoxName;
+import xlite.util.Util;
 
 import java.io.File;
 
@@ -50,7 +51,13 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
         String keyBoxName = idType.accept(BoxName.INSTANCE, java);
         body.println(tab, String.format("Map<%s, %s> conf = formatter.load(file, new TypeReference<Map<%s, %s>>(){});", keyBoxName, clazz.getName(), keyBoxName, clazz.getName()));
         body.println(tab, String.format("%s = Collections.unmodifiableMap(conf);", dataFieldName));
-        body.print(tab, String.format("%s.onLoad(conf);", PrintConferBody.fieldName));
+        body.println(tab, String.format("%s.onLoad(conf);", PrintConferBody.fieldName));
+
+        for (ConfBeanField field : clazz.getIndexFields()) {
+            String fieldName = "Index" + Util.firstToUpper(field.getName());
+            body.println(tab, String.format("%s.index(conf);", fieldName));
+        }
+        body.deleteEnd(1);
         XField paramDataDir = new XField(dataDirName, new XBean(File.class), method);
         method.staticed()
             .addParam(paramDataDir)

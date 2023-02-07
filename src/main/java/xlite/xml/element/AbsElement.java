@@ -39,7 +39,7 @@ public abstract class AbsElement implements XElement {
     @Override
     public XElement parse(XElement preEle, XmlContext context) {
         NodeList nodes = src.getChildNodes();
-        for(int i = 0, size = nodes.getLength(); i < size; i++) {
+        for (int i = 0, size = nodes.getLength(); i < size; i++) {
             Node node = nodes.item(i);
             if(!(node instanceof Element)) {
                 continue;

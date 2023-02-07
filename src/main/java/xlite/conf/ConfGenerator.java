@@ -174,10 +174,10 @@ public class ConfGenerator {
                 .map(c -> (ConfClass)c)
                 .filter(c -> Util.notEmpty(c.getFromExcel()))
                 .forEach(c -> {
+                    language.accept(new PrintConferBody(c));
                     language.accept(new PrintLoadMethod(c));
                     language.accept(new PrintAllMethod(c));
                     language.accept(new PrintOneMethod(c));
-                    language.accept(new PrintConferBody(c));
                 });
     }
 

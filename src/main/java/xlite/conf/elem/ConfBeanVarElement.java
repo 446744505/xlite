@@ -43,6 +43,10 @@ public class ConfBeanVarElement extends BeanVarElement {
         if (Objects.nonNull(mustAttr)) {
             confField.setMustCheck(mustAttr.getValue());
         }
+        XAttr indexAttr = getAttr(XAttr.ATTR_INDEX);
+        if (Objects.nonNull(indexAttr)) {
+            confField.setIndex(indexAttr.getValue());
+        }
         return confField;
     }
 }
