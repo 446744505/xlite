@@ -14,6 +14,8 @@ public abstract class DataFormatter {
             return new JsonFormatter();
         } else if ("xml".equals(formatter)) {
             return new XmlFormatter();
+        } else if ("xjson".equals(formatter)) {
+            return new XJsonFormatter();
         }
         throw new UnsupportedOperationException("unsupported data output format " + formatter);
     }

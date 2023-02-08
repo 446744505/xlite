@@ -49,7 +49,7 @@ public class ExcelSqlEngine {
         Map<String, XExcel> allExcel = reader.read();
 
         spark = SparkSession.builder()
-            .appName("xlite")
+            .appName("xlite-excel")
             .master("local")
             .getOrCreate();
 

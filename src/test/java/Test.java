@@ -14,6 +14,10 @@ public class Test {
 
 //        generator.addPartExcel("角色装备.xlsx");
 //        generator.readDef("TEST");
+//        generator.genData(ConfGenerator.ENDPOINT_ALL);
+
+        generator = new ConfGenerator(xml, excelDir,"gen", "java");
+        generator.setDataConf("conf_sql", "xjson");
         generator.genData(ConfGenerator.ENDPOINT_ALL);
 
 //        generator.genCode(ConfGenerator.ENDPOINT_ALL);
