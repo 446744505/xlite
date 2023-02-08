@@ -1,15 +1,14 @@
 package xlite.util;
 
 import org.apache.commons.io.FilenameUtils;
+import xlite.conf.ConfEnum;
+import xlite.conf.ConfEnumField;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Util {
     public static final int SECOND = 1000;
@@ -128,5 +127,15 @@ public class Util {
             return true;
         }
         return isChild(parent, maybeParent);
+    }
+
+    public static List<String> getEnumExcels(ConfEnum e, ConfEnumField field) {
+        if (Objects.nonNull(field.getValue())) {
+            return Collections.emptyList();
+        }
+        List<String> enumExcels = getExcels(e.getFromExcel());
+        List<String> fieldExcels = getExcels(field.getExcel());
+        fieldExcels.addAll(enumExcels);
+        return fieldExcels;
     }
 }

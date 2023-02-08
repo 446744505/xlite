@@ -119,7 +119,7 @@ public class ConfGenerator {
         ConfExcelHook hook = new ConfExcelHook(true);
         allEnums.stream().map(e -> (ConfEnum)e).forEach(e -> {
             e.getFields().stream().map(f -> (ConfEnumField)f).forEach(f -> {
-                getExcels(e, f).forEach(excel -> hook.registerEnumExcel(excel, f.getName()));
+                Util.getEnumExcels(e, f).forEach(excel -> hook.registerEnumExcel(excel, f.getName()));
             });
         });
 
@@ -127,7 +127,7 @@ public class ConfGenerator {
         allEnums.stream().map(e -> (ConfEnum)e).forEach(e -> {
             List<ConfEnumField> newFields = new ArrayList<>();
             e.getFields().stream().map(f -> (ConfEnumField)f).forEach(f -> {
-                getExcels(e, f).forEach(excel -> {
+                Util.getEnumExcels(e, f).forEach(excel -> {
                     XExcel data = excels.get(excel);
                     data.iterator().forEachRemaining(sheet -> sheet.rows(def).forEach(row -> {
                         XCell nameCell = row.getCell(f.getName());
@@ -181,16 +181,6 @@ public class ConfGenerator {
                 });
     }
 
-    private List<String> getExcels(ConfEnum e, ConfEnumField field) {
-        if (Objects.nonNull(field.getValue())) {
-            return Collections.emptyList();
-        }
-        List<String> enumExcels = Util.getExcels(e.getFromExcel());
-        List<String> fieldExcels = Util.getExcels(field.getExcel());
-        fieldExcels.addAll(enumExcels);
-        return fieldExcels;
-    }
-
     private XClass addExportClass(XPackage root) {
         final String paramGeneratorName = "generator";
         List<XEnumer> allEnums = new ArrayList<>();
@@ -201,7 +191,7 @@ public class ConfGenerator {
         allEnums.stream().map(e -> (ConfEnum)e).forEach(e -> {
             e.getFields().stream()
                     .map(f -> (ConfEnumField)f).filter(f -> Objects.isNull(f.getValue())).forEach(f -> {
-                getExcels(e, f).forEach(excel -> allEnumExcels.put(excel, f.getName()));
+                Util.getEnumExcels(e, f).forEach(excel -> allEnumExcels.put(excel, f.getName()));
             });
         });
 

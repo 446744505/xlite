@@ -20,7 +20,7 @@ public class XReader {
 
     private final File excelDir;
     private final XExcelHook hook;
-    private final Map<String, Workbook> books = new HashMap<>();
+    private final Map<String, Book> books = new HashMap<>();
 
     public XReader(File excelDir, XExcelHook hook) {
         this.excelDir = excelDir;
@@ -55,7 +55,7 @@ public class XReader {
             workbook = new HSSFWorkbook(new FileInputStream(file));
         }
         if (Objects.nonNull(workbook)) {
-            if (Objects.nonNull(books.put(fileName, workbook))) {//不允许重名
+            if (Objects.nonNull(books.put(fileName, new Book(workbook, file)))) {//不允许重名
                 throw new UnsupportedOperationException(String.format("excel file name %s is exist", fileName));
             }
         }
@@ -63,21 +63,21 @@ public class XReader {
 
     private Map<String, XExcel> readExcels() throws IOException {
         Map<String, XExcel> excels = new HashMap<>(books.size());
-        for (Map.Entry<String, Workbook> en : books.entrySet()) {
+        for (Map.Entry<String, Book> en : books.entrySet()) {
             String fileName = en.getKey();
-            Workbook book = en.getValue();
+            Book book = en.getValue();
             if (hook.isLoadExcel(fileName)) {
                 XExcel excel = parseBook(fileName, book);
                 excels.put(excel.getFileName(), excel);
             }
-            book.close();
+            book.b.close();
         }
         return excels;
     }
 
-    private XExcel parseBook(String fileName, Workbook book) {
-        XExcel excel = new XExcel(fileName, hook);
-        book.sheetIterator().forEachRemaining(sheet -> excel.addSheet(parseSheet(excel, sheet)));
+    private XExcel parseBook(String fileName, Book book) {
+        XExcel excel = new XExcel(fileName, book.file, hook);
+        book.b.sheetIterator().forEachRemaining(sheet -> excel.addSheet(parseSheet(excel, sheet)));
         return excel;
     }
 
@@ -151,5 +151,15 @@ public class XReader {
             r.addCell(colIndex, XCell.createCell(cell));
         }
         return r;
+    }
+
+    private static class Book {
+        private final Workbook b;
+        private final File file;
+
+        private Book(Workbook b, File file) {
+            this.b = b;
+            this.file = file;
+        }
     }
 }

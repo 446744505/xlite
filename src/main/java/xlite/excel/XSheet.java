@@ -29,9 +29,11 @@ public class XSheet {
             rows.put(def, rs);
         }
 
-        Object key = hook.key(row);
-        if (Objects.nonNull(rs.put(key, row))) {
-            throw new IllegalStateException(String.format("multi row key = %s @ %s", key, this));
+        if (hook.isParseKey()) {
+            Object key = hook.key(row);
+            if (Objects.nonNull(rs.put(key, row))) {
+                throw new IllegalStateException(String.format("multi row key = %s @ %s", key, this));
+            }
         }
     }
 

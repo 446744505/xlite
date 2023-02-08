@@ -50,6 +50,11 @@ public class ConfExcelHook implements XExcelHook {
     }
 
     @Override
+    public boolean isParseKey() {
+        return true;
+    }
+
+    @Override
     public Object key(XRow row) {
         String fileName = row.getSheet().getExcel().getFileName();
         if (isEnumExcel(fileName)) {
