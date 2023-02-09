@@ -14,13 +14,14 @@ public class XJsonFormatter extends DataFormatter {
     @Override
     public void export(Map<?, ?> conf, Class clazz, File outDir) throws Exception {
         File file = new File(outDir, clazz.getSimpleName() + ".xjson");
-        FileWriter writer = new FileWriter(file);
-        for (Object val : conf.values()) {
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(val);
-            writer.append(json).append("\n");
+        try (FileWriter writer = new FileWriter(file)) {
+            for (Object val : conf.values()) {
+                ObjectMapper mapper = new ObjectMapper();
+                String json = mapper.writeValueAsString(val);
+                writer.append(json).append("\n");
+            }
+            writer.flush();
         }
-        writer.flush();
     }
 
     @Override

@@ -17,6 +17,10 @@ public class Util {
     public static final int DAY = 24 * HOUR;
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    public static void log(String s) {
+        System.out.println(s);
+    }
+
     public static String firstToUpper(String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }

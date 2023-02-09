@@ -2,6 +2,7 @@ package xlite.conf;
 
 import lombok.Getter;
 import xlite.coder.*;
+import xlite.conf.elem.ConfBeanElement;
 import xlite.conf.formatter.DataFormatter;
 import xlite.excel.XExcel;
 import xlite.excel.XReader;
@@ -16,6 +17,7 @@ import xlite.type.visitor.BoxName;
 import xlite.util.Util;
 import xlite.xml.XParser;
 import xlite.xml.XmlContext;
+import xlite.xml.attr.XAttr;
 import xlite.xml.element.PackageElement;
 import xlite.xml.element.XElement;
 
@@ -40,10 +42,14 @@ public class ConfGenerator {
     /*
     * 部分导表：
     * 1、enum永远导出，这是为了简单，不用去分析bean对enum的依赖
-    * 2、（外部addPartExcel传入）找出增加、修改的xml、excel，再找出xml里的所有excel(比如在xml里删除了某个bean的一个from excel)
+    * 2、（外部找出增加/修改的xml/excel传入，通过addPartExcel/addPartXml），再找出xml里的所有excel(比如在xml里删除了某个bean的一个from excel)
     * 3、再找出跟上面两种excel在同一个bean里的excel则为本次部分打表的所有excel
     * */
     private final Set<String> partExcels = new HashSet<>();
+    /*
+     * 不会直接使用。先找出里面所有的excel，然后加入partExcels使用
+     */
+    private final Set<String> partXmls = new HashSet<>();
     private final Map<Class, Set<Object>> allIds = new HashMap<>();
     @Getter private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
 
@@ -58,6 +64,10 @@ public class ConfGenerator {
 
     public void addPartExcel(String file) {
         partExcels.add(file);
+    }
+
+    public void addPartXml(String file) {
+        partXmls.add(file);
     }
 
     public void readDef(String def) {
@@ -77,18 +87,28 @@ public class ConfGenerator {
         }
         File dir = new File(dataOut);
         dir.mkdirs();
-        if (partExcels.isEmpty()) {
+        if (!isPart()) {
             Util.cleanDir(dir);
         }
         gen(true, endPoint);
     }
 
-    private void gen(boolean isReadCode, String endPoint) throws Exception {
+    public boolean isPart() {
+        return !partExcels.isEmpty() || !partXmls.isEmpty();
+    }
+
+    /***
+     *
+     * @param isExportCode true-生成导出数据的代码 false-生成加载数据的代码
+     * @param endPoint
+     * @throws Exception
+     */
+    private void gen(boolean isExportCode, String endPoint) throws Exception {
         XElement root = parser.parse();
         if (!(root instanceof PackageElement)) {
             throw new RuntimeException("conf xml root must be package");
         }
-        context.setConfReadCode(isReadCode);
+        context.setExportCode(isExportCode);
         context.setEndPoint(endPoint);
         PackageElement packageElement = (PackageElement) root;
         XPackage xPackage = packageElement.build(context);
@@ -96,7 +116,8 @@ public class ConfGenerator {
         xPackage.check();
 
         XClass exportClass = null;
-        if (isReadCode) {
+        if (isExportCode) {
+            processPartXml();
             addEnumValueMethod(xPackage);
             addReadMethod(xPackage);
             exportClass = addExportClass(xPackage);
@@ -105,11 +126,35 @@ public class ConfGenerator {
             addLoaderClass(xPackage);
         }
         generator.gen(xPackage);
-        if (isReadCode) {
+        if (isExportCode) {
             ClassLoader classLoader = generator.compile();
             Class<?> clazz = classLoader.loadClass(exportClass.getFullName(language));
             Method loadMethod = clazz.getMethod(exportAllMethodName, File.class, ConfGenerator.class);
             loadMethod.invoke(null, excelDir, this);
+        }
+    }
+
+    private void processPartXml() throws Exception {
+        if (partXmls.isEmpty()) {
+            return;
+        }
+        for (File file : parser.getAllXmls()) {
+            if (!partXmls.contains(file.getName())) {
+                continue;
+            }
+
+            XParser parser = new XParser(file, context);
+            XElement pak = parser.parse();
+            for (XElement child : pak.getChildren()) {
+                //只需要读取bean里的excel就可以，enum的会永远导出
+                if (child instanceof ConfBeanElement) {
+                    ConfBeanElement beanElement = (ConfBeanElement) child;
+                    XAttr excelAttr = beanElement.getAttr(XAttr.ATTR_EXCEL);
+                    if (Objects.nonNull(excelAttr)) {
+                        partExcels.addAll(Util.getExcels(excelAttr.getValue()));
+                    }
+                }
+            }
         }
     }
 
@@ -202,14 +247,15 @@ public class ConfGenerator {
             body.println(tab, String.format("hook.registerEnumExcel(\"%s\", \"%s\");", excel, keyCol));
         });
 
-        Set<String> allPartExcels = new HashSet<>(partExcels);
+        Set<String> allPartExcels = new HashSet<>();
         allClass.stream()
             .map(c -> (ConfClass)c)
             .forEach(c -> {
                 XField idField = c.getIdField();
                 List<String> excels = Util.getExcels(c.getFromExcel());
                 for (String excel : excels) {
-                    if (!allPartExcels.isEmpty() && allPartExcels.contains(excel)) {
+                    //是部分导表并且部分表里包含当前bean的任一个excel，则该bean的所有excel都导
+                    if (isPart() && partExcels.contains(excel)) {
                         allPartExcels.addAll(excels);
                     }
                     XType idType = idField.getType();//有excel则idField一定不为null
@@ -234,6 +280,7 @@ public class ConfGenerator {
                     String boxName = new XBean(c.getName()).accept(BoxName.INSTANCE, language);
 
                     body.println(tab, "{");
+                    body.println(tab + 1, String.format("xlite.util.Util.log(\"start export %s\");", excel));
                     body.println(tab + 1, String.format("XExcel excel = excels.get(\"%s\");", excel));
                     String idBoxName = idField.getType().accept(BoxName.INSTANCE, language);
                     body.println(tab +1, String.format("java.util.Map<%s, %s> conf = new java.util.HashMap<>();", idBoxName, boxName));
@@ -305,6 +352,7 @@ public class ConfGenerator {
             allConf.put(clazz, confs);
         }
         confs.putAll(conf);
+        Util.log(String.format("%s export conf count = %s", clazz.getName(), conf.size()));
     }
 
     public void flush() throws Exception {

@@ -84,7 +84,7 @@ public abstract class AbsElement implements XElement {
         this.comment = comment;
     }
 
-    protected <T> T getAttr(String name) {
+    public <T> T getAttr(String name) {
         return (T) attrs.get(name);
     }
 }

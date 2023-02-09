@@ -41,6 +41,10 @@ public class ForeignCheck {
     }
 
     public static void doForeignCheck(ConfGenerator generator) throws Exception {
+        if (generator.isPart()) {
+            //部分导表无法做关联检查
+            return;
+        }
         for (ForeignCheck check : foreignChecks) {
             boolean pass = false;
             for (Map.Entry<Class, Map<Object, Object>> en : generator.getAllConf().entrySet()) {

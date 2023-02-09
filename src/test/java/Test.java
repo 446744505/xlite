@@ -13,12 +13,13 @@ public class Test {
         ConfGenerator generator = new ConfGenerator(xml, excelDir,"gen", "java");
 
 //        generator.addPartExcel("角色装备.xlsx");
+//        generator.addPartXml("item.xml");
 //        generator.readDef("TEST");
-//        generator.genData(ConfGenerator.ENDPOINT_ALL);
-
-        generator = new ConfGenerator(xml, excelDir,"gen", "java");
-        generator.setDataConf("conf_sql", "xjson");
         generator.genData(ConfGenerator.ENDPOINT_ALL);
+
+//        generator = new ConfGenerator(xml, excelDir,"gen", "java");
+//        generator.setDataConf("conf_sql", "xjson");
+//        generator.genData(ConfGenerator.ENDPOINT_ALL);
 
 //        generator.genCode(ConfGenerator.ENDPOINT_ALL);
 //        Equip.I.onLoad(values -> System.out.println(values));
