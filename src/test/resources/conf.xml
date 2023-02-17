@@ -6,7 +6,7 @@
         <var name="Xml_Const3" type="string" value="xxx"/>
         <var name="name" type="any" from="value" comment="备注"/>
     </enum>
-    <bean name="TestConf" excel="测试.xlsx">
+    <bean name="TestConf" excel="测试.xlsx" split="2">
         <var name="id" type="int" from="ID" must="Item.itemId"/> ID
         <var name="items" type="list" value="ItemIV"/>
         <var name="time" type="time" from="时间"/>

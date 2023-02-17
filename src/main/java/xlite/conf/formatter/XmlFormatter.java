@@ -9,9 +9,9 @@ import java.util.Map;
 public class XmlFormatter extends DataFormatter {
 
     @Override
-    public void export(Map<?, ?> conf, Class clazz, File outDir) throws Exception {
+    public void export(Map<?, ?> conf, String fileName, File outDir) throws Exception {
         XmlMapper mapper = new XmlMapper();
-        File file = new File(outDir, clazz.getSimpleName() + ".xml");
+        File file = new File(outDir, fileName + ".xml");
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, conf);
     }
 

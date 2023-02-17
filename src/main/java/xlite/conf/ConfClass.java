@@ -14,6 +14,7 @@ import java.util.Objects;
 
 public class ConfClass extends XClass {
     @Getter @Setter private String fromExcel;
+    @Getter @Setter private int split;
 
     public ConfClass(String name, XCoder parent) {
         super(name, parent);

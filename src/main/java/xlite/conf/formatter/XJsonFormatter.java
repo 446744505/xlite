@@ -12,8 +12,8 @@ import java.util.Map;
  */
 public class XJsonFormatter extends DataFormatter {
     @Override
-    public void export(Map<?, ?> conf, Class clazz, File outDir) throws Exception {
-        File file = new File(outDir, clazz.getSimpleName() + ".xjson");
+    public void export(Map<?, ?> conf, String fileName, File outDir) throws Exception {
+        File file = new File(outDir, fileName + ".xjson");
         try (FileWriter writer = new FileWriter(file)) {
             for (Object val : conf.values()) {
                 ObjectMapper mapper = new ObjectMapper();

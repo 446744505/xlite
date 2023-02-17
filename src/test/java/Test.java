@@ -18,6 +18,7 @@ public class Test {
         generator.genData(ConfGenerator.ENDPOINT_ALL);
 
 //        generator = new ConfGenerator(xml, excelDir,"gen", "java");
+//        generator.setOpenSplit(false); //sql生成必须设置为false，否者数据不在一个table里
 //        generator.setDataConf("conf_sql", "xjson");
 //        generator.genData(ConfGenerator.ENDPOINT_ALL);
 

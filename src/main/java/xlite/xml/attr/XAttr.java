@@ -11,6 +11,7 @@ public interface XAttr {
 
     //conf
     String ATTR_EXCEL = "excel";
+    String ATTR_SPLIT = "split"; //数据拆分为part个文件
     String ATTR_COLFROM = "from";
     String ATTR_ENDPOINT = "to";
     String ATTR_FOREIGN_CHECK = "foreign";

@@ -9,9 +9,9 @@ import java.util.Map;
 public class JsonFormatter extends DataFormatter {
 
     @Override
-    public void export(Map<?, ?> conf, Class clazz, File outDir) throws Exception {
+    public void export(Map<?, ?> conf, String fileName, File outDir) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        File file = new File(outDir, clazz.getSimpleName() + ".json");
+        File file = new File(outDir, fileName + ".json");
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, conf);
     }
 

@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.Map;
 
 public abstract class DataFormatter {
-    public abstract void export(Map<?, ?> conf, Class clazz, File outDir) throws Exception;
+    public abstract void export(Map<?, ?> conf, String fileName, File outDir) throws Exception;
     public abstract <K, V> Map<K, V> load(File file, TypeReference<Map<K, V>> ref) throws Exception;
 
     public static DataFormatter createFormatter(String formatter) {

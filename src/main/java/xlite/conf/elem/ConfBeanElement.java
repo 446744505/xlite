@@ -23,6 +23,10 @@ public class ConfBeanElement extends BeanElement {
         if (Objects.nonNull(excelAttr)) {
             confClass.setFromExcel(excelAttr.getValue());
         }
+        XAttr splitAttr = getAttr(XAttr.ATTR_SPLIT);
+        if (Objects.nonNull(splitAttr)) {
+            confClass.setSplit(Integer.valueOf(splitAttr.getValue()));
+        }
         return confClass;
     }
 }

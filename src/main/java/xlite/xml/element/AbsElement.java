@@ -32,7 +32,11 @@ public abstract class AbsElement implements XElement {
         if (Objects.nonNull(buildCache)) {
             return (T) buildCache;
         }
-        build0(context);//这里不赋值，必须在build0里设置cache值
+        /*
+           这里返回值不赋给buildCache，必须在build0里设置cache值
+           因为在build0里面会调用child的build(会用到其parent的buildCache),所以如果在这里才赋值的话时机太晚了
+         */
+        build0(context);
         return (T) buildCache;
     }
 

@@ -1,6 +1,7 @@
 package xlite.conf;
 
 import lombok.Getter;
+import lombok.Setter;
 import xlite.coder.*;
 import xlite.conf.elem.ConfBeanElement;
 import xlite.conf.formatter.DataFormatter;
@@ -50,7 +51,12 @@ public class ConfGenerator {
      * 不会直接使用。先找出里面所有的excel，然后加入partExcels使用
      */
     private final Set<String> partXmls = new HashSet<>();
+
     private final Map<Class, Set<Object>> allIds = new HashMap<>();
+
+    @Setter private boolean isOpenSplit = true;
+    //记录每个配置表分为几个数据文件
+    private final Map<Class, Integer> allConfSplits = new HashMap<>();
     @Getter private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
 
     public ConfGenerator(File xml, File excelDir, String srcOut, String lan) throws Exception {
@@ -296,7 +302,7 @@ public class ConfGenerator {
                     if (Objects.isNull(topParent)) {
                         topParent = c;
                     }
-                    body.println(tab + 1, String.format("%s.export(conf, %s.class, %s.class);", paramGeneratorName, boxName, topParent.getFullName(language)));
+                    body.println(tab + 1, String.format("%s.export(conf, %s, %s.class, %s.class);", paramGeneratorName, c.getSplit(), boxName, topParent.getFullName(language)));
                     body.println(tab, "}");
                 }
             });
@@ -335,7 +341,7 @@ public class ConfGenerator {
         this.dataFormat = dataFormat;
     }
 
-    public void export(Map<?, ?> conf, Class clazz, Class parent) {
+    public void export(Map<?, ?> conf, int split, Class clazz, Class parent) {
         Set<Object> ids = allIds.get(parent);
         if (Objects.isNull(ids)) {
             ids = new HashSet<>();
@@ -352,6 +358,11 @@ public class ConfGenerator {
             allConf.put(clazz, confs);
         }
         confs.putAll(conf);
+
+        Integer oldPart = allConfSplits.get(clazz);
+        split += Objects.isNull(oldPart) ? 0 : oldPart;
+        allConfSplits.put(clazz, split);
+
         Util.log(String.format("%s export conf count = %s", clazz.getName(), conf.size()));
     }
 
@@ -359,8 +370,42 @@ public class ConfGenerator {
         File dataDir = new File(dataOut);
         for (Map.Entry<Class, Map<Object, Object>> en : allConf.entrySet()) {
             Class clazz = en.getKey();
-            Map<Object, Object> conf = en.getValue();
-            DataFormatter.createFormatter(dataFormat).export(conf, clazz, dataDir);
+            int split = allConfSplits.get(clazz);
+            Map<Object, Object> confs = en.getValue();
+            final int totalCount = confs.size();
+            if (!isOpenSplit || split > totalCount) { //如果设置的part比数据本身大，说明没多少数据
+                split = 1;
+            }
+
+            //单个数据文件
+            if (split < 2) {
+                DataFormatter.createFormatter(dataFormat).export(confs, clazz.getSimpleName(), dataDir);
+                continue;
+            }
+
+            //多个数据文件-拆分
+            final int avg = totalCount / split;
+            int[] distribution = new int[split];
+            for (int i = 0; i < totalCount; i++) {
+                distribution[i % split]++;
+            }
+
+            int index = 1;
+            Map<Object, Object> curSplitConfs = new TreeMap<>();
+            for (Map.Entry<Object, Object> e : confs.entrySet()) {
+                curSplitConfs.put(e.getKey(), e.getValue());
+                if (curSplitConfs.size() == distribution[index - 1]) {
+                    String fileName = clazz.getSimpleName() + "_" + index;
+                    DataFormatter.createFormatter(dataFormat).export(curSplitConfs, fileName, dataDir);
+                    curSplitConfs.clear();
+                    index++;
+                }
+            }
+
+            if (!curSplitConfs.isEmpty()) {
+                //不应该有剩下的
+                throw new IndexOutOfBoundsException("代码算法错误，不应该有剩下的数据");
+            }
         }
     }
 }
