@@ -227,6 +227,7 @@ public class ConfGenerator {
                 .forEach(c -> {
                     language.accept(new PrintConferBody(c));
                     language.accept(new PrintLoadMethod(c));
+                    language.accept(new PrintReloadMethod(c));
                     language.accept(new PrintAllMethod(c));
                     language.accept(new PrintOneMethod(c));
                 });
@@ -373,7 +374,8 @@ public class ConfGenerator {
             int split = allConfSplits.get(clazz);
             Map<Object, Object> confs = en.getValue();
             final int totalCount = confs.size();
-            if (!isOpenSplit || split > totalCount) { //如果设置的part比数据本身大，说明没多少数据
+            split = Math.min(split, totalCount);
+            if (!isOpenSplit) {
                 split = 1;
             }
 

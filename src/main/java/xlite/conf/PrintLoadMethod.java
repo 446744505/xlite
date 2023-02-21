@@ -6,17 +6,15 @@ import xlite.gen.Writer;
 import xlite.gen.visitor.LanguageVisitor;
 import xlite.language.Java;
 import xlite.type.TypeBuilder;
-import xlite.type.XBean;
+import xlite.type.XString;
 import xlite.type.XType;
 import xlite.type.visitor.BoxName;
+import xlite.type.visitor.DefaultValue;
 import xlite.util.Util;
-
-import java.io.File;
 
 public class PrintLoadMethod implements LanguageVisitor<XMethod> {
     public static final String methodName = "load";
     public static final String dataFieldName = "confs";
-    private static final String dataDirName = "dataDir";
 
     private final ConfClass clazz;
 
@@ -26,6 +24,7 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
 
     @Override
     public XMethod visit(Java java) {
+        final String idName = "id";
         XType idType = clazz.getIdField().getType();
         XType dataFieldType = TypeBuilder.build(TypeBuilder.TYPE_MAP, idType.name(), clazz.getName(), null);
         XField dataField = new XField(dataFieldName, dataFieldType, clazz);
@@ -41,26 +40,40 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
         XMethod method = new XMethod(methodName, clazz);
         int tab = 2;
         Writer body = new Writer();
-        body.println(String.format("File file = %s.listFiles(new FilenameFilter() {", dataDirName));
+        final String varFilesName = "files";
+        body.println(String.format("File[] %s = %s.%s.%s.listFiles(new FilenameFilter() {", varFilesName,
+                clazz.getFullName(java).split("\\.")[0], AddLoaderClass.className, AddLoaderClass.dataDirName));
         body.println(tab + 1, "@Override public boolean accept(File dir, String name) {");
         body.println(tab + 2, String.format("return name.startsWith(\"%s\");", clazz.getName()));
         body.println(tab + 1, "}");
-        body.println(tab, "})[0];");
-        body.println(tab, "String ext = FilenameUtils.getExtension(file.getName());");
-        body.println(tab, "DataFormatter formatter = DataFormatter.createFormatter(ext);");
+        body.println(tab, "});");
+
+        final String varConfName = "conf";
         String keyBoxName = idType.accept(BoxName.INSTANCE, java);
-        body.println(tab, String.format("Map<%s, %s> conf = formatter.load(file, new TypeReference<Map<%s, %s>>(){});", keyBoxName, clazz.getName(), keyBoxName, clazz.getName()));
-        body.println(tab, String.format("%s = Collections.unmodifiableMap(conf);", dataFieldName));
-        body.println(tab, String.format("%s.onLoad(conf);", PrintConferBody.fieldName));
+        body.println(tab, String.format("Map<%s, %s> %s;", keyBoxName, clazz.getName(), varConfName));
+        if (idType instanceof XString) {
+            body.println(tab, String.format("if (Objects.isNull(%s)) {", idName));
+        } else {
+            String idDefaultVal = clazz.getIdField().getType().accept(DefaultValue.INSTANCE, java);
+            body.println(tab, String.format("if (%s == %s) {", idName, idDefaultVal));
+        }
+        body.println(tab + 1, String.format("%s = %s.loadAll(%s);", varConfName, PrintConferBody.instanceFieldName, varFilesName));
+        body.println(tab, "} else {");
+        body.println(tab + 1, String.format("%s = %s.load(%s, %s);", varConfName, PrintConferBody.instanceFieldName, varFilesName, idName));
+        body.println(tab + 1, String.format("%s.putAll(%s);", varConfName, dataFieldName));
+        body.println(tab, "}");
+        body.println(tab, String.format("%s = Collections.unmodifiableMap(%s);", dataFieldName, varConfName));
 
         for (ConfBeanField field : clazz.getIndexFields()) {
             String fieldName = "Index" + Util.firstToUpper(field.getName());
             body.println(tab, String.format("%s.index(conf);", fieldName));
         }
         body.deleteEnd(1);
-        XField paramDataDir = new XField(dataDirName, new XBean(File.class), method);
+
+        XField loadIdParam = new XField(idName, idType, method);
+
         method.staticed()
-            .addParam(paramDataDir)
+            .addParam(loadIdParam)
             .addBody(body.getString())
             .throwed("Exception");
         clazz.addMethod(method);

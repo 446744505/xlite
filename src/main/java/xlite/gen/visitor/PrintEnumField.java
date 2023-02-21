@@ -6,10 +6,10 @@ import xlite.type.visitor.SimpleName;
 import xlite.type.visitor.Valueof;
 import xlite.util.Util;
 
-public class PrintConst implements LanguageVisitor<String> {
+public class PrintEnumField implements LanguageVisitor<String> {
     private final XEnumField field;
 
-    public PrintConst(XEnumField field) {
+    public PrintEnumField(XEnumField field) {
         this.field = field;
     }
 

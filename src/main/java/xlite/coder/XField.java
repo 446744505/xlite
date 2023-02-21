@@ -8,7 +8,9 @@ public class XField extends AbsCoder {
     @Getter private final String name;
     @Getter private boolean staticed;
     @Getter private boolean consted;
+    @Getter @Setter private boolean isPublic;
     @Getter @Setter private XType type;
+    @Getter @Setter private String defaultVal;
     @Getter @Setter private String comment;
     @Getter @Setter private String rangeCheck = "";
 

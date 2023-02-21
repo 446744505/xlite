@@ -6,7 +6,7 @@ import xlite.coder.XCoder;
 import xlite.coder.XEnumer;
 import xlite.coder.XEnumField;
 import xlite.gen.GenContext;
-import xlite.gen.visitor.PrintConst;
+import xlite.gen.visitor.PrintEnumField;
 
 import java.util.Objects;
 
@@ -22,6 +22,6 @@ public class ConfEnum extends XEnumer {
         fields.stream()
             .map(f -> (ConfEnumField) f)
             .filter(f -> Objects.nonNull(f.getValue()))
-            .forEach(f -> context.println(1, new PrintConst((XEnumField) f)));
+            .forEach(f -> context.println(1, new PrintEnumField((XEnumField) f)));
     }
 }
