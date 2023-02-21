@@ -3,6 +3,7 @@ package xlite.conf;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import xlite.conf.formatter.DataFormatter;
 
 import java.io.File;
@@ -12,10 +13,23 @@ import java.util.function.Consumer;
 public abstract class Confer<K extends Comparable<K>, V> {
     protected boolean isAllLoaded;
     private SplitMeta<K> meta;
+    private final Set<Integer> loadedIndex = new ConcurrentHashSet<>();
     private final List<Consumer<Map<K, V>>> onLoads = new ArrayList<>();
 
     public abstract Map<K, V> all();
     public abstract V one(K id);
+
+    public void freshIsLoadAll() {
+        if (!isAllLoaded && Objects.nonNull(meta)) {
+            isAllLoaded = loadedIndex.size() == meta.getIndexs().size();
+        }
+    }
+
+    public void reset() {
+        meta = null;
+        isAllLoaded = false;
+        loadedIndex.clear();
+    }
 
     public Map<K, V> loadAll(File[] files, TypeReference ref) throws Exception {
         Map<K, V> rst = new TreeMap<>();
@@ -45,6 +59,7 @@ public abstract class Confer<K extends Comparable<K>, V> {
 
         for (File file : files) {
             if (FilenameUtils.getBaseName(file.getName()).endsWith("_" + index)) {
+                loadedIndex.add(index);
                 return loadOneFile(file, dataRef);
             }
         }

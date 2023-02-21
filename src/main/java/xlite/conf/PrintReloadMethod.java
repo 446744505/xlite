@@ -31,6 +31,7 @@ public class PrintReloadMethod implements LanguageVisitor<XMethod> {
         body.println(String.format("if (%s) {", paramIsLoadAll));
         body.println(tab + 1, String.format(PrintLoadMethod.methodName + "(%s);", idDefaultVal));
         body.println(tab,"} else {");
+        body.println(tab + 1, String.format("%s.reset();", PrintConferBody.instanceFieldName));
         body.println(tab + 1, String.format("%s = Collections.unmodifiableMap(Collections.EMPTY_MAP);", PrintLoadMethod.dataFieldName));
         body.print(tab,  "}");
         method.staticed()

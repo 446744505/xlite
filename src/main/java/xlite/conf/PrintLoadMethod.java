@@ -68,6 +68,7 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
         body.println(tab + 1, String.format("%s = %s.load(%s, %s, %s, new TypeReference<SplitMeta<%s>>() {});",
                 varConfName, PrintConferBody.instanceFieldName, varFilesName, idName, varRefName, keyBoxName));
         body.println(tab + 1, String.format("%s.putAll(%s);", varConfName, dataFieldName));
+        body.println(tab + 1, String.format("%s.freshIsLoadAll();", PrintConferBody.instanceFieldName));
         body.println(tab, "}");
         body.println(tab, String.format("%s = Collections.unmodifiableMap(%s);", dataFieldName, varConfName));
 

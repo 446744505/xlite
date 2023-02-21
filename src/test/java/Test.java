@@ -1,4 +1,5 @@
 import conf.Loader;
+import conf.TestConf;
 import xlite.conf.ConfGenerator;
 
 import java.io.File;
@@ -18,7 +19,7 @@ public class Test {
 //        generator.readDef("TEST");
 //        generator.genData(ConfGenerator.ENDPOINT_ALL);
 
-//        generator = new ConfGenerator(xml, excelDir,"gen", "java");
+//        generator = new ConfGenerator(xml, excelDir, "gen", "java");
 //        generator.setOpenSplit(false); //sql生成必须设置为false，否者数据不在一个table里
 //        generator.setDataConf("conf_sql", "xjson");
 //        generator.genData(ConfGenerator.ENDPOINT_ALL);
@@ -28,7 +29,8 @@ public class Test {
         Loader.dataDir = new File("conf");
 //        Loader.loadAll(new File("conf"));
 //        System.out.println(Equip.I.one(ItemID.Equip1));
-//        System.out.println(TestConf.I.one(1));
+        System.out.println(TestConf.I.one(1));
+        System.out.println(TestConf.I.one(4));
 //        System.out.println(TestConf.I.all());
     }
 }

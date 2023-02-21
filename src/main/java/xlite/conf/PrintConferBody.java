@@ -37,7 +37,7 @@ public class PrintConferBody implements LanguageVisitor<Void> {
         body.println(tab + 1, "};");
         body.println(tab + 1, String.format("@Override public %s one(%s %s) {", val, keyBox, paraId));
         body.println(tab + 2, String.format("%s %s = %s.%s(%s);", val, varConf, val, PrintOneMethod.methodName, paraId));
-        body.println(tab + 2, String.format("if (Objects.nonNull(%s)) {", varConf));
+        body.println(tab + 2, String.format("if (isAllLoaded || Objects.nonNull(%s)) {", varConf));
         body.println(tab + 3, String.format("return %s;", varConf));
         body.println(tab + 2, String.format("} else {"));
         body.println(tab + 3, String.format("try { %s.%s(%s); } catch (Exception e) {throw new RuntimeException(e);}",
