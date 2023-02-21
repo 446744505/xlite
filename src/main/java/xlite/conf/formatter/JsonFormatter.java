@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class JsonFormatter extends DataFormatter {
 
@@ -16,7 +17,7 @@ public class JsonFormatter extends DataFormatter {
     }
 
     @Override
-    public <K, V> Map<K, V> load(File file, TypeReference<Map<K, V>> ref) throws Exception {
+    public <K, V> Map<K, V> load(File file, TypeReference<TreeMap<K, V>> ref) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         return (Map<K, V>) mapper.readValue(file, ref);
     }

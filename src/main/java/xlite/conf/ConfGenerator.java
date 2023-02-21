@@ -1,5 +1,6 @@
 package xlite.conf;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import xlite.coder.*;
@@ -393,16 +394,27 @@ public class ConfGenerator {
             }
 
             int index = 1;
+            Object start = null;
+            SplitMeta<?> meta = new SplitMeta<>();
             Map<Object, Object> curSplitConfs = new TreeMap<>();
             for (Map.Entry<Object, Object> e : confs.entrySet()) {
                 curSplitConfs.put(e.getKey(), e.getValue());
+                if (Objects.isNull(start)) {
+                    start = e.getKey();
+                }
                 if (curSplitConfs.size() == distribution[index - 1]) {
                     String fileName = clazz.getSimpleName() + "_" + index;
                     DataFormatter.createFormatter(dataFormat).export(curSplitConfs, fileName, dataDir);
+                    meta.addIndex(start, e.getKey(), index);
                     curSplitConfs.clear();
+                    start = null;
                     index++;
                 }
             }
+
+            ObjectMapper mapper = new ObjectMapper();
+            File file = new File(dataDir, clazz.getSimpleName() + SplitMeta.META_FILE + ".json");
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, meta);
 
             if (!curSplitConfs.isEmpty()) {
                 //不应该有剩下的

@@ -32,10 +32,13 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
         clazz.addImport("com.fasterxml.jackson.core.type.TypeReference")
                 .addImport("org.apache.commons.io.FilenameUtils")
                 .addImport("xlite.conf.formatter.DataFormatter")
+                .addImport("xlite.conf.SplitMeta")
                 .addImport("java.io.File")
                 .addImport("java.io.FilenameFilter")
                 .addImport("java.util.Collections")
                 .addImport("java.util.Map")
+                .addImport("java.util.TreeMap")
+                .addImport("java.util.Objects")
                 .addField(dataField);
         XMethod method = new XMethod(methodName, clazz);
         int tab = 2;
@@ -49,17 +52,21 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
         body.println(tab, "});");
 
         final String varConfName = "conf";
+        final String varRefName = "ref";
         String keyBoxName = idType.accept(BoxName.INSTANCE, java);
         body.println(tab, String.format("Map<%s, %s> %s;", keyBoxName, clazz.getName(), varConfName));
+        body.println(tab, String.format("TypeReference %s = new TypeReference<TreeMap<%s, %s>>() {};", varRefName, keyBoxName, clazz.getName()));
         if (idType instanceof XString) {
             body.println(tab, String.format("if (Objects.isNull(%s)) {", idName));
         } else {
             String idDefaultVal = clazz.getIdField().getType().accept(DefaultValue.INSTANCE, java);
             body.println(tab, String.format("if (%s == %s) {", idName, idDefaultVal));
         }
-        body.println(tab + 1, String.format("%s = %s.loadAll(%s);", varConfName, PrintConferBody.instanceFieldName, varFilesName));
+        body.println(tab + 1, String.format("%s = %s.loadAll(%s, %s);",
+                varConfName, PrintConferBody.instanceFieldName, varFilesName, varRefName));
         body.println(tab, "} else {");
-        body.println(tab + 1, String.format("%s = %s.load(%s, %s);", varConfName, PrintConferBody.instanceFieldName, varFilesName, idName));
+        body.println(tab + 1, String.format("%s = %s.load(%s, %s, %s, new TypeReference<SplitMeta<%s>>() {});",
+                varConfName, PrintConferBody.instanceFieldName, varFilesName, idName, varRefName, keyBoxName));
         body.println(tab + 1, String.format("%s.putAll(%s);", varConfName, dataFieldName));
         body.println(tab, "}");
         body.println(tab, String.format("%s = Collections.unmodifiableMap(%s);", dataFieldName, varConfName));

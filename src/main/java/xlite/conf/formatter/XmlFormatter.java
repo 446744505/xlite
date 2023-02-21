@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.File;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class XmlFormatter extends DataFormatter {
 
@@ -16,7 +17,7 @@ public class XmlFormatter extends DataFormatter {
     }
 
     @Override
-    public <K, V> Map<K, V> load(File file, TypeReference<Map<K, V>> ref) throws Exception {
+    public <K, V> Map<K, V> load(File file, TypeReference<TreeMap<K, V>> ref) throws Exception {
         XmlMapper mapper = new XmlMapper();
         return (Map<K, V>) mapper.readValue(file, ref);
     }

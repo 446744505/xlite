@@ -1,6 +1,7 @@
 package xlite.conf;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FilenameUtils;
 import xlite.conf.formatter.DataFormatter;
 
@@ -8,30 +9,61 @@ import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
 
-public abstract class Confer<K, V> {
+public abstract class Confer<K extends Comparable<K>, V> {
     protected boolean isAllLoaded;
+    private SplitMeta<K> meta;
     private final List<Consumer<Map<K, V>>> onLoads = new ArrayList<>();
 
     public abstract Map<K, V> all();
+    public abstract V one(K id);
 
-    public Map<K, V> loadAll(File[] files) throws Exception {
-        Map<K, V> rst = new HashMap<>();
+    public Map<K, V> loadAll(File[] files, TypeReference ref) throws Exception {
+        Map<K, V> rst = new TreeMap<>();
         for (File file : files) {
-            rst.putAll(loadOneFile(file));
+            rst.putAll(loadOneFile(file, ref));
         }
         isAllLoaded = true;
         return rst;
     }
 
-    public Map<K, V> load(File[] files, K id) throws Exception {
+    public Map<K, V> load(File[] files, K id, TypeReference dataRef, TypeReference metaRef) throws Exception {
+        if (files.length == 1) {
+            return loadAll(files, dataRef);
+        }
+        if (Objects.isNull(meta)) {
+            for (File file : files) {
+                if (FilenameUtils.getBaseName(file.getName()).endsWith(SplitMeta.META_FILE)) {
+                    loadMeta(file, metaRef);
+                    break;
+                }
+            }
+        }
+        int index = meta.findIndex(id);
+        if (index == 0) {
+            return Collections.EMPTY_MAP;
+        }
 
-        return loadOneFile(files[0]);
+        for (File file : files) {
+            if (FilenameUtils.getBaseName(file.getName()).endsWith("_" + index)) {
+                return loadOneFile(file, dataRef);
+            }
+        }
+        return Collections.EMPTY_MAP;
     }
 
-    private Map<K, V> loadOneFile(File file) throws Exception {
+    private void loadMeta(File metaFile, TypeReference ref) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        meta = (SplitMeta<K>) mapper.readValue(metaFile, ref);
+    }
+
+    private Map<K, V> loadOneFile(File file, TypeReference ref) throws Exception {
+        String baseName = FilenameUtils.getBaseName(file.getName());
+        if (baseName.endsWith(SplitMeta.META_FILE)) {
+            return Collections.EMPTY_MAP;
+        }
         String ext = FilenameUtils.getExtension(file.getName());
         DataFormatter formatter = DataFormatter.createFormatter(ext);
-        Map<K, V> rst = formatter.load(file, new TypeReference<Map<K, V>>() {});
+        Map<K, V> rst = formatter.load(file, ref);
         onLoad(rst);
         return rst;
     }

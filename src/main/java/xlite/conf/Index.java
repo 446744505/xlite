@@ -3,36 +3,36 @@ package xlite.conf;
 import java.util.*;
 import java.util.function.Function;
 
-public class Index<K, V> {
-    private final Function<V, K> getKey;
-    private Map<K, List<V>> confs = new HashMap<>();
+public class Index<I, V> {
+    private final Function<V, I> getKey;
+    private Map<I, List<V>> confs = new HashMap<>();
 
-    public Index(Function<V, K> getKey) {
+    public Index(Function<V, I> getKey) {
         this.getKey = getKey;
     }
 
     public void index(Map<?, V> conf) {
-        Map<K, List<V>> cfgs = new HashMap<>();
+        Map<I, List<V>> cfgs = new HashMap<>();
         conf.forEach((id, val) -> {
-            K k = getKey.apply(val);
-            List<V> list = cfgs.get(k);
+            I i = getKey.apply(val);
+            List<V> list = cfgs.get(i);
             if (list == null) {
                 list = new ArrayList<>();
-                cfgs.put(k, list);
+                cfgs.put(i, list);
             }
             list.add(val);
         });
 
-        Map<K, List<V>> unmodify = new HashMap<>();
-        cfgs.forEach((k, list) -> unmodify.put(k, Collections.unmodifiableList(list)));
+        Map<I, List<V>> unmodify = new HashMap<>();
+        cfgs.forEach((i, list) -> unmodify.put(i, Collections.unmodifiableList(list)));
         this.confs = Collections.unmodifiableMap(unmodify);
     }
 
-    public List<V> one(K index) {
+    public List<V> one(I index) {
         return confs.get(index);
     }
 
-    public Map<K, List<V>> all() {
+    public Map<I, List<V>> all() {
         return confs;
     }
 }

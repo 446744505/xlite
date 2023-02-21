@@ -6,7 +6,6 @@ import xlite.language.Java;
 import xlite.type.XType;
 import xlite.type.visitor.BoxName;
 import xlite.type.visitor.DefaultValue;
-import xlite.type.visitor.SimpleName;
 import xlite.util.Util;
 
 public class PrintConferBody implements LanguageVisitor<Void> {
@@ -25,7 +24,6 @@ public class PrintConferBody implements LanguageVisitor<Void> {
         XType idType = clazz.getIdField().getType();
         String idDefaultVal = idType.accept(DefaultValue.INSTANCE, java);
         String keyBox = idType.accept(BoxName.INSTANCE, java);
-        String keySimple = idType.accept(SimpleName.INSTANCE, java);
         String val = clazz.getName();
         final String varConf = "conf";
         final String paraId = "id";
@@ -37,9 +35,9 @@ public class PrintConferBody implements LanguageVisitor<Void> {
         body.println(tab + 2, "}");
         body.println(tab + 2, String.format("return %s.%s();", val, PrintAllMethod.methodName));
         body.println(tab + 1, "};");
-        body.println(tab + 1, String.format("public %s one(%s %s) {", val, keySimple, paraId));
+        body.println(tab + 1, String.format("@Override public %s one(%s %s) {", val, keyBox, paraId));
         body.println(tab + 2, String.format("%s %s = %s.%s(%s);", val, varConf, val, PrintOneMethod.methodName, paraId));
-        body.println(tab + 2, String.format("if (java.util.Objects.nonNull(%s)) {", varConf));
+        body.println(tab + 2, String.format("if (Objects.nonNull(%s)) {", varConf));
         body.println(tab + 3, String.format("return %s;", varConf));
         body.println(tab + 2, String.format("} else {"));
         body.println(tab + 3, String.format("try { %s.%s(%s); } catch (Exception e) {throw new RuntimeException(e);}",

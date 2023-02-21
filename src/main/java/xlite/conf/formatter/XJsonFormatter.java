@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * json for sql select
@@ -25,7 +26,7 @@ public class XJsonFormatter extends DataFormatter {
     }
 
     @Override
-    public <K, V> Map<K, V> load(File file, TypeReference<Map<K, V>> ref) throws Exception {
+    public <K, V> Map<K, V> load(File file, TypeReference<TreeMap<K, V>> ref) throws Exception {
         return null;
     }
 }
