@@ -27,6 +27,10 @@ public class ConfBeanElement extends BeanElement {
         if (Objects.nonNull(splitAttr)) {
             confClass.setSplit(Integer.valueOf(splitAttr.getValue()));
         }
+
+        if (confClass.getSplit() > 1 && !confClass.getIndexFields().isEmpty()) {
+            throw new UnsupportedOperationException(String.format("有索引的表[%s]不支持数据拆分功能", clazz.getName()));
+        }
         return confClass;
     }
 }

@@ -1,5 +1,3 @@
-import conf.Loader;
-import conf.TestConf;
 import xlite.conf.ConfGenerator;
 
 import java.io.File;
@@ -26,11 +24,10 @@ public class Test {
 
         generator.genCode(ConfGenerator.ENDPOINT_ALL);
 //        Equip.I.onLoad(values -> System.out.println(values));
-        Loader.dataDir = new File("conf");
+//        Loader.dataDir = new File("conf");
 //        Loader.loadAll(new File("conf"));
 //        System.out.println(Equip.I.one(ItemID.Equip1));
-        System.out.println(TestConf.I.one(1));
-        System.out.println(TestConf.I.one(4));
+//        System.out.println(TestConf.I.one(1));
 //        System.out.println(TestConf.I.all());
     }
 }

@@ -12,6 +12,8 @@ import xlite.type.visitor.BoxName;
 import xlite.type.visitor.DefaultValue;
 import xlite.util.Util;
 
+import java.util.List;
+
 public class PrintLoadMethod implements LanguageVisitor<XMethod> {
     public static final String methodName = "load";
     public static final String dataFieldName = "confs";
@@ -53,13 +55,14 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
 
         final String varConfName = "conf";
         final String varRefName = "ref";
+        String idDefaultVal = clazz.getIdField().getType().accept(DefaultValue.INSTANCE, java);
+        List<ConfBeanField> indexFields = clazz.getIndexFields();
         String keyBoxName = idType.accept(BoxName.INSTANCE, java);
         body.println(tab, String.format("Map<%s, %s> %s;", keyBoxName, clazz.getName(), varConfName));
         body.println(tab, String.format("TypeReference %s = new TypeReference<TreeMap<%s, %s>>() {};", varRefName, keyBoxName, clazz.getName()));
         if (idType instanceof XString) {
             body.println(tab, String.format("if (Objects.isNull(%s)) {", idName));
         } else {
-            String idDefaultVal = clazz.getIdField().getType().accept(DefaultValue.INSTANCE, java);
             body.println(tab, String.format("if (%s == %s) {", idName, idDefaultVal));
         }
         body.println(tab + 1, String.format("%s = %s.loadAll(%s, %s);",
@@ -72,7 +75,7 @@ public class PrintLoadMethod implements LanguageVisitor<XMethod> {
         body.println(tab, "}");
         body.println(tab, String.format("%s = Collections.unmodifiableMap(%s);", dataFieldName, varConfName));
 
-        for (ConfBeanField field : clazz.getIndexFields()) {
+        for (ConfBeanField field : indexFields) {
             String fieldName = "Index" + Util.firstToUpper(field.getName());
             body.println(tab, String.format("%s.index(conf);", fieldName));
         }
