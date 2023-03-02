@@ -1,17 +1,15 @@
 package xlite.gen;
 
-import lombok.Getter;
-import lombok.Setter;
 import xlite.gen.visitor.LanguageVisitor;
 import xlite.language.XLanguage;
 
 import java.io.File;
 
 public class GenContext implements Printer {
-    @Getter private final File outDir;
-    @Getter private final XLanguage language;
-    @Getter private final GenConf conf;
-    @Setter private Writer classWriter;
+    private final File outDir;
+    private final XLanguage language;
+    private final GenConf conf;
+    private Writer classWriter;
 
     public GenContext(File outDir, XLanguage language, GenConf conf) {
         this.outDir = outDir;
@@ -59,5 +57,21 @@ public class GenContext implements Printer {
     @Override
     public void println(int tab, String txt, String... x) {
         classWriter.println(tab, txt, x);
+    }
+
+    public File getOutDir() {
+        return outDir;
+    }
+
+    public XLanguage getLanguage() {
+        return language;
+    }
+
+    public GenConf getConf() {
+        return conf;
+    }
+
+    public void setClassWriter(Writer classWriter) {
+        this.classWriter = classWriter;
     }
 }

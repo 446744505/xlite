@@ -1,13 +1,12 @@
 package xlite.type;
 
-import lombok.Getter;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 import xlite.util.Util;
 
 public class XBean implements XType {
     private String name;
-    @Getter private Class clazz;
+    private Class clazz;
 
     public XBean(String name) {
         this.name = name;
@@ -28,5 +27,9 @@ public class XBean implements XType {
             return name;
         }
         return clazz.getSimpleName();
+    }
+
+    public Class getClazz() {
+        return clazz;
     }
 }

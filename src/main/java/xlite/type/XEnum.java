@@ -1,13 +1,12 @@
 package xlite.type;
 
-import lombok.Getter;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
 import java.util.Objects;
 
 public class XEnum extends XBean {
-    @Getter private final XType inner;//所有字段的类型相同时的类型
+    private final XType inner;//所有字段的类型相同时的类型
 
     public XEnum(String name, XType inner) {
         super(name);
@@ -23,5 +22,9 @@ public class XEnum extends XBean {
         if (Objects.isNull(inner)) {
             throw new IllegalStateException("if enum as a var`type, it all fields must same type at " + name());
         }
+    }
+
+    public XType getInner() {
+        return inner;
     }
 }

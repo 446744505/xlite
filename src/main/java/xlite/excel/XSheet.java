@@ -1,14 +1,11 @@
 package xlite.excel;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.*;
 
 public class XSheet {
-    @Getter private final XExcel excel;
-    @Getter private final String sheetName;
-    @Setter @Getter private Header header;
+    private final XExcel excel;
+    private final String sheetName;
+    private Header header;
     private final Map<String, Map<Object, XRow>> rows = new HashMap<>();//key1=宏 key2=row key
 
     public XSheet(XExcel excel, String sheetName) {
@@ -57,6 +54,22 @@ public class XSheet {
 
     public boolean isCommentCol(int colIndex) {
         return header.isCommentCol(colIndex);
+    }
+
+    public XExcel getExcel() {
+        return excel;
+    }
+
+    public String getSheetName() {
+        return sheetName;
+    }
+
+    public Header getHeader() {
+        return header;
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
     }
 
     @Override

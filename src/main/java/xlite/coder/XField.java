@@ -1,18 +1,16 @@
 package xlite.coder;
 
-import lombok.Getter;
-import lombok.Setter;
 import xlite.type.XType;
 
 public class XField extends AbsCoder {
-    @Getter private final String name;
-    @Getter private boolean staticed;
-    @Getter private boolean consted;
-    @Getter @Setter private boolean isPublic;
-    @Getter @Setter private XType type;
-    @Getter @Setter private String defaultVal;
-    @Getter @Setter private String comment;
-    @Getter @Setter private String rangeCheck = "";
+    private final String name;
+    private boolean staticed;
+    private boolean consted;
+    private boolean isPublic;
+    private XType type;
+    private String defaultVal;
+    private String comment;
+    private String rangeCheck = "";
 
     public XField(String name, XType type, XCoder parent) {
         super(parent);
@@ -28,5 +26,57 @@ public class XField extends AbsCoder {
     public XField consted() {
         consted = true;
         return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isStaticed() {
+        return staticed;
+    }
+
+    public boolean isConsted() {
+        return consted;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public XType getType() {
+        return type;
+    }
+
+    public String getDefaultVal() {
+        return defaultVal;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public String getRangeCheck() {
+        return rangeCheck;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public void setType(XType type) {
+        this.type = type;
+    }
+
+    public void setDefaultVal(String defaultVal) {
+        this.defaultVal = defaultVal;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setRangeCheck(String rangeCheck) {
+        this.rangeCheck = rangeCheck;
     }
 }

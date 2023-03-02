@@ -1,7 +1,5 @@
 package xlite.excel;
 
-import lombok.Getter;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -9,9 +7,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class XExcel implements Iterable<XSheet> {
-    @Getter private final String fileName;
+    private final String fileName;
     private final File file;
-    @Getter private final XExcelHook hook;
+    private final XExcelHook hook;
     private final Map<String, XSheet> sheets = new LinkedHashMap<>();
 
     public XExcel(String fileName, File file, XExcelHook hook) {
@@ -39,5 +37,13 @@ public class XExcel implements Iterable<XSheet> {
 
     public String getPath() {
         return file.getAbsolutePath();
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public XExcelHook getHook() {
+        return hook;
     }
 }

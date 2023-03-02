@@ -1,7 +1,5 @@
 package xlite.conf;
 
-import lombok.Getter;
-import lombok.Setter;
 import xlite.coder.XClass;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
@@ -13,8 +11,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ConfClass extends XClass {
-    @Getter @Setter private String fromExcel;
-    @Getter @Setter private int split;
+    private String fromExcel;
+    private int split;
 
     public ConfClass(String name, XCoder parent) {
         super(name, parent);
@@ -60,5 +58,21 @@ public class ConfClass extends XClass {
             }
         }
         return rst;
+    }
+
+    public String getFromExcel() {
+        return fromExcel;
+    }
+
+    public void setFromExcel(String fromExcel) {
+        this.fromExcel = fromExcel;
+    }
+
+    public int getSplit() {
+        return split;
+    }
+
+    public void setSplit(int split) {
+        this.split = split;
     }
 }

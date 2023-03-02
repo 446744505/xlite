@@ -1,12 +1,10 @@
 package xlite.type;
 
-import lombok.Getter;
-import lombok.Setter;
 import xlite.language.XLanguage;
 import xlite.type.visitor.TypeVisitor;
 
 public class XAny implements XType, HaveValue {
-    @Getter @Setter private XType value;
+    private XType value;
 
     public XAny() {}
 
@@ -18,5 +16,14 @@ public class XAny implements XType, HaveValue {
     @Override
     public String name() {
         return TypeBuilder.TYPE_ANY;
+    }
+
+    @Override
+    public XType getValue() {
+        return value;
+    }
+
+    public void setValue(XType value) {
+        this.value = value;
     }
 }

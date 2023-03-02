@@ -1,6 +1,5 @@
 package xlite.coder;
 
-import lombok.Getter;
 import xlite.gen.GenContext;
 import xlite.gen.visitor.Import;
 import xlite.gen.visitor.PrintDefine;
@@ -10,11 +9,11 @@ import xlite.util.Util;
 import java.util.*;
 
 public class XInterface extends AbsCoder {
-    @Getter protected final String name;
-    @Getter protected List<XInterface> extendes = new ArrayList<>();
+    protected final String name;
+    protected List<XInterface> extendes = new ArrayList<>();
     protected final List<String> imports = new ArrayList<>();
     protected final Map<String, XMethod> methods = new LinkedHashMap<>();
-    @Getter private final List<String> contents = new ArrayList<>();
+    private final List<String> contents = new ArrayList<>();
 
     public XInterface(String name, XCoder parent) {
         super(parent);
@@ -89,5 +88,17 @@ public class XInterface extends AbsCoder {
 
     protected void printContents(GenContext context) {
         contents.forEach(body -> context.println(body));
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<XInterface> getExtendes() {
+        return extendes;
+    }
+
+    public List<String> getContents() {
+        return contents;
     }
 }

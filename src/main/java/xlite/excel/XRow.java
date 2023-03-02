@@ -1,6 +1,5 @@
 package xlite.excel;
 
-import lombok.Getter;
 import xlite.excel.cell.BlankCell;
 import xlite.excel.cell.XCell;
 
@@ -10,7 +9,7 @@ import java.util.Objects;
 
 public class XRow {
     private final int rowNum;
-    @Getter private final XSheet sheet;
+    private final XSheet sheet;
     private final Map<Integer, XCell> cells = new HashMap<>();
 
     public XRow(XSheet sheet, int rowNum) {
@@ -49,17 +48,25 @@ public class XRow {
         return (T) hook.key(this);
     }
 
+    public XSheet getSheet() {
+        return sheet;
+    }
+
     @Override
     public String toString() {
         return sheet + " at row " + rowNum;
     }
 
     public static class DefStartRow extends XRow {
-        @Getter private final String name;
+        private final String name;
 
         public DefStartRow(String name) {
             super(null, 0);
             this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 

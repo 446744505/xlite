@@ -1,14 +1,31 @@
 package xlite.xml;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class XmlContext {
-    @Getter private final XXmlFactory factory;
-    @Getter @Setter private boolean exportCode;
-    @Getter @Setter private String endPoint;
+    private final XXmlFactory factory;
+    private boolean exportCode;
+    private String endPoint;
 
     public XmlContext(XXmlFactory factory) {
         this.factory = factory;
+    }
+
+    public XXmlFactory getFactory() {
+        return factory;
+    }
+
+    public boolean isExportCode() {
+        return exportCode;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setExportCode(boolean exportCode) {
+        this.exportCode = exportCode;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
     }
 }

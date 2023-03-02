@@ -1,8 +1,6 @@
 package xlite.conf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
 import xlite.coder.*;
 import xlite.conf.elem.ConfBeanElement;
 import xlite.conf.formatter.DataFormatter;
@@ -55,10 +53,10 @@ public class ConfGenerator {
 
     private final Map<Class, Set<Object>> allIds = new HashMap<>();
 
-    @Setter private boolean isOpenSplit = true;
+    private boolean isOpenSplit = true;
     //记录每个配置表分为几个数据文件
     private final Map<Class, Integer> allConfSplits = new HashMap<>();
-    @Getter private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
+    private final Map<Class, Map<Object, Object>> allConf = new HashMap<>();
 
     public ConfGenerator(File xml, File excelDir, String srcOut, String lan) throws Exception {
         ConfFactory factory = new ConfFactory();
@@ -421,5 +419,13 @@ public class ConfGenerator {
                 throw new IndexOutOfBoundsException("代码算法错误，不应该有剩下的数据");
             }
         }
+    }
+
+    public Map<Class, Map<Object, Object>> getAllConf() {
+        return allConf;
+    }
+
+    public void setOpenSplit(boolean openSplit) {
+        isOpenSplit = openSplit;
     }
 }

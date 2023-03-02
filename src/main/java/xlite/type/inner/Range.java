@@ -1,6 +1,5 @@
 package xlite.type.inner;
 
-import lombok.Getter;
 import xlite.coder.XClass;
 import xlite.type.TypeBuilder;
 import xlite.type.XBean;
@@ -25,10 +24,10 @@ public class Range<T extends Comparable<T>> {
         register0(TypeBuilder.TYPE_DATE, Date.INSTANCE);
     }
 
-    @Getter private final T min;
-    @Getter private final T max;
-    @Getter private final boolean rightOpen;
-    @Getter private final boolean leftOpen;
+    private final T min;
+    private final T max;
+    private final boolean rightOpen;
+    private final boolean leftOpen;
 
     public Range(T min, T max, boolean leftOpen, boolean rigthOpen) {
         this.min = min;
@@ -75,6 +74,22 @@ public class Range<T extends Comparable<T>> {
         }
 
         return pass;
+    }
+
+    public T getMin() {
+        return min;
+    }
+
+    public T getMax() {
+        return max;
+    }
+
+    public boolean isRightOpen() {
+        return rightOpen;
+    }
+
+    public boolean isLeftOpen() {
+        return leftOpen;
     }
 
     @Override

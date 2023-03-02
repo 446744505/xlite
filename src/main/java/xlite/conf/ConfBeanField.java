@@ -1,20 +1,66 @@
 package xlite.conf;
 
-import lombok.Getter;
-import lombok.Setter;
 import xlite.coder.XCoder;
 import xlite.coder.XField;
 import xlite.type.XType;
 
 public class ConfBeanField extends XField {
-    @Getter @Setter private String fromCol;
-    @Getter @Setter private String endPoint;
-    @Getter @Setter private String foreignCheck;
-    @Getter @Setter private String uniqCheck;
-    @Getter @Setter private String mustCheck;
-    @Getter @Setter private String index;
+    private String fromCol;
+    private String endPoint;
+    private String foreignCheck;
+    private String uniqCheck;
+    private String mustCheck;
+    private String index;
 
     public ConfBeanField(String name, XType type, XCoder parent) {
         super(name, type, parent);
+    }
+
+    public String getFromCol() {
+        return fromCol;
+    }
+
+    public void setFromCol(String fromCol) {
+        this.fromCol = fromCol;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public String getForeignCheck() {
+        return foreignCheck;
+    }
+
+    public void setForeignCheck(String foreignCheck) {
+        this.foreignCheck = foreignCheck;
+    }
+
+    public String getUniqCheck() {
+        return uniqCheck;
+    }
+
+    public void setUniqCheck(String uniqCheck) {
+        this.uniqCheck = uniqCheck;
+    }
+
+    public String getMustCheck() {
+        return mustCheck;
+    }
+
+    public void setMustCheck(String mustCheck) {
+        this.mustCheck = mustCheck;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 }

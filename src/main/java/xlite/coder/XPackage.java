@@ -1,6 +1,5 @@
 package xlite.coder;
 
-import lombok.Getter;
 import xlite.gen.GenContext;
 import xlite.gen.Writer;
 import xlite.gen.visitor.FileName;
@@ -12,7 +11,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class XPackage extends AbsCoder implements GenCoder {
-    @Getter private final String name;
+    private final String name;
     private final List<XPackage> children = new ArrayList<>();
     private final List<XClass> classes = new ArrayList<>();
     private final List<XEnumer> enums = new ArrayList<>();
@@ -122,5 +121,9 @@ public class XPackage extends AbsCoder implements GenCoder {
 
     public String fullPack(XLanguage language) {
         return language.accept(new FullPack(this));
+    }
+
+    public String getName() {
+        return name;
     }
 }

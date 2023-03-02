@@ -1,7 +1,5 @@
 package xlite.coder;
 
-import lombok.Getter;
-import lombok.Setter;
 import xlite.gen.GenConf;
 import xlite.gen.GenContext;
 import xlite.gen.visitor.*;
@@ -15,9 +13,9 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class XClass extends XInterface {
-    @Getter @Setter private String comment;
-    @Getter protected final List<XField> fields = new ArrayList<>();
-    @Getter private final List<XInterface> interfaces = new ArrayList<>();
+    private String comment;
+    protected final List<XField> fields = new ArrayList<>();
+    private final List<XInterface> interfaces = new ArrayList<>();
 
     private static final Map<String, XClass> clazzCache = new HashMap<>();
     private static final Map<String, List<Consumer<XClass>>> waitBuildClass = new HashMap<>();
@@ -218,5 +216,21 @@ public class XClass extends XInterface {
                 context.println();
             }
         });
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public List<XField> getFields() {
+        return fields;
+    }
+
+    public List<XInterface> getInterfaces() {
+        return interfaces;
     }
 }

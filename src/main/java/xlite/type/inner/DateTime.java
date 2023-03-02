@@ -1,13 +1,12 @@
 package xlite.type.inner;
 
-import lombok.Getter;
 import xlite.util.Util;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class DateTime implements Comparable<DateTime> {
-    @Getter private final String txt;
+    private final String txt;
     private LocalDateTime localDateTime;
 
     public DateTime() {
@@ -25,6 +24,10 @@ public class DateTime implements Comparable<DateTime> {
         }
         localDateTime = Util.strToDate(txt);
         return localDateTime;
+    }
+
+    public String getTxt() {
+        return txt;
     }
 
     @Override

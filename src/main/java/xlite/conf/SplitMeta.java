@@ -1,14 +1,12 @@
 package xlite.conf;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class SplitMeta<K extends Comparable<K>> {
     public static final String META_FILE = "_meta";
 
-    @Getter private final List<Index<K>> indexs = new ArrayList<>();
+    private final List<Index<K>> indexs = new ArrayList<>();
 
     public void addIndex(Object start, Object end, int index) {
         Index i = new Index();
@@ -26,6 +24,10 @@ public class SplitMeta<K extends Comparable<K>> {
             }
         }
         return 0;
+    }
+
+    public List<Index<K>> getIndexs() {
+        return indexs;
     }
 
     public static class Index<K extends Comparable<K>> {
